@@ -18,7 +18,7 @@ object BookController extends Controller {
 
   def get(id:Long) = Action.async{
     BookLogic.get(id).map(_ match {
-      case None => BadRequest
+      case None => BadRequest("El libro no existe")
       case Some(book) => Ok(Json.toJson(book))
     })
   }

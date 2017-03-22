@@ -2,9 +2,6 @@ package models.bookModule
 import slick.lifted.Tag
 import slick.jdbc.PostgresProfile.api._
 import traits.Entity
-/**
-  * Created by sfrsebastian on 3/14/17.
-  */
 
 case class Book(id:Long, name:String, description:String, ISBN:String, image:String)
 

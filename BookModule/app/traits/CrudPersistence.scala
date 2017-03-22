@@ -4,9 +4,6 @@ import scala.concurrent.Future
 import slick.jdbc.PostgresProfile.api._
 import play.api.libs.concurrent.Execution.Implicits._
 
-/**
-  * Created by sfrsebastian on 3/7/17.
-  */
 trait CrudPersistence[T, K <: Entity[T]] {
   protected def db: Database = Database.forConfig("mydb")
   protected val table:TableQuery[K]

@@ -6,9 +6,6 @@ import persistence.bookModule.BookPersistence
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 
-/**
-  * Created by sfrsebastian on 3/21/17.
-  */
 object BookLogic extends CrudLogic[Book] {
 
   override def getAll: Future[Seq[Book]] = {
