@@ -1,0 +1,9 @@
+GET     /               controllers.bookModule.BookController.getAll
+
+GET     /:id            controllers.bookModule.BookController.get(id: Int)
+
+PUT     /:id            controllers.bookModule.BookController.update(id: Int)
+
+POST    /               controllers.bookModule.BookController.create
+
+DELETE  /:id            controllers.bookModule.BookController.delete(id:Int)
