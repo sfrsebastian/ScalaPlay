@@ -1,23 +1,25 @@
 package controllers.bookModule
 
+import javax.inject.Inject
+
+import logic.bookModule.BookLogicTrait
 import models.bookModule.Book
-import play.api.libs.json.{Json}
+import play.api.libs.json.Json
 import play.api.mvc._
-import logic.bookModule.BookLogic
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object BookController extends Controller {
+class BookController @Inject()(logic:BookLogicTrait) extends Controller {
 
   implicit val format = Json.format[Book]
 
   def getAll = Action.async{
-    BookLogic.getAll.map(books => Ok(Json.toJson(books)))
+    logic.getAll.map(books => Ok(Json.toJson(books)))
   }
 
   def get(id:Long) = Action.async{
-    BookLogic.get(id).map(_ match {
+    logic.get(id).map(_ match {
       case None => BadRequest("El libro no existe")
       case Some(book) => Ok(Json.toJson(book))
     })
@@ -26,7 +28,7 @@ object BookController extends Controller {
   def create() = Action.async(parse.json){ request =>
     request.body.validateOpt[Book].getOrElse(None) match {
       case Some(x) => {
-        BookLogic.create(x).map(_ match{
+        logic.create(x).map(_ match{
           case Some(y) => Ok(Json.toJson(y))
           case None => BadRequest("Error creando nuevo libro")
         })
@@ -38,7 +40,7 @@ object BookController extends Controller {
   def update(id:Long) = Action.async(parse.json) { request =>
     request.body.validateOpt[Book].getOrElse(None) match {
       case Some(x) => {
-        BookLogic.update(id, x.copy(id=id)).map(_ match{
+        logic.update(id, x.copy(id=id)).map(_ match{
           case Some(book) => Ok(Json.toJson(book))
           case None => BadRequest("Error actualizando libro con id " + id)
         })
@@ -48,7 +50,7 @@ object BookController extends Controller {
   }
 
   def delete(id:Long) = Action.async{
-    BookLogic.delete(id).map(_ match{
+    logic.delete(id).map(_ match{
       case Some(x) => {
         Ok(Json.toJson(x))
       }

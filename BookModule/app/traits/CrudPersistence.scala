@@ -1,12 +1,17 @@
 package traits
 
-import scala.concurrent.Future
-import slick.jdbc.PostgresProfile.api._
 import play.api.libs.concurrent.Execution.Implicits._
+import slick.jdbc.PostgresProfile.api._
+import traits.profiles.DatabaseProfile
 
-trait CrudPersistence[T, K <: Entity[T]] {
-  protected def db: Database = Database.forConfig("mydb")
-  protected val table:TableQuery[K]
+import scala.concurrent.Future
+
+/**
+  * Created by sfrsebastian on 4/10/17.
+  */
+trait CrudPersistence[T, K <: Entity[T]] extends DatabaseProfile{
+
+  def table:TableQuery[K]
 
   def getAll : Future[Seq[T]] = {
     db.run(table.result).map(_ match {

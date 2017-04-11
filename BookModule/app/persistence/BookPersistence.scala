@@ -1,9 +1,6 @@
 package persistence.bookModule
 
-import models.bookModule._
-import slick.lifted.TableQuery
-import traits.CrudPersistence
+import traits.profiles.{DevProfile, TestProfile}
 
-object BookPersistence extends CrudPersistence[Book,Books] {
-  override val table = TableQuery[Books]
-}
+class BookPersistenceDev extends BookPersistenceTrait with DevProfile
+class BookPersistenceTest extends BookPersistenceTrait with TestProfile

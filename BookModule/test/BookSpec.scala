@@ -1,17 +1,26 @@
-import logic.bookModule.BookLogic
-import models.bookModule.Book
+import persistence.bookModule.{BookPersistenceTest, BookPersistenceTrait}
+import play.api.inject.guice.GuiceApplicationBuilder
 import org.scalatestplus.play._
-import play.api.mvc.{Result, Results}
-import play.api.test.FakeRequest
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.inject.bind
 
-import scala.concurrent.Future
+class BookSpec extends PlaySpec with GuiceOneAppPerSuite {
+  override lazy val app = new GuiceApplicationBuilder()
+    .overrides(bind[BookPersistenceTrait].to[BookPersistenceTest])
+    .build
 
-class BookSpec extends PlaySpec with Results {
+  val persistence = app.injector.instanceOf[BookPersistenceTrait]
 
   "BookController" should {
-    "return collection" in {
-      val result: Future[Seq[Book]] = BookLogic.getAll
-      assert(result.value.size>=0)
+    "Get All" should {
+      "debe retornar una coleccion vacia" in {
+        val result = persistence.getAll.map(response => {
+          println("response is")
+          println(response)
+          response.length mustBe 0
+        })
+      }
     }
   }
 }
