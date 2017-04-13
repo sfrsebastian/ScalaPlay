@@ -2,7 +2,7 @@ package controllers.bookModule
 
 import javax.inject.Inject
 
-import common.traits.CrudController
+import common.traits.app.CrudController
 import logic.bookModule.BookLogicTrait
 import models.bookModule.{Book, Books}
 import play.api.libs.json.Json

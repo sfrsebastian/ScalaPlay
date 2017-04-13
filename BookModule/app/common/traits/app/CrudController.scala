@@ -1,6 +1,6 @@
-package common.traits
+package common.traits.app
 
-import common.Entity
+import common.traits.model.Entity
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, Controller}
 

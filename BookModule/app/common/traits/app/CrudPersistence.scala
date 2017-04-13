@@ -1,9 +1,11 @@
-package common.traits
-import common.Entity
+package common.traits.app
+
+import common.traits.model.Entity
 import common.traits.persistenceProfiles.DatabaseProfile
 import play.api.libs.concurrent.Execution.Implicits._
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Query
+
 import scala.concurrent.Future
 
 /**

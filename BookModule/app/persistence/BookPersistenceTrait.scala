@@ -1,11 +1,11 @@
 package persistence.bookModule
 
-import common.traits.CrudPersistence
+import common.traits.app.CrudPersistence
 import models.bookModule.{Book, Books}
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**

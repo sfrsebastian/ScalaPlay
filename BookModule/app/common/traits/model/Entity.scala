@@ -1,4 +1,5 @@
-package common
+package common.traits.model
+
 import slick.jdbc.PostgresProfile.api._
 
 abstract class Entity[T](tag:Tag, tableName:String) extends Table[T](tag, tableName){

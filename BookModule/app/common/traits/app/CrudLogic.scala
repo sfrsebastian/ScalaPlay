@@ -1,6 +1,7 @@
-package common.traits
+package common.traits.app
 
-import common.Entity
+import common.traits.model.Entity
+
 import scala.concurrent.Future
 
 trait CrudLogic[T, K <: Entity[T]] {
