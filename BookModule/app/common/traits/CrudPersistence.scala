@@ -1,0 +1,56 @@
+package common.traits
+import common.Entity
+import common.traits.persistenceProfiles.DatabaseProfile
+import play.api.libs.concurrent.Execution.Implicits._
+import slick.jdbc.PostgresProfile.api._
+import slick.lifted.Query
+import scala.concurrent.Future
+
+/**
+  * Created by sfrsebastian on 4/10/17.
+  */
+trait CrudPersistence[T, K <: Entity[T]] extends DatabaseProfile{
+
+  var table:TableQuery[K]
+
+  val updateProjection: K => Product
+
+  def updateTransform(element:T): Product
+
+  def getAll : Future[Seq[T]] = {
+    db.run(table.result).map(_ match {
+      case null => List()
+      case x : Seq[T] => x
+    })
+  }
+
+  def getAll(query: Query[K, T, Seq]):Future[Seq[T]] = {
+    db.run(query.result)
+  }
+
+  def get(id: Int): Future[Option[T]] = {
+    get(table.filter(_.id === id))
+  }
+
+  def get(query: Query[K, T, Seq]):Future[Option[T]] = {
+    db.run(query.result).map(_.headOption)
+  }
+
+  def create(element:T): Future[Option[T]] = {
+    db.run(((table returning table) += (element)).map(Some(_)))
+  }
+
+  def update(id: Int, toUpdate: T) : Future[Option[T]]
+
+  def delete(id: Int): Future[Option[T]] = {
+    for {
+      toDelete <- get(id)
+      result <- db.run(table.filter(_.id === id).delete)
+    } yield {
+      result match{
+        case 1 => toDelete
+        case _ => None
+      }
+    }
+  }
+}

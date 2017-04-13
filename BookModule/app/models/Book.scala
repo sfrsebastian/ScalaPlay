@@ -1,9 +1,9 @@
 package models.bookModule
 import slick.lifted.Tag
 import slick.jdbc.PostgresProfile.api._
-import traits.Entity
+import common.Entity
 
-case class Book(id:Long, name:String, description:String, ISBN:String, image:String)
+case class Book(id:Int, name:String, description:String, ISBN:String, image:String)
 
 class Books(tag:Tag) extends Entity[Book](tag, "BOOKS") {
   def description = column[String]("DESCRIPTION")

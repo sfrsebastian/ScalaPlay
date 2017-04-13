@@ -1,6 +1,6 @@
 package persistence.bookModule
 
-import traits.profiles.{DevProfile, TestProfile}
+import common.traits.persistenceProfiles.{DevProfile, TestProfile}
 
 class BookPersistenceDev extends BookPersistenceTrait with DevProfile
-class BookPersistenceTest extends BookPersistenceTrait with TestProfile
+class BookPersistenceTesting extends BookPersistenceTrait with TestProfile

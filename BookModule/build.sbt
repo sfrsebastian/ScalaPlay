@@ -14,8 +14,11 @@ libraryDependencies ++= Seq(
   "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
   "com.h2database" % "h2" % "1.4.194",
   "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0",
-  "org.mockito" % "mockito-core" % "2.7.19"
+  "org.mockito" % "mockito-core" % "2.7.22",
+  "uk.co.jemos.podam" % "podam" % "6.0.1.RELEASE"
 )
+
+routesGenerator := InjectedRoutesGenerator
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-results")
 

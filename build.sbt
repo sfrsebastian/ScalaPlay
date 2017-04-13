@@ -9,8 +9,7 @@ lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala).dependsOn
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0",
-  "org.mockito" % "mockito-core" % "2.7.19"
+  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0"
 )
 
 routesGenerator := InjectedRoutesGenerator

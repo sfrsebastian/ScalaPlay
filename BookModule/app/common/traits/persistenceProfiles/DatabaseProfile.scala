@@ -1,4 +1,4 @@
-package traits.profiles
+package common.traits.persistenceProfiles
 
 import slick.jdbc.PostgresProfile.api._
 
