@@ -1,12 +1,10 @@
 package common
 
-import slick.jdbc.meta.MTable
-import slick.lifted.TableQuery
-import slick.jdbc.PostgresProfile.api._
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import slick.jdbc.PostgresProfile.api._
+import slick.jdbc.meta.MTable
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by sfrsebastian on 4/11/17.

@@ -1,7 +1,7 @@
 package common.traits.test
 
 import akka.stream.Materializer
-import common.traits.app.{CrudController, CrudLogic}
+import common.traits.layers.{CrudController, CrudLogic}
 import common.traits.model.{Entity, Row}
 import org.mockito.ArgumentMatchers.{any, anyInt}
 import org.mockito.Mockito.when

@@ -1,4 +1,4 @@
-package common.traits.app
+package common.traits.layers
 
 import common.traits.model.Entity
 

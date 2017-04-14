@@ -2,21 +2,23 @@ import common.traits.test.CrudLogicTestTrait
 import logic.bookModule.BookLogic
 import models.bookModule.{Book, Books}
 import org.mockito.Mockito._
-import persistence.bookModule.BookPersistenceTesting
+import persistence.bookModule
+import persistence.bookModule.BookPersistence
 import slick.jdbc.PostgresProfile.api._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
   * Created by sfrsebastian on 4/12/17.
   */
-class BookLogicTest extends CrudLogicTestTrait[Book, Books, BookLogic, BookPersistenceTesting]{
+class BookLogicTest extends CrudLogicTestTrait[Book, Books, BookLogic, BookPersistence]{
 
-  var persistenceMock = mock[BookPersistenceTesting]
+  var persistenceMock = mock[BookPersistence]
   var logic = new BookLogic(persistenceMock)
 
   override def beforeEach(){
-    persistenceMock = mock[BookPersistenceTesting]
+    persistenceMock = mock[BookPersistence]
     when(persistenceMock.table) thenReturn mock[TableQuery[Books]]
     logic = new BookLogic(persistenceMock)
   }

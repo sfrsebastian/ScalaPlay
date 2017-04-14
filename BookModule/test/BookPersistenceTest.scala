@@ -1,11 +1,13 @@
-import common.traits.app.CrudPersistence
+import common.traits.layers.CrudPersistence
 import common.traits.test.CrudPersistenceTestTrait
 import models.bookModule.{Book, Books}
-import persistence.bookModule.BookPersistenceTesting
+import persistence.bookModule.{BookPersistence, BookPersistenceTrait}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.bind
 
 class BookPersistenceTest extends CrudPersistenceTestTrait[Book, Books]{
 
-  override var persistence: CrudPersistence[Book, Books] = new BookPersistenceTesting
+  override var persistence: CrudPersistence[Book, Books] = new BookPersistence
   override var seedCollection: Seq[Book] = Nil
   override def generatePojo(): Book = factory.manufacturePojo(classOf[Book])
 

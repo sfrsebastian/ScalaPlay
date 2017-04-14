@@ -1,6 +1,6 @@
 package logic.bookModule
 
-import common.traits.app.CrudLogic
+import common.traits.layers.CrudLogic
 import models.bookModule.{Book, Books}
 import persistence.bookModule.BookPersistenceTrait
 

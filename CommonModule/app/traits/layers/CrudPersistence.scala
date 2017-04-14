@@ -1,7 +1,6 @@
-package common.traits.app
+package common.traits.layers
 
 import common.traits.model.Entity
-import common.traits.persistenceProfiles.DatabaseProfile
 import play.api.libs.concurrent.Execution.Implicits._
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Query
@@ -11,7 +10,9 @@ import scala.concurrent.Future
 /**
   * Created by sfrsebastian on 4/10/17.
   */
-trait CrudPersistence[T, K <: Entity[T]] extends DatabaseProfile{
+trait CrudPersistence[T, K <: Entity[T]]{
+
+  def db:Database = Database.forConfig("Database")
 
   var table:TableQuery[K]
 

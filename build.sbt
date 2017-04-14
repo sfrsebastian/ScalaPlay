@@ -2,9 +2,10 @@ name := "BookStore"
 
 version := "1.0"
 
-lazy val BookModule = (project in file("BookModule")).enablePlugins(PlayScala, SonarRunnerPlugin)
+lazy val CommonModule = (project in file("CommonModule")).enablePlugins(PlayScala)
+lazy val BookModule = (project in file("BookModule")).enablePlugins(PlayScala, SonarRunnerPlugin).aggregate(CommonModule).dependsOn(CommonModule)
 
-lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala).dependsOn(BookModule).aggregate(BookModule)
+lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala).aggregate(BookModule).dependsOn(BookModule)
 
 scalaVersion := "2.11.7"
 
@@ -14,9 +15,8 @@ libraryDependencies ++= Seq(
 
 routesGenerator := InjectedRoutesGenerator
 
-testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-results")
+//testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-results")
 
-//unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
-//coverageEnabled := true
+//javaOptions in Test += "-Dconfig.file=conf/application.test.conf"
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"

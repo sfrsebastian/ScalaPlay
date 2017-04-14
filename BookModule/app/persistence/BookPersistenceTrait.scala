@@ -1,6 +1,6 @@
 package persistence.bookModule
 
-import common.traits.app.CrudPersistence
+import common.traits.layers.CrudPersistence
 import models.bookModule.{Book, Books}
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep

@@ -9,19 +9,16 @@ import models.bookModule.{Book, Books}
 
 object Global extends GlobalSettings{
 
-  val db = Database.forConfig("PostgresDB")
-  val dbTest = Database.forConfig("PostgresDBTest")
+  val db = Database.forConfig("Database")
   val books = TableQuery[Books]
   val tables = List(books)
 
   override def onStart(app: Application) {
     if(app.configuration.getBoolean("dropCreate").getOrElse(false)){
       dropCreate(db)
-      dropCreate(dbTest)
     }
     else{
       create(db)
-      create(dbTest)
     }
   }
 

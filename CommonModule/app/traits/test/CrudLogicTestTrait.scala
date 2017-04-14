@@ -1,6 +1,6 @@
 package common.traits.test
 
-import common.traits.app.{CrudLogic, CrudPersistence}
+import common.traits.layers.{CrudLogic, CrudPersistence}
 import common.traits.model.{Entity, Row}
 import org.mockito.ArgumentMatchers.{any, anyInt}
 import org.mockito.Mockito.when
