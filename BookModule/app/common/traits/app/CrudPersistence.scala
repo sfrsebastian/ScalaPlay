@@ -20,14 +20,14 @@ trait CrudPersistence[T, K <: Entity[T]] extends DatabaseProfile{
   def updateTransform(element:T): Product
 
   def getAll : Future[Seq[T]] = {
-    db.run(table.result).map(_ match {
-      case null => List()
-      case x : Seq[T] => x
-    })
+    getAll(table.sortBy(_.id.asc.nullsLast))
   }
 
   def getAll(query: Query[K, T, Seq]):Future[Seq[T]] = {
-    db.run(query.result)
+    db.run(query.result).map(_ match {
+      case null => List()
+      case x : Seq[T] => x
+    })
   }
 
   def get(id: Int): Future[Option[T]] = {
