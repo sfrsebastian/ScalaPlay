@@ -1,9 +1,9 @@
 import common.traits.app.CrudPersistence
-import common.traits.test.PersistenceTestTrait
+import common.traits.test.CrudPersistenceTestTrait
 import models.bookModule.{Book, Books}
 import persistence.bookModule.BookPersistenceTesting
 
-class BookPersistenceTest extends PersistenceTestTrait[Book, Books]{
+class BookPersistenceTest extends CrudPersistenceTestTrait[Book, Books]{
 
   override var persistence: CrudPersistence[Book, Books] = new BookPersistenceTesting
   override var seedCollection: Seq[Book] = Nil
