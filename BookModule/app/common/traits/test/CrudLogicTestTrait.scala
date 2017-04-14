@@ -33,8 +33,8 @@ trait CrudLogicTestTrait[T<:Row, K<:Entity[T], L<:CrudLogic[T,K], P<:CrudPersist
         when(persistenceMock.get(null)) thenReturn Future(None)
         when(persistenceMock.create(any())) thenReturn Future(Some(newObject))
         whenReady(logic.create(newObject)) {
-          case Some(element) => assertByProperties(element, newObject)
           case None => fail("Se deberia retornar el objeto creado")
+          case Some(element) => assertByProperties(element, newObject)
         }
       }
     }
@@ -47,8 +47,8 @@ trait CrudLogicTestTrait[T<:Row, K<:Entity[T], L<:CrudLogic[T,K], P<:CrudPersist
         val dbObject = generatePojo
         when(persistenceMock.get(anyInt())) thenReturn Future(Some(dbObject))
         whenReady(logic.get(id)){
-          case Some(element) => assert(element == dbObject)
           case None => fail("El objeto buscado deberia encontrarse")
+          case Some(element) => assert(element == dbObject)
         }
       }
     }
@@ -60,8 +60,8 @@ trait CrudLogicTestTrait[T<:Row, K<:Entity[T], L<:CrudLogic[T,K], P<:CrudPersist
         val mockCollection = (0 to 20).map(_ => generatePojo)
         when(persistenceMock.getAll) thenReturn Future(mockCollection)
         whenReady(logic.getAll) {
-          case elements => assert(elements == mockCollection, "Los objetos recibidos deben ser los dados por la base de datos")
           case Nil => fail("La coleccion no deberia ser vacia")
+          case elements => assert(elements == mockCollection, "Los objetos recibidos deben ser los dados por la base de datos")
         }
       }
     }
@@ -74,8 +74,8 @@ trait CrudLogicTestTrait[T<:Row, K<:Entity[T], L<:CrudLogic[T,K], P<:CrudPersist
         val id = Random.nextInt(20)
         when(persistenceMock.update(anyInt(), any())) thenReturn Future(Some(toUpdate))
         whenReady(logic.update(id, toUpdate)) {
-          case Some(element) => element == toUpdate
           case None => fail("Se debe recibir el objeto actualizado")
+          case Some(element) => element == toUpdate
         }
       }
     }
@@ -88,8 +88,8 @@ trait CrudLogicTestTrait[T<:Row, K<:Entity[T], L<:CrudLogic[T,K], P<:CrudPersist
         val id = Random.nextInt(20)
         when(persistenceMock.delete(anyInt())) thenReturn Future(Some(toDelete))
         whenReady(logic.delete(id)) {
-          case Some(element) => element == toDelete
           case None => fail("Se debe recibir el objeto eliminado")
+          case Some(element) => element == toDelete
         }
       }
     }

@@ -22,7 +22,7 @@ trait CrudController[T, K <: Entity[T]] extends Controller {
 
   def get(id:Int) = Action.async{
     logic.get(id).map(_ match {
-      case None => BadRequest("El elemento no existe")
+      case None => BadRequest("El recurso no existe")
       case Some(elemento) => Ok(Json.toJson(elemento))
     })
   }
@@ -32,7 +32,7 @@ trait CrudController[T, K <: Entity[T]] extends Controller {
       case Some(x) => {
         logic.create(x).map(_ match{
           case Some(y) => Created(Json.toJson(y))
-          case None => BadRequest("El elemento no pudo ser creado")
+          case None => BadRequest("El recurso no pudo ser creado")
         })
       }
       case None => Future(BadRequest("Error en formato de contenido"))
@@ -44,7 +44,7 @@ trait CrudController[T, K <: Entity[T]] extends Controller {
       case Some(x) => {
         logic.update(id, x).map(_ match{
           case Some(elemento) => Ok(Json.toJson(elemento))
-          case None => BadRequest("El elemento no pudo ser actualizado")
+          case None => BadRequest("El recurso no pudo ser actualizado")
         })
       }
       case None => Future(BadRequest("Error en formato de contenido"))
@@ -56,7 +56,7 @@ trait CrudController[T, K <: Entity[T]] extends Controller {
       case Some(x) => {
         Ok(Json.toJson(x))
       }
-      case None => BadRequest("El elemento con id dado no existe")
+      case None => BadRequest("El recurso con id dado no existe")
     })
   }
 }

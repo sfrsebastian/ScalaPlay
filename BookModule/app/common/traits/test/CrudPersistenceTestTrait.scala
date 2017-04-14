@@ -46,24 +46,24 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
       "Los campos del objeto persistido deben ser iguales que los del objeto a crear" in {
         val newObject = generatePojo
         whenReady(persistence.create(newObject)) {
+          case None => fail()
           case Some(element) =>
             assert(element.id == seedCollection.length + 1, "El id debe incrementar en 1")
             assertByProperties(newObject, element)
-          case None => fail()
         }
       }
 
       "El objeto creado debe existir en la base de datos" in {
         val newObject = generatePojo
         whenReady(persistence.create(newObject)) {
+          case None => fail()
           case Some(element) =>
             whenReady(persistence.db.run(persistence.table.filter(_.id === element.id).result.headOption)){
+              case None => fail()
               case Some(queried) =>
                 assert(element.id == seedCollection.length + 1, "El id debe incrementar en 1")
                 assertByProperties(newObject, queried)
-              case None => fail()
             }
-          case None => fail()
         }
       }
     }
@@ -75,8 +75,8 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
         val id = Random.nextInt(20)
         val existingObject = seedCollection(id)
         whenReady(persistence.get(id + 1)){
-          case Some(element) => assertByProperties(element, existingObject)
           case None => fail("El objeto buscado deberia encontrarse")
+          case Some(element) => assertByProperties(element, existingObject)
         }
       }
 
@@ -85,8 +85,8 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
         val existingObject = seedCollection(id)
         val query = persistence.table.filter(_.name === existingObject.name)
         whenReady(persistence.get(query)){
-          case Some(element) => assert(element.name == existingObject.name, "El nombre deberia ser el mismo")
           case None => fail("El objeto buscado deberia encontrarse")
+          case Some(element) => assert(element.name == existingObject.name, "El nombre deberia ser el mismo")
         }
       }
     }
@@ -96,8 +96,8 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
     "Al solicitar multiples objetos" must {
       "Solicitar todos: La longitud de la lista de objetos recibida debe ser la misma que la de objetos semilla" in {
         whenReady(persistence.getAll){
-          case elements => assert(elements.length == seedCollection.length, "La cantidad de objetos recibida debe ser la misma que los objetos semilla")
           case Nil => fail("La coleccion no deberia ser vacia")
+          case elements => assert(elements.length == seedCollection.length, "La cantidad de objetos recibida debe ser la misma que los objetos semilla")
         }
       }
 
@@ -106,8 +106,8 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
         val existingObject = seedCollection(id)
         val query = persistence.table.filter(_.name === existingObject.name)
         whenReady(persistence.getAll(query)){
-          case elements => assert(elements.length == 1, "La cantidad de objetos recibidos debe ser 1")
           case Nil => fail("La coleccion no deberia ser vacia")
+          case elements => assert(elements.length == 1, "La cantidad de objetos recibidos debe ser 1")
         }
       }
 
@@ -123,10 +123,10 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
         val toUpdate = generatePojo
         val id = Random.nextInt(20)
         whenReady(persistence.update(id + 1, toUpdate)) {
+          case None => fail("Se deberia obtener el objeto actualizado")
           case Some(element) =>
             assert(element.id == id+1, "El id deberia ser el mismo")
             assertByProperties(element, toUpdate)
-          case None => fail("Se deberia obtener el objeto actualizado")
         }
       }
 
@@ -143,12 +143,12 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
         val toUpdate = generatePojo
         val id = Random.nextInt(20)
         whenReady(persistence.update(id + 1, toUpdate)) {
+          case None => fail("El objeto deberia actualizarse")
           case Some(_) =>
             whenReady(persistence.db.run(persistence.table.filter(_.id === (id + 1)).result.headOption)){
               case Some(queried) => assertByProperties(toUpdate, queried)
               case None => fail("El elemento no fue encontrado en la base de datos")
             }
-          case None => fail("El objeto deberia actualizarse")
         }
       }
     }
@@ -160,10 +160,10 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
         val id = Random.nextInt(20)
         val toDelete = seedCollection(id)
         whenReady(persistence.delete(id + 1)) {
+          case None => fail("Se deberia obtener el objeto eliminado")
           case Some(element) =>
             assert(element.id == id + 1, "El id deberia ser el mismo")
             assertByProperties(toDelete, element)
-          case None => fail("Se deberia obtener el objeto eliminado")
         }
       }
 
@@ -178,12 +178,12 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
       "El objeto no deberia existir en la base de datos despues de eliminado" in {
         val id = Random.nextInt(20)
         whenReady(persistence.delete(id + 1)) {
+          case None => fail("Se deberia obtener el objeto eliminado")
           case Some(_) =>
             whenReady(persistence.db.run(persistence.table.filter(_.id === (id + 1)).result.headOption)){
               case Some(_) => fail("No se deberia encontrar el elemento eliminado")
               case None => succeed
             }
-          case None => fail("Se deberia obtener el objeto eliminado")
         }
       }
     }
