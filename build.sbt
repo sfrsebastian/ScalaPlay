@@ -9,14 +9,6 @@ lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala).aggregate
 
 scalaVersion := "2.11.7"
 
-libraryDependencies ++= Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0"
-)
-
 routesGenerator := InjectedRoutesGenerator
-
-//testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-results")
-
-//javaOptions in Test += "-Dconfig.file=conf/application.test.conf"
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"

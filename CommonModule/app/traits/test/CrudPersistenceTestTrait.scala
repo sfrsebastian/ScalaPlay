@@ -1,16 +1,12 @@
 package common.traits.test
 
-import akka.stream.Materializer
 import common.DatabaseOperations
 import common.traits.layers.CrudPersistence
 import common.traits.model.{Entity, Row}
-import org.junit.runner.RunWith
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play._
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import slick.jdbc.PostgresProfile.api._
 import uk.co.jemos.podam.api.PodamFactoryImpl
 

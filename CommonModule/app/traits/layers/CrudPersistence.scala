@@ -11,7 +11,6 @@ import scala.concurrent.Future
   * Created by sfrsebastian on 4/10/17.
   */
 trait CrudPersistence[T, K <: Entity[T]]{
-
   def db:Database = Database.forConfig("Database")
 
   var table:TableQuery[K]
@@ -25,10 +24,10 @@ trait CrudPersistence[T, K <: Entity[T]]{
   }
 
   def getAll(query: Query[K, T, Seq]):Future[Seq[T]] = {
-    db.run(query.result).map(_ match {
+    db.run(query.result).map {
       case null => List()
-      case x : Seq[T] => x
-    })
+      case x: Seq[T] => x
+    }
   }
 
   def get(id: Int): Future[Option[T]] = {
@@ -40,7 +39,7 @@ trait CrudPersistence[T, K <: Entity[T]]{
   }
 
   def create(element:T): Future[Option[T]] = {
-    db.run(((table returning table) += (element)).map(Some(_)))
+    db.run(((table returning table) += element).map(Some(_)))
   }
 
   def update(id: Int, toUpdate: T) : Future[Option[T]]

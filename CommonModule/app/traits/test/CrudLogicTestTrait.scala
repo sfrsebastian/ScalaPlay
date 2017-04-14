@@ -1,7 +1,8 @@
-package common.traits.test
+package traits.test
 
 import common.traits.layers.{CrudLogic, CrudPersistence}
 import common.traits.model.{Entity, Row}
+import common.traits.test.CrudTest
 import org.mockito.ArgumentMatchers.{any, anyInt}
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
@@ -10,6 +11,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import uk.co.jemos.podam.api.PodamFactoryImpl
 import scala.concurrent.ExecutionContext.Implicits.global
+
 import scala.concurrent.Future
 import scala.util.Random
 
