@@ -1,0 +1,47 @@
+package common.auth.logic
+
+import javax.inject.Inject
+
+import common.auth.models.Profile
+
+import scala.concurrent.Future
+import scala.language.postfixOps
+import play.api.Configuration
+import play.api.libs.concurrent.Execution.Implicits._
+import play.api.i18n.Messages
+import play.api.libs.mailer._
+
+class Mailer @Inject() (configuration:Configuration, mailer:MailerClient) {
+  val from = configuration.getString("mail.from").get
+  val replyTo = configuration.getString("mail.reply")
+
+  def sendEmailAsync(recipients:String*)(subject:String, bodyHtml:Option[String], bodyText:Option[String]) = {
+    Future {
+      sendEmail(recipients:_*)(subject, bodyHtml, bodyText)
+    } recover {
+      case e => play.api.Logger.error("error sending email", e)
+    }
+  }
+
+  def sendEmail(recipients:String*)(subject:String, bodyHtml:Option[String], bodyText:Option[String]) {
+    val email = Email(subject = subject, from = from, to = recipients, bodyHtml = bodyHtml, bodyText = bodyText, replyTo = replyTo)
+    mailer.send(email)
+    ()
+  }
+
+  def welcome(profile:Profile, link:String)(implicit messages:Messages) = {
+    sendEmailAsync(profile.email.get)(
+      subject = Messages("mail.welcome.subject"),
+      bodyHtml = Some("Hola " + profile.name),
+      bodyText = Some("Este es el correo de bienvenida click en este enlace " + link)
+    )
+  }
+
+  def resetPassword(email:String, link:String)(implicit messages:Messages) = {
+    sendEmailAsync(email)(
+      subject = Messages("mail.reset.subject"),
+      bodyHtml = Some("Hola password reset"),
+      bodyText = Some("Este es el correo de reseteo de contraseña click en este enlace " + link)
+    )
+  }
+}

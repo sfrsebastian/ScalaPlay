@@ -1,0 +1,25 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Map static resources from the /public folder to the /assets URL path
+
+GET     /signup                controllers.common.auth.AuthenticationController.startSignUp
+POST    /signup                controllers.common.auth.AuthenticationController.handleStartSignUp
+GET     /signup/:token         controllers.common.auth.AuthenticationController.signUp(token:String)
+
+GET     /signin                controllers.common.auth.AuthenticationController.signIn
+POST    /authenticate          controllers.common.auth.AuthenticationController.authenticate
+#GET     /signout               controllers.common.auth.AuthenticationController.signOut
+#
+#GET     /reset                 controllers.common.auth.AuthenticationController.startResetPassword
+#POST    /reset                 controllers.common.auth.AuthenticationController.handleStartResetPassword
+#GET     /reset/:token          controllers.common.auth.AuthenticationController.resetPassword(token:String)
+#POST    /reset/:token          controllers.common.auth.AuthenticationController.handleResetPassword(token:String)
+
+GET     /index                 controllers.common.auth.AuthenticationController.index
+
+GET     /profile               controllers.common.auth.AuthenticationController.profile
+
+#GET     /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)
+#GET     /webjars/*file         controllers.WebJarAssets.at(file)

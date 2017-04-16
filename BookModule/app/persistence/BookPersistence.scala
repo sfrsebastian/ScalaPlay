@@ -1,3 +1,5 @@
 package persistence.bookModule
 
-class BookPersistence extends BookPersistenceTrait
+class BookPersistence extends BookPersistenceTrait{
+
+}

@@ -4,7 +4,7 @@ import org.mockito.Mockito._
 import persistence.bookModule
 import persistence.bookModule.BookPersistence
 import slick.jdbc.PostgresProfile.api._
-import traits.test.CrudLogicTestTrait
+import crud.test.CrudLogicTestTrait
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

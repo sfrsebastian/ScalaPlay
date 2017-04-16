@@ -1,23 +1,40 @@
 package common.traits.layers
 
+import com.google.inject.Inject
+import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
+import com.mohiva.play.silhouette.api.{Environment, Silhouette}
+import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
+import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
+import common.auth.models.User
+import common.settings.auth.MyEnv
 import common.traits.model.Entity
+import play.Environment
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, Controller}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, LogoutEvent, SignUpEvent, Silhouette}
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
+import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordHasherRegistry}
+import com.mohiva.play.silhouette.api.exceptions.ProviderException
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
+import com.mohiva.play.silhouette.impl.exceptions.{IdentityNotFoundException, InvalidPasswordException}
+import com.mohiva.play.silhouette.api.Authenticator.Implicits._
 import scala.concurrent.Future
 
 /**
   * Created by sfrsebastian on 4/12/17.
   */
-trait CrudController[T, K <: Entity[T]] extends Controller {
+abstract class CrudController[T, K <: Entity[T]] extends Controller with AuthController{
 
   val logic:CrudLogic[T, K]
 
   implicit val format:Format[T]
 
   def getAll = Action.async{
-    logic.getAll.map(elements => Ok(Json.toJson(elements)))
+      logic.getAll.map(elements => Ok(Json.toJson(elements)))
   }
 
   def get(id:Int) = Action.async{

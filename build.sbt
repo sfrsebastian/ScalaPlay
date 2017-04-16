@@ -3,9 +3,10 @@ name := "BookStore"
 version := "1.0"
 
 lazy val CommonModule = (project in file("CommonModule")).enablePlugins(PlayScala)
-lazy val BookModule = (project in file("BookModule")).enablePlugins(PlayScala, SonarRunnerPlugin).aggregate(CommonModule).dependsOn(CommonModule)
 
-lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala).aggregate(BookModule).dependsOn(BookModule)
+lazy val BookModule = (project in file("BookModule")).enablePlugins(PlayScala).dependsOn(CommonModule)
+
+lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala, SonarRunnerPlugin).aggregate(CommonModule, BookModule).dependsOn(CommonModule, BookModule)
 
 scalaVersion := "2.11.7"
 

@@ -1,5 +1,5 @@
+import auth.controllers.BookController
 import common.traits.test.CrudControllerTestTrait
-import controllers.bookModule.BookController
 import logic.bookModule.BookLogic
 import models.bookModule.{Book, Books}
 import play.api.libs.json.Json

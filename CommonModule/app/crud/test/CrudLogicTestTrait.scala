@@ -1,4 +1,4 @@
-package traits.test
+package crud.test
 
 import common.traits.layers.{CrudLogic, CrudPersistence}
 import common.traits.model.{Entity, Row}

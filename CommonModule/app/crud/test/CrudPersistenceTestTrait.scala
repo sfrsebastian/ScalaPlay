@@ -1,8 +1,8 @@
 package common.traits.test
 
-import common.DatabaseOperations
 import common.traits.layers.CrudPersistence
 import common.traits.model.{Entity, Row}
+import common.utilities.DatabaseOperations
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
@@ -21,11 +21,11 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
   var seedCollection:Seq[T]
 
   override def beforeAll(): Unit = {
-    DatabaseOperations.createIfNotExist[T, K](persistence.db, Seq(persistence.table))
+    DatabaseOperations.createIfNotExist[T,K](persistence.db, persistence.table)
   }
 
   override def beforeEach(){
-    DatabaseOperations.DropCreate[T, K](persistence.db, Seq(persistence.table))
+    DatabaseOperations.DropCreate[T,K](persistence.db, persistence.table)
     seedCollection = for {
       _ <- 0 to 19
     }yield generatePojo
@@ -33,7 +33,7 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
   }
 
   override def afterAll():Unit = {
-    DatabaseOperations.DropCreate[T, K](persistence.db, Seq(persistence.table))
+    DatabaseOperations.DropCreate[T,K](persistence.db, persistence.table)
   }
 
   def generatePojo:T
