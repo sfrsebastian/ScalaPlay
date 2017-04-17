@@ -1,9 +1,6 @@
 package common.auth.logic
 
 import javax.inject.Inject
-
-import common.auth.models.Profile
-
 import scala.concurrent.Future
 import scala.language.postfixOps
 import play.api.Configuration
@@ -29,10 +26,10 @@ class Mailer @Inject() (configuration:Configuration, mailer:MailerClient) {
     ()
   }
 
-  def welcome(profile:Profile, link:String)(implicit messages:Messages) = {
-    sendEmailAsync(profile.email.get)(
+  def welcome(fullName:String, email:String, link:String)(implicit messages:Messages) = {
+    sendEmailAsync(email)(
       subject = Messages("mail.welcome.subject"),
-      bodyHtml = Some("Hola " + profile.name),
+      bodyHtml = Some("Hola " + fullName),
       bodyText = Some("Este es el correo de bienvenida click en este enlace " + link)
     )
   }

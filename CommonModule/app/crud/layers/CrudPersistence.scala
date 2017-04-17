@@ -1,6 +1,6 @@
 package common.traits.layers
 
-import common.traits.model.Entity
+import common.traits.model.{Entity, Row}
 import play.api.libs.concurrent.Execution.Implicits._
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Query
@@ -15,7 +15,7 @@ trait CrudPersistence[T, K <: Entity[T]]{
 
   var table:TableQuery[K]
 
-  val updateProjection: K => Product
+  def updateProjection: K => Product
 
   def updateTransform(element:T): Product
 
@@ -38,8 +38,8 @@ trait CrudPersistence[T, K <: Entity[T]]{
     db.run(query.result).map(_.headOption)
   }
 
-  def create(element:T): Future[Option[T]] = {
-    db.run(((table returning table) += element).map(Some(_)))
+  def create(element:T): Future[T] = {
+    db.run(((table returning table) += element))
   }
 
   def update(id: Int, toUpdate: T) : Future[Option[T]]

@@ -32,8 +32,7 @@ trait CrudLogicTestTrait[T<:Row, K<:Entity[T], L<:CrudLogic[T,K], P<:CrudPersist
     "Al insertar un nuevo objeto" must {
       "Se deberia retornar el objeto creado en la base de datos" in {
         val newObject = generatePojo
-        when(persistenceMock.get(null)) thenReturn Future(None)
-        when(persistenceMock.create(any())) thenReturn Future(Some(newObject))
+        when(persistenceMock.create(any())) thenReturn Future(newObject)
         whenReady(logic.create(newObject)) {
           case None => fail("Se deberia retornar el objeto creado")
           case Some(element) => assertByProperties(element, newObject)

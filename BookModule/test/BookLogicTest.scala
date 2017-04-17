@@ -1,7 +1,6 @@
 import logic.bookModule.BookLogic
 import models.bookModule.{Book, Books}
 import org.mockito.Mockito._
-import persistence.bookModule
 import persistence.bookModule.BookPersistence
 import slick.jdbc.PostgresProfile.api._
 import crud.test.CrudLogicTestTrait
@@ -46,7 +45,7 @@ class BookLogicTest extends CrudLogicTestTrait[Book, Books, BookLogic, BookPersi
       "Se deberia retornar el libro creado si el ISBN dado no existe, los campos del libro retornado deben ser iguales que los del objeto creado" in {
         val newObject = generatePojo
         when(persistenceMock.get(null)) thenReturn Future(None)
-        when(persistenceMock.create(newObject)) thenReturn Future(Some(newObject))
+        when(persistenceMock.create(newObject)) thenReturn Future(newObject)
         whenReady(logic.create(newObject)) {
           case Some(element) => assertByProperties(element, newObject)
           case None => fail("Se deberia retorna el libro creado")

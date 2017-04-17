@@ -46,9 +46,7 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
     "Al insertar un nuevo objeto" must {
       "Los campos del objeto persistido deben ser iguales que los del objeto a crear" in {
         val newObject = generatePojo
-        whenReady(persistence.create(newObject)) {
-          case None => fail()
-          case Some(element) =>
+        whenReady(persistence.create(newObject)) {element =>
             assert(element.id == seedCollection.length + 1, "El id debe incrementar en 1")
             assertByProperties(newObject, element)
         }
@@ -56,15 +54,13 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
 
       "El objeto creado debe existir en la base de datos" in {
         val newObject = generatePojo
-        whenReady(persistence.create(newObject)) {
-          case None => fail()
-          case Some(element) =>
-            whenReady(persistence.db.run(persistence.table.filter(_.id === element.id).result.headOption)){
-              case None => fail()
-              case Some(queried) =>
-                assert(element.id == seedCollection.length + 1, "El id debe incrementar en 1")
-                assertByProperties(newObject, queried)
-            }
+        whenReady(persistence.create(newObject)) {element =>
+          whenReady(persistence.db.run(persistence.table.filter(_.id === element.id).result.headOption)){
+            case None => fail()
+            case Some(queried) =>
+              assert(element.id == seedCollection.length + 1, "El id debe incrementar en 1")
+              assertByProperties(newObject, queried)
+          }
         }
       }
     }

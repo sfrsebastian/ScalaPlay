@@ -1,8 +1,8 @@
 package common.traits.layers
 
 import common.traits.model.Entity
-
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait CrudLogic[T, K <: Entity[T]] {
   val persistence:CrudPersistence[T, K]
@@ -16,7 +16,7 @@ trait CrudLogic[T, K <: Entity[T]] {
   }
 
   def create(element:T): Future[Option[T]] = {
-    persistence.create(element)
+    persistence.create(element).map(Some(_))
   }
 
   def update(id: Int, toUpdate: T) : Future[Option[T]] = {

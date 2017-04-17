@@ -27,14 +27,14 @@ import scala.concurrent.Future
 /**
   * Created by sfrsebastian on 4/12/17.
   */
-abstract class CrudController[T, K <: Entity[T]] extends Controller with AuthController{
+abstract class CrudController[T, K <: Entity[T]] extends Controller{
 
   val logic:CrudLogic[T, K]
 
   implicit val format:Format[T]
 
   def getAll = Action.async{
-      logic.getAll.map(elements => Ok(Json.toJson(elements)))
+    logic.getAll.map(elements => Ok(Json.toJson(elements)))
   }
 
   def get(id:Int) = Action.async{
@@ -46,11 +46,9 @@ abstract class CrudController[T, K <: Entity[T]] extends Controller with AuthCon
 
   def create() = Action.async(parse.json){ request =>
     request.body.validateOpt[T].getOrElse(None) match {
-      case Some(x) => {
-        logic.create(x).map(_ match{
-          case Some(y) => Created(Json.toJson(y))
-          case None => BadRequest("El recurso no pudo ser creado")
-        })
+      case Some(x) => logic.create(x).map{
+        case Some(element) => Created(Json.toJson(element))
+        case None => BadRequest("El recurso no pudo ser creado")
       }
       case None => Future(BadRequest("Error en formato de contenido"))
     }
