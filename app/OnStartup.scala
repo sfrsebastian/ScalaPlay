@@ -1,11 +1,11 @@
 package settings
 
 import com.google.inject.Inject
-import common.auth.models.{Token, Tokens, User, Users}
-import common.utilities.DatabaseOperations
+import auth.models.{Token, Tokens, User, Users}
+import crud.DatabaseOperations
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
-import models.bookModule.{Book, Books}
+import book.models.{Book, Books}
 import play.api.Configuration
 
 class OnStartup @Inject()(configuration:Configuration) {

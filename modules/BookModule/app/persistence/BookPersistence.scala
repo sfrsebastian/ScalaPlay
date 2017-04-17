@@ -1,0 +1,3 @@
+package book.persistence
+
+class BookPersistence extends BookPersistenceTrait

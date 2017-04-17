@@ -2,11 +2,13 @@ name := "BookStore"
 
 version := "1.0"
 
-lazy val CommonModule = (project in file("CommonModule")).enablePlugins(PlayScala)
+lazy val CrudModule = (project in file("modules/CrudModule"))
 
-lazy val BookModule = (project in file("BookModule")).enablePlugins(PlayScala).dependsOn(CommonModule)
+lazy val AuthModule = (project in file("modules/AuthModule")).enablePlugins(PlayScala).dependsOn(CrudModule)
 
-lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala, SonarRunnerPlugin).aggregate(CommonModule, BookModule).dependsOn(CommonModule, BookModule)
+lazy val BookModule = (project in file("modules/BookModule")).enablePlugins(PlayScala).dependsOn(AuthModule)
+
+lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala, SonarRunnerPlugin).aggregate(AuthModule, BookModule).dependsOn(AuthModule, BookModule)
 
 scalaVersion := "2.11.7"
 
