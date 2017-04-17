@@ -2,7 +2,6 @@ package common.auth.models
 
 import java.sql.Timestamp
 import java.util.{Calendar, UUID}
-
 import common.traits.model.Entity
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Tag

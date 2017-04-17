@@ -3,7 +3,6 @@ package common.utilities
 import common.traits.model.Entity
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.meta.MTable
-
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration

@@ -4,14 +4,11 @@ import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
 import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import common.auth.models.User
 import common.settings.auth.MyEnv
-import play.api.i18n.I18nSupport
-import play.api.mvc.Controller
-import play.mvc.Security
 
 /**
   * Created by sfrsebastian on 4/15/17.
   */
-trait AuthController extends I18nSupport {
+trait AuthController{
   def silhouette: Silhouette[MyEnv]
   def env: Environment[MyEnv] = silhouette.env
 

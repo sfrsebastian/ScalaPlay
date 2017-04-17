@@ -1,7 +1,6 @@
 package common.auth.logic
 
 import java.util.UUID
-
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.services.IdentityService

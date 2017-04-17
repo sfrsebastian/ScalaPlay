@@ -1,7 +1,6 @@
 package common.auth.models
 
 import java.util.UUID
-
 import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import common.traits.model.{Entity, Row}
@@ -23,6 +22,13 @@ case class User(
   passwordInfo:PasswordInfo
 ) extends Row with Identity{
   def fullName = name + " " + lastName
+  def toMin = UserMin(name, lastName, email)
+}
+
+case class UserMin(name:String, lastName:String, email:String)
+
+object UserMin{
+  implicit val userMinJsonFormat = Json.format[UserMin]
 }
 
 object User{

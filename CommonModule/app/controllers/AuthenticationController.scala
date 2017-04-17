@@ -1,5 +1,6 @@
 package controllers.common.auth
 
+
 import java.util.UUID
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
@@ -12,9 +13,8 @@ import common.auth.logic.{AuthLogic, Mailer}
 import common.auth.models._
 import common.settings.auth.MyEnv
 import common.traits.layers.AuthController
-import common.auth.models.{SignInForm, SignUpForm}
+import common.auth.models.{SignInForm, SignUpForm, ResetPasswordFormEmail, ResetPasswordFormPassword}
 import play.api.Configuration
-import play.api.i18n.MessagesApi
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, Controller}
 import net.ceedubs.ficus.Ficus._
@@ -28,7 +28,6 @@ import common.auth.logic.Implicits.SumDateTime
 object AuthenticationController
 class AuthenticationController @Inject() (
                                            override val silhouette: Silhouette[MyEnv],
-                                           override val messagesApi: MessagesApi,
                                            env:Environment[MyEnv],
                                            authInfoRepository: AuthInfoRepository,
                                            credentialsProvider: CredentialsProvider,
@@ -40,6 +39,8 @@ class AuthenticationController @Inject() (
 
   implicit val signUpFormat:Format[SignUpForm] = Json.format[SignUpForm]
   implicit val signInFormat:Format[SignInForm] = Json.format[SignInForm]
+  implicit val passwordResetPFormat:Format[ResetPasswordFormPassword] = Json.format[ResetPasswordFormPassword]
+  implicit val passwordResetEFormat:Format[ResetPasswordFormEmail] = Json.format[ResetPasswordFormEmail]
 
   def signUp(redirect:String) = Action.async(parse.json){implicit request =>
     request.body.validateOpt[SignUpForm].getOrElse(None) match {
@@ -112,6 +113,46 @@ class AuthenticationController @Inject() (
     env.authenticatorService.discard(request.authenticator, Redirect(redirect))
   }
 
+  def sendResetPassword(redirect:String) = Action.async(parse.json) { implicit request =>
+    request.body.validateOpt[ResetPasswordFormEmail].getOrElse(None) match {
+      case None => Future(BadRequest("Error en formato de formulario"))
+      case Some(form) => authLogic.retrieve(LoginInfo(CredentialsProvider.ID, form.email)).flatMap {
+        case None => Future(NotFound("Error validando solicitud, contacta al administrador"))
+        case Some(user) => for {
+          token <- authLogic.create(Token.create(user.id, user.email, isSignUp = false))
+        } yield {
+          mailer.resetPassword(user.email, link = redirect + "?tokenId=" + token.token.toString)
+          Ok("Las instrucciones de cambio de contraseña han sido enviadas al correo del usuario")
+        }
+      }
+    }
+  }
+
+  def resetPassword(tokenId:String) = Action.async(parse.json){implicit request =>
+    request.body.validateOpt[ResetPasswordFormPassword].getOrElse(None) match {
+      case None => Future(BadRequest("Error en formato de formulario"))
+      case Some(form) => {
+        val tokenUUID = UUID.fromString(tokenId)
+        authLogic.getToken(tokenUUID).flatMap {
+          case None => Future(NotFound("Error validando solicitud, contactar al administrador"))
+          case Some(token) if !token.isSignUp && !token.isExpired => {
+            val loginInfo = LoginInfo(CredentialsProvider.ID, token.email)
+            for {
+              _ <- authInfoRepository.save(loginInfo, passwordHasher.hash(form.password))
+              authenticator <- env.authenticatorService.create(loginInfo)
+              value <- env.authenticatorService.init(authenticator)
+              _ <- authLogic.deleteToken(token.id)
+              result <- env.authenticatorService.embed(value, Ok("Cambio de contraseña exitoso"))
+            } yield result
+          }
+          case Some(token) => for {
+            _ <- authLogic.deleteToken(token.id)
+          } yield NotFound("Solicitud de cambio de contraseña vencida, debes realizar una nueva solicitud")
+        }
+      }
+    }
+  }
+
   private def authenticatorWithRememberMe(authenticator: CookieAuthenticator, rememberMe: Boolean) = {
     if (rememberMe) {
       authenticator.copy(
@@ -132,42 +173,9 @@ class AuthenticationController @Inject() (
     )
   }
 
- /* def authenticate = Action.async { implicit request =>
-    AuthForms.signInForm.bindFromRequest.fold(
-      bogusForm => Future.successful(BadRequest(views.html.auth.signIn(bogusForm))),
-      signInData => {
-        val credentials = Credentials(signInData.email, signInData.password)
-        credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
-          userLogic.retrieve(loginInfo).flatMap {
-            case None =>
-              Future.successful(Redirect(routes.AuthenticationController.signIn()).flashing("error" -> Messages("error.noUser")))
-            case Some(user) if !user.profileFor(loginInfo).map(_.confirmed).getOrElse(false) =>
-              Future.successful(Redirect(routes.AuthenticationController.signIn).flashing("error" -> Messages("error.unregistered", signInData.email)))
-            case Some(_) => for {
-              authenticator <- env.authenticatorService.create(loginInfo).map {
-                case authenticator if signInData.rememberMe =>
-                  val c = configuration.underlying
-                  authenticator.copy(
-                    expirationDateTime = new DateTime(),//+ c.as[FiniteDuration]("silhouette.authenticator.rememberMe.authenticatorExpiry"),
-                    idleTimeout = c.getAs[FiniteDuration]("silhouette.authenticator.rememberMe.authenticatorIdleTimeout"),
-                    cookieMaxAge = c.getAs[FiniteDuration]("silhouette.authenticator.rememberMe.cookieMaxAge")
-                  )
-                case authenticator => authenticator
-              }
-              value <- env.authenticatorService.init(authenticator)
-              result <- env.authenticatorService.embed(value, Redirect(routes.AuthenticationController.index()))
-            } yield result
-          }
-        }.recover {
-          case e:ProviderException => Redirect(routes.AuthenticationController.signIn()).flashing("error" -> Messages("error.invalidCredentials"))
-        }
-      }
-    )
-  }*/
-
   def index = UserAwareAction.async { implicit request =>
     request.identity match{
-      case Some(user) => Future(Ok(Json.toJson(user)))
+      case Some(user) => Future(Ok(Json.toJson(user.toMin)))
       case None => Future(Ok("No hay usuario autenticado"))
     }
   }

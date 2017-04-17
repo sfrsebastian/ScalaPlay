@@ -1,14 +1,12 @@
 package common.auth.persistence
 
 import java.util.UUID
-
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import common.auth.models.{User, Users}
 import common.traits.layers.CrudPersistence
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

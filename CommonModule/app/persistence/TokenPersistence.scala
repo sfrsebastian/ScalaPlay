@@ -2,12 +2,10 @@ package common.auth.persistence
 
 import java.sql.Timestamp
 import java.util.UUID
-
 import common.auth.models.{Token, Tokens}
 import common.traits.layers.CrudPersistence
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

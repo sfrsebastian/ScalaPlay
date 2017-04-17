@@ -7,20 +7,12 @@
 POST    /signup                 controllers.common.auth.AuthenticationController.signUp(redirect:String)
 POST    /confirm/:token         controllers.common.auth.AuthenticationController.confirmAccount(token:String, redirect:String)
 
-POST    /signin                controllers.common.auth.AuthenticationController.signIn(redirect:String)
+POST    /signin                 controllers.common.auth.AuthenticationController.signIn(redirect:String)
 
 POST    /signout                controllers.common.auth.AuthenticationController.signOut(redirect:String)
-#POST    /authenticate          controllers.common.auth.AuthenticationController.authenticate
-#GET     /signout               controllers.common.auth.AuthenticationController.signOut
-#
-#GET     /reset                 controllers.common.auth.AuthenticationController.startResetPassword
-#POST    /reset                 controllers.common.auth.AuthenticationController.handleStartResetPassword
-#GET     /reset/:token          controllers.common.auth.AuthenticationController.resetPassword(token:String)
-#POST    /reset/:token          controllers.common.auth.AuthenticationController.handleResetPassword(token:String)
+
+POST    /reset                  controllers.common.auth.AuthenticationController.sendResetPassword(redirect:String)
+
+POST    /reset/:token           controllers.common.auth.AuthenticationController.resetPassword(token:String)
 
 GET     /index                  controllers.common.auth.AuthenticationController.index
-
-GET     /profile                controllers.common.auth.AuthenticationController.profile
-
-#GET     /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)
-#GET     /webjars/*file         controllers.WebJarAssets.at(file)

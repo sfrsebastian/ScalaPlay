@@ -1,11 +1,9 @@
 package common.auth.persistence
 
 import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -33,9 +31,8 @@ class PasswordPersistence @Inject()(userPersistence:UserPersistenceTrait) extend
     add(loginInfo, authInfo)
   }
 
-  def save(loginInfo:LoginInfo, authInfo:PasswordInfo):Future[PasswordInfo] = {
-    println("Entra save de password Manager")
-    add(loginInfo, authInfo)
+  def save(loginInfo:LoginInfo, passwordInfo:PasswordInfo):Future[PasswordInfo] = {
+    add(loginInfo, passwordInfo)
   }
 
   def remove(loginInfo:LoginInfo):Future[Unit] = {

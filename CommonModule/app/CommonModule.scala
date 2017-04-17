@@ -21,7 +21,6 @@ import common.auth.persistence._
 import common.settings.auth.MyEnv
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 

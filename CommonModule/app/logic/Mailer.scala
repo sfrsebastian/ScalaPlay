@@ -5,7 +5,6 @@ import scala.concurrent.Future
 import scala.language.postfixOps
 import play.api.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.i18n.Messages
 import play.api.libs.mailer._
 
 class Mailer @Inject() (configuration:Configuration, mailer:MailerClient) {
@@ -26,17 +25,17 @@ class Mailer @Inject() (configuration:Configuration, mailer:MailerClient) {
     ()
   }
 
-  def welcome(fullName:String, email:String, link:String)(implicit messages:Messages) = {
+  def welcome(fullName:String, email:String, link:String) = {
     sendEmailAsync(email)(
-      subject = Messages("mail.welcome.subject"),
+      subject = "Encabezado",
       bodyHtml = Some("Hola " + fullName),
       bodyText = Some("Este es el correo de bienvenida click en este enlace " + link)
     )
   }
 
-  def resetPassword(email:String, link:String)(implicit messages:Messages) = {
+  def resetPassword(email:String, link:String) = {
     sendEmailAsync(email)(
-      subject = Messages("mail.reset.subject"),
+      subject = "Encabezado",
       bodyHtml = Some("Hola password reset"),
       bodyText = Some("Este es el correo de reseteo de contraseña click en este enlace " + link)
     )
