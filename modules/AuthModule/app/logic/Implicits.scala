@@ -6,7 +6,7 @@ import scala.concurrent.duration._
 
 object Implicits {
   implicit class SumDateTime(val dateTime: DateTime) extends AnyVal {
-    def +(duration: Duration): DateTime = {
+    def +(duration: FiniteDuration): DateTime = {
       dateTime.withDurationAdded(duration.toMillis, 1)
     }
   }

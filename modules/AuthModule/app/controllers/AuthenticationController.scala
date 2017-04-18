@@ -4,14 +4,14 @@ import java.util.UUID
 import auth.controllers.AuthController
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.api.{Environment, LoginInfo, Silhouette}
+import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordHasher, PasswordInfo}
-import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
+import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import auth.logic.{AuthLogic, Mailer}
 import auth.models._
-import auth.settings.MyEnv
+import auth.settings.AuthenticationEnvironment
 import auth.models.{ResetPasswordFormEmail, ResetPasswordFormPassword, SignInForm, SignUpForm}
 import play.api.Configuration
 import play.api.libs.json.{Format, Json}
@@ -28,8 +28,8 @@ import auth.logic.Implicits.SumDateTime
 
 object AuthenticationController
 class AuthenticationController @Inject() (
-                                           override val silhouette: Silhouette[MyEnv],
-                                           env:Environment[MyEnv],
+                                           override val silhouette: Silhouette[AuthenticationEnvironment],
+                                           env:Environment[AuthenticationEnvironment],
                                            authInfoRepository: AuthInfoRepository,
                                            credentialsProvider: CredentialsProvider,
                                            authLogic: AuthLogic,
@@ -55,8 +55,9 @@ class AuthenticationController @Inject() (
               _ <- authInfoRepository.add(loginInfo, passwordHasher.hash(form.password))
               token <- authLogic.create(Token.create(user.id, form.email, true))
             } yield {
+              println("mailer " + mailer)
               mailer.welcome(user.fullName, user.email,link = routes.AuthenticationController.confirmAccount(token.id.toString, redirect.toString).absoluteURL())
-              Ok("Usuario creado correctamente")
+              Ok("Usuario creado correctamente, se ha enviado un correo de confirmación")
             }
           }
         }
@@ -75,12 +76,13 @@ class AuthenticationController @Inject() (
           case Some(user) =>
             val loginInfo = LoginInfo(CredentialsProvider.ID, user.email)
             for {
-              authenticator <- env.authenticatorService.create(loginInfo)
-              value <- env.authenticatorService.init(authenticator)
               _ <- authLogic.confirm(loginInfo)
               _ <- authLogic.deleteToken(token.id)
-              result <- env.authenticatorService.embed(value, Redirect(redirect.toString))
-            } yield result
+              result <- Redirect(redirect.toString)
+            } yield {
+              silhouette.env.eventBus.publish(SignUpEvent(user, request))
+              result
+            }
         }
       case Some(token) =>
         authLogic.deleteToken(token.id)
@@ -88,7 +90,7 @@ class AuthenticationController @Inject() (
     }
   }
 
-  def signIn(redirect:String) = Action.async(parse.json) { implicit request =>
+  def signIn = Action.async(parse.json) { implicit request =>
     request.body.validateOpt[SignInForm].getOrElse(None) match {
       case None => Future(BadRequest("Error en formato de formulario"))
       case Some(form) => {
@@ -97,11 +99,13 @@ class AuthenticationController @Inject() (
           authLogic.retrieve(loginInfo).flatMap {
             case None => Future(InternalServerError("Error autenticando usuario, contacta al administrador"))
             case Some(user) if !user.confirmed => Future(BadRequest("El usuario debe confirmar su cuenta"))
-            case Some(_) => for {
+            case Some(user) => for {
               authenticator <- env.authenticatorService.create(loginInfo).map(authenticatorWithRememberMe(_, form.rememberMe))
               value <- env.authenticatorService.init(authenticator)
-              result <- env.authenticatorService.embed(value, Redirect(redirect))
-            } yield result
+            } yield {
+              silhouette.env.eventBus.publish(LoginEvent(user, request))
+              Ok(Json.obj("token"->value))
+            }
           }
         }.recover {
           case _:ProviderException => BadRequest("Usuario y/o contraseña invalidos")
@@ -110,8 +114,9 @@ class AuthenticationController @Inject() (
     }
   }
 
-  def signOut(redirect:String) = SecuredAction.async { implicit request =>
-    env.authenticatorService.discard(request.authenticator, Redirect(redirect))
+  def signOut = SecuredAction.async { implicit request =>
+    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
+    silhouette.env.authenticatorService.discard(request.authenticator, Ok)
   }
 
   def sendResetPassword(redirect:String) = Action.async(parse.json) { implicit request =>
@@ -154,23 +159,21 @@ class AuthenticationController @Inject() (
     }
   }
 
-  private def authenticatorWithRememberMe(authenticator: CookieAuthenticator, rememberMe: Boolean) = {
+  private def authenticatorWithRememberMe(authenticator: JWTAuthenticator, rememberMe: Boolean) = {
     if (rememberMe) {
       authenticator.copy(
         expirationDateTime = clock.now + rememberMeParams._1,
-        idleTimeout = rememberMeParams._2,
-        cookieMaxAge = rememberMeParams._3
+        idleTimeout = rememberMeParams._2
       )
     }
     else
       authenticator
   }
-  private lazy val rememberMeParams: (FiniteDuration, Option[FiniteDuration], Option[FiniteDuration]) = {
+  private lazy val rememberMeParams: (FiniteDuration, Option[FiniteDuration]) = {
     val cfg = configuration.getConfig("silhouette.authenticator.rememberMe").get.underlying
     (
       cfg.as[FiniteDuration]("authenticatorExpiry"),
-      cfg.getAs[FiniteDuration]("authenticatorIdleTimeout"),
-      cfg.getAs[FiniteDuration]("cookieMaxAge")
+      cfg.getAs[FiniteDuration]("authenticatorIdleTimeout")
     )
   }
 
@@ -179,9 +182,5 @@ class AuthenticationController @Inject() (
       case Some(user) => Future(Ok(Json.toJson(user.toMin)))
       case None => Future(Ok("No hay usuario autenticado"))
     }
-  }
-
-  def profile = SecuredAction { implicit request =>
-    Ok("Segura")
   }
 }

@@ -1,6 +1,6 @@
 package auth.models
 
-import auth.settings.MyEnv
+import auth.settings.AuthenticationEnvironment
 import com.mohiva.play.silhouette.api.Authorization
 import play.api.mvc.Request
 
@@ -15,8 +15,8 @@ import scala.concurrent.Future
   * Master service is always allowed.
   * Ex: WithService("serviceA", "serviceB") => only users with services "serviceA" OR "serviceB" (or "master") are allowed.
   */
-case class WithRole(anyOf: String*) extends Authorization[User, MyEnv#A] {
-  def isAuthorized[A](user: User, authenticator: MyEnv#A)(implicit r: Request[A]) = Future.successful {
+case class WithRole(anyOf: String*) extends Authorization[User, AuthenticationEnvironment#A] {
+  def isAuthorized[A](user: User, authenticator: AuthenticationEnvironment#A)(implicit r: Request[A]) = Future.successful {
     WithRole.isAuthorized(user, anyOf: _*)
   }
 }
@@ -30,8 +30,8 @@ object WithRole {
   * Master service is always allowed.
   * Ex: Restrict("serviceA", "serviceB") => only users with services "serviceA" AND "serviceB" (or "master") are allowed.
   */
-case class WithRoles(allOf: String*) extends Authorization[User, MyEnv#A] {
-  def isAuthorized[A](user: User, authenticator: MyEnv#A)(implicit r: Request[A]) = Future.successful {
+case class WithRoles(allOf: String*) extends Authorization[User, AuthenticationEnvironment#A] {
+  def isAuthorized[A](user: User, authenticator: AuthenticationEnvironment#A)(implicit r: Request[A]) = Future.successful {
     WithRoles.isAuthorized(user, allOf: _*)
   }
 }

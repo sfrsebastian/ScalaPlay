@@ -8,9 +8,9 @@ POST    /signup                 controllers.auth.AuthenticationController.signUp
 
 POST    /confirm/:token         controllers.auth.AuthenticationController.confirmAccount(token:String, redirect:String)
 
-POST    /signin                 controllers.auth.AuthenticationController.signIn(redirect:String)
+POST    /signin                 controllers.auth.AuthenticationController.signIn
 
-POST    /signout                controllers.auth.AuthenticationController.signOut(redirect:String)
+POST    /signout                controllers.auth.AuthenticationController.signOut
 
 POST    /reset                  controllers.auth.AuthenticationController.sendResetPassword(redirect:String)
 
