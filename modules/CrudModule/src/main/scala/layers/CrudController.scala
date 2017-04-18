@@ -15,8 +15,8 @@ trait CrudController[T, K <: Entity[T]] extends Controller{
 
   implicit val format:Format[T]
 
-  def getAll = Action.async{
-    logic.getAll.map(elements => Ok(Json.toJson(elements)))
+  def getAll(start:Option[Int], limit:Option[Int]) = Action.async{
+    logic.getAll(start.getOrElse(0), limit.getOrElse(100)).map(elements => Ok(Json.toJson(elements)))
   }
 
   def get(id:Int) = Action.async{

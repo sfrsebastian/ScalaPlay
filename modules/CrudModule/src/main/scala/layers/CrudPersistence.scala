@@ -18,12 +18,12 @@ trait CrudPersistence[T, K <: Entity[T]]{
 
   def updateTransform(element:T): Product
 
-  def getAll : Future[Seq[T]] = {
-    getAll(table.sortBy(_.id.asc.nullsLast))
+  def getAll(start:Int, limit: Int) : Future[Seq[T]] = {
+    getAll(table.sortBy(_.id.asc.nullsLast), start, limit)
   }
 
-  def getAll(query: Query[K, T, Seq]):Future[Seq[T]] = {
-    db.run(query.result).map {
+  def getAll(query: Query[K, T, Seq], start:Int = 0, limit:Int = 100):Future[Seq[T]] = {
+    db.run(query.drop(start).take(limit).result).map {
       case null => List()
       case x: Seq[T] => x
     }

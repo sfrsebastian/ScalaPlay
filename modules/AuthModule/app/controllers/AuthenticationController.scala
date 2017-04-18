@@ -55,7 +55,6 @@ class AuthenticationController @Inject() (
               _ <- authInfoRepository.add(loginInfo, passwordHasher.hash(form.password))
               token <- authLogic.create(Token.create(user.id, form.email, true))
             } yield {
-              println("mailer " + mailer)
               mailer.welcome(user.fullName, user.email,link = routes.AuthenticationController.confirmAccount(token.id.toString, redirect.toString).absoluteURL())
               Ok("Usuario creado correctamente, se ha enviado un correo de confirmación")
             }
@@ -78,10 +77,9 @@ class AuthenticationController @Inject() (
             for {
               _ <- authLogic.confirm(loginInfo)
               _ <- authLogic.deleteToken(token.id)
-              result <- Redirect(redirect.toString)
             } yield {
               silhouette.env.eventBus.publish(SignUpEvent(user, request))
-              result
+              Redirect(redirect)
             }
         }
       case Some(token) =>

@@ -92,7 +92,7 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
   def getAllTest:Unit={
     "Al solicitar multiples objetos" must {
       "Solicitar todos: La longitud de la lista de objetos recibida debe ser la misma que la de objetos semilla" in {
-        whenReady(persistence.getAll){
+        whenReady(persistence.getAll(0, 100)){
           case Nil => fail("La coleccion no deberia ser vacia")
           case elements => assert(elements.length == seedCollection.length, "La cantidad de objetos recibida debe ser la misma que los objetos semilla")
         }

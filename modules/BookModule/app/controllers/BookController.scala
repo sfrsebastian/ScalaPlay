@@ -14,8 +14,8 @@ import play.api.libs.json.Json
 class BookController @Inject()(override val logic:BookLogicTrait, override val silhouette:Silhouette[AuthenticationEnvironment]) extends CrudController[Book, Books] with AuthController {
   override implicit val format = Json.format[Book]
 
-  override def getAll = SecuredAction(WithRole("admin")).async{implicit request =>
+  /*override def getAll(start:Int, limit:Int) = SecuredAction(WithRole("admin")).async{implicit request =>
     println(Json.toJson(request.identity.toMin).toString())
-    super.getAll.apply(request)
-  }
+    super.getAll(start, limit).apply(request)
+  }*/
 }

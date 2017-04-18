@@ -57,8 +57,8 @@ trait CrudLogicTestTrait[T<:Row, K<:Entity[T], L<:CrudLogic[T,K], P<:CrudPersist
     "Al solicitar multiples objetos" must {
       "La lista de objetos recibida debe ser igual a la dada por la base de datos" in {
         val mockCollection = (0 to 20).map(_ => generatePojo)
-        when(persistenceMock.getAll) thenReturn Future(mockCollection)
-        whenReady(logic.getAll) {
+        when(persistenceMock.getAll(anyInt(), anyInt())) thenReturn Future(mockCollection)
+        whenReady(logic.getAll(0, 100)) {
           case Nil => fail("La coleccion no deberia ser vacia")
           case elements => assert(elements == mockCollection, "Los objetos recibidos deben ser los dados por la base de datos")
         }

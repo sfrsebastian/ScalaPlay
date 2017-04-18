@@ -7,8 +7,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 trait CrudLogic[T, K <: Entity[T]] {
   val persistence:CrudPersistence[T, K]
 
-  def getAll:Future[Seq[T]]={
-    persistence.getAll
+  def getAll(start:Int = 0, limit:Int = 100):Future[Seq[T]]={
+    persistence.getAll(start, limit)
   }
 
   def get(id: Int): Future[Option[T]] = {

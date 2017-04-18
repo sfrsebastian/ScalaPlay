@@ -1,4 +1,4 @@
-GET     /               controllers.book.BookController.getAll
+GET     /               controllers.book.BookController.getAll(start:Option[Int], limit:Option[Int])
 
 GET     /:id            controllers.book.BookController.get(id: Int)
 
