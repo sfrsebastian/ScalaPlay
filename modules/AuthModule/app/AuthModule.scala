@@ -15,11 +15,14 @@ import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, Secure
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
-import auth.logic.AuthLogic
+import auth.logic.{AuthLogic, Mailer}
 import auth.models.User
 import auth.persistence._
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
+import play.api.libs.mailer.MailerClient
+import play.api.libs.ws.WSClient
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 

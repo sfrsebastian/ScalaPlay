@@ -1,4 +1,3 @@
-
 import book.logic.BookLogic
 import book.models.{Book, Books}
 import controllers.book.BookController

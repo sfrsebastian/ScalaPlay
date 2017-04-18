@@ -21,7 +21,7 @@ routesGenerator := InjectedRoutesGenerator
 
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-results")
 
-javaOptions in Test += "-Dconfig.file=../conf/database.test.conf"
+javaOptions in Test += "-Dconfig.file=../../conf/database.test.conf"
 
 resolvers ++= Seq(
   "Scalaz Bintray Repo" at "https://dl.bintray.com/scalaz/releases",

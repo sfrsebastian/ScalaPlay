@@ -1,7 +1,6 @@
 package controllers.auth
 
 import java.util.UUID
-
 import auth.controllers.AuthController
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
@@ -18,7 +17,6 @@ import play.api.Configuration
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, Controller}
 import net.ceedubs.ficus.Ficus._
-
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

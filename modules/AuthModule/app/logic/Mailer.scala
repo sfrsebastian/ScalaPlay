@@ -1,13 +1,14 @@
 package auth.logic
 
-import javax.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import scala.concurrent.Future
 import scala.language.postfixOps
 import play.api.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.mailer._
 
-class Mailer @Inject() (configuration:Configuration, mailer:MailerClient) {
+@Singleton
+class Mailer @Inject() (mailer:MailerClient, configuration:Configuration) {
   val from = configuration.getString("mail.from").get
   val replyTo = configuration.getString("mail.reply")
 

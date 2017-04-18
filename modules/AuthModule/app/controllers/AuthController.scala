@@ -2,7 +2,7 @@ package auth.controllers
 
 import auth.models.User
 import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
-import com.mohiva.play.silhouette.api.{Environment, Silhouette}
+import com.mohiva.play.silhouette.api.Silhouette
 import auth.settings.MyEnv
 
 /**
@@ -10,8 +10,6 @@ import auth.settings.MyEnv
   */
 trait AuthController{
   def silhouette: Silhouette[MyEnv]
-  def env: Environment[MyEnv] = silhouette.env
-
   def SecuredAction = silhouette.SecuredAction
   def UnsecuredAction = silhouette.UnsecuredAction
   def UserAwareAction = silhouette.UserAwareAction

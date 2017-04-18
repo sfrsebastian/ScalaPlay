@@ -5,6 +5,7 @@
 # Map static resources from the /public folder to the /assets URL path
 
 POST    /signup                 controllers.auth.AuthenticationController.signUp(redirect:String)
+
 POST    /confirm/:token         controllers.auth.AuthenticationController.confirmAccount(token:String, redirect:String)
 
 POST    /signin                 controllers.auth.AuthenticationController.signIn(redirect:String)
