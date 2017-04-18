@@ -1,6 +1,7 @@
 package auth.logic
 
 import org.joda.time.DateTime
+
 import scala.concurrent.duration._
 
 object Implicits {

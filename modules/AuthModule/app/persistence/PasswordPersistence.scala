@@ -27,7 +27,6 @@ class PasswordPersistence @Inject()(userPersistence:UserPersistenceTrait) extend
   }
 
   def update(loginInfo:LoginInfo, authInfo:PasswordInfo):Future[PasswordInfo] = {
-    println("Entra update de password Manager")
     add(loginInfo, authInfo)
   }
 
@@ -36,7 +35,6 @@ class PasswordPersistence @Inject()(userPersistence:UserPersistenceTrait) extend
   }
 
   def remove(loginInfo:LoginInfo):Future[Unit] = {
-    println("Entra remove de password Manager")
-    Future()
+    Future.successful(add(loginInfo, PasswordInfo("","",None)))
   }
 }
