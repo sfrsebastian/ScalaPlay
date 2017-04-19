@@ -14,6 +14,7 @@ import play.api.libs.json.{Format, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.co.jemos.podam.api.PodamFactoryImpl
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Random
 import scala.concurrent.Future
@@ -24,7 +25,9 @@ import scala.concurrent.Future
 trait CrudControllerTestTrait[T<:Row, K<:Entity[T], C<:CrudController[T,K], L<:CrudLogic[T,K]] extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with MockitoSugar with CrudTest{
 
   val factory = new PodamFactoryImpl
+
   var logicMock:L
+
   var controller: C
 
   implicit val format:Format[T]

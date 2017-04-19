@@ -9,7 +9,6 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play._
 import slick.jdbc.PostgresProfile.api._
 import uk.co.jemos.podam.api.PodamFactoryImpl
-
 import scala.util.Random
 
 trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with CrudTest{

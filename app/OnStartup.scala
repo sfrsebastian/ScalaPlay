@@ -24,6 +24,7 @@ class OnStartup @Inject()(configuration:Configuration) {
   DatabaseOperations.createIfNotExist[Book, Books](db, books)
   DatabaseOperations.createIfNotExist[Token, Tokens](db, tokens)
   DatabaseOperations.createIfNotExist[User, Users](db, users)
+
   if(configuration.getBoolean("seed").getOrElse(false)){
     val seedCollection = for {
       _ <- 0 to 19
