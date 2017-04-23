@@ -1,5 +1,6 @@
+package filters
+
 import com.google.inject.Inject
-import filters.SecurityFilter
 import play.api.http.DefaultHttpFilters
 
 /**

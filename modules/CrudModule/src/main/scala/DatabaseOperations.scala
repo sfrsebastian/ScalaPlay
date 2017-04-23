@@ -4,7 +4,7 @@ import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.meta.MTable
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 
 /**
   * Created by sfrsebastian on 4/11/17.
@@ -21,7 +21,7 @@ object DatabaseOperations{
       }
       existing
     })
-    Await.result(f, Duration.Inf)
+    Await.result(f, 10.second)
   }
 
   def DropCreate[T, K<:Table[T]](database:Database, table:TableQuery[K]) = {
@@ -34,7 +34,7 @@ object DatabaseOperations{
       }
       existing
     })
-    Await.result(f, Duration.Inf)
+    Await.result(f, 10.second)
   }
 
   def Drop[T ,K <: Table[T]](database:Database, table:TableQuery[K]) = {
@@ -47,6 +47,6 @@ object DatabaseOperations{
       }
       existing
     })
-    Await.result(f, Duration.Inf)
+    Await.result(f, 10.second)
   }
 }

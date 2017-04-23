@@ -19,7 +19,7 @@ class SecurityFilter @Inject() (implicit val mat: Materializer, ec: ExecutionCon
 
   def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
     if(!requestHeader.path.contains("auth")){
-      rules.find(rule => requestHeader.path.matches(rule.path)) match {
+      rules.find(rule => requestHeader.path.matches(rule.path) && rule.method == requestHeader.method) match {
         case Some(r) => {
           r.authentication match{
             case "Secured" => {

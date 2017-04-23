@@ -9,6 +9,8 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play._
 import slick.jdbc.PostgresProfile.api._
 import uk.co.jemos.podam.api.PodamFactoryImpl
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import scala.util.Random
 
 trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with CrudTest{
@@ -24,11 +26,14 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
   }
 
   override def beforeEach(){
+    seedCollection = Seq()
     DatabaseOperations.DropCreate[T,K](persistence.db, persistence.table)
-    seedCollection = for {
-      _ <- 0 to 19
-    }yield generatePojo
-    persistence.db.run(persistence.table ++= seedCollection)
+    Thread.sleep(1000)
+    for(_ <- 0 to 19){
+      val pojo = generatePojo
+      seedCollection = seedCollection :+ pojo
+      Await.result(persistence.db.run(persistence.table += pojo), 10.second)
+    }
   }
 
   override def afterAll():Unit = {
