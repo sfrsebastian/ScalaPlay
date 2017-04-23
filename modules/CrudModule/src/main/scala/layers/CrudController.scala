@@ -1,15 +1,17 @@
 package crud.layers
 
 import crud.models.Entity
+import layers.UserHandler
 import play.api.libs.json.{Format, Json}
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, AnyContent, Controller, Request}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
   * Created by sfrsebastian on 4/12/17.
   */
-trait CrudController[T, K <: Entity[T]] extends Controller{
+trait CrudController[T, K <: Entity[T]] extends Controller with UserHandler{
 
   val logic:CrudLogic[T, K]
 

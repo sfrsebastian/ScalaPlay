@@ -1,21 +1,25 @@
 package controllers.book
 
-import javax.inject.Inject
-
-import auth.controllers.AuthController
-import auth.models.{WithRole, WithRoles}
-import auth.settings.AuthenticationEnvironment
+import auth.controllers.AuthUserHandler
 import crud.layers.CrudController
 import book.logic.BookLogicTrait
 import book.models.{Book, Books}
-import com.mohiva.play.silhouette.api.Silhouette
+import com.google.inject.Inject
 import play.api.libs.json.Json
+import play.api.mvc.{Action, AnyContent}
 
-class BookController @Inject()(override val logic:BookLogicTrait, override val silhouette:Silhouette[AuthenticationEnvironment]) extends CrudController[Book, Books] with AuthController {
+import scala.concurrent.ExecutionContext.Implicits.global
+
+class BookController @Inject()(override val logic:BookLogicTrait) extends CrudController[Book, Books] with AuthUserHandler {
   override implicit val format = Json.format[Book]
 
-  /*override def getAll(start:Option[Int], limit:Option[Int]) = SecuredAction(WithRole("admin")).async{implicit request =>
-    println(Json.toJson(request.identity.toMin).toString())
-    super.getAll(start, limit).apply(request)
+/*  override def getAll(start:Option[Int], limit:Option[Int]) = Action.async{implicit request =>
+    println(getIdentity)
+    logic.getAll(start.getOrElse(0), limit.getOrElse(100)).map(elements => Ok(Json.toJson(elements)))
+  }
+
+  override def get(id: Int): Action[AnyContent] = Action.async{implicit request =>
+    println(getIdentity)
+    logic.get(id).map(elements => Ok(Json.toJson(elements)))
   }*/
 }

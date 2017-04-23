@@ -33,7 +33,6 @@ class AuthModule extends AbstractModule with ScalaModule {
     bind[Silhouette[AuthenticationEnvironment]].to[SilhouetteProvider[AuthenticationEnvironment]]
     bind[IdentityService[User]].to[AuthLogic]
     bind[UserPersistenceTrait].to[UserPersistence]
-    bind[TokenPersistenceTrait].to[TokenPersistence]
     bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordPersistence]
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
     bind[PasswordHasher].toInstance(new BCryptPasswordHasher)

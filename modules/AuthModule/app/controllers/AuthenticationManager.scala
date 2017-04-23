@@ -8,7 +8,7 @@ import auth.settings.AuthenticationEnvironment
 /**
   * Created by sfrsebastian on 4/15/17.
   */
-trait AuthController{
+trait AuthenticationManager{
   def silhouette: Silhouette[AuthenticationEnvironment]
   def SecuredAction = silhouette.SecuredAction
   def UnsecuredAction = silhouette.UnsecuredAction

@@ -1,7 +1,6 @@
 package controllers.auth
 
-import java.util.UUID
-import auth.controllers.AuthController
+import auth.controllers.AuthenticationManager
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api._
@@ -9,10 +8,10 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordHasher, PasswordInfo}
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
-import auth.logic.{AuthLogic, Mailer}
+import auth.logic.AuthLogic
 import auth.models._
 import auth.settings.AuthenticationEnvironment
-import auth.models.{ResetPasswordFormEmail, ResetPasswordFormPassword, SignInForm, SignUpForm}
+import auth.models.{SignInForm, SignUpForm}
 import play.api.Configuration
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, Controller}
@@ -35,15 +34,12 @@ class AuthenticationController @Inject() (
                                            authLogic: AuthLogic,
                                            passwordHasher: PasswordHasher,
                                            configuration: Configuration,
-                                           clock:Clock,
-                                           mailer: Mailer) extends Controller with AuthController{
+                                           clock:Clock) extends Controller with AuthenticationManager{
 
   implicit val signUpFormat:Format[SignUpForm] = Json.format[SignUpForm]
   implicit val signInFormat:Format[SignInForm] = Json.format[SignInForm]
-  implicit val passwordResetPFormat:Format[ResetPasswordFormPassword] = Json.format[ResetPasswordFormPassword]
-  implicit val passwordResetEFormat:Format[ResetPasswordFormEmail] = Json.format[ResetPasswordFormEmail]
 
-  def signUp(redirect:String) = Action.async(parse.json){implicit request =>
+  def signUp = Action.async(parse.json){implicit request =>
     request.body.validateOpt[SignUpForm].getOrElse(None) match {
       case Some(form) => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, form.email)
@@ -52,39 +48,16 @@ class AuthenticationController @Inject() (
           case None => {
             for {
               user <- authLogic.create(User.generateUser(form, loginInfo, PasswordInfo("", "", None)))
+              _ <- authLogic.confirm(loginInfo)
               _ <- authInfoRepository.add(loginInfo, passwordHasher.hash(form.password))
-              token <- authLogic.create(Token.create(user.id, form.email, true))
             } yield {
-              mailer.welcome(user.fullName, user.email,link = routes.AuthenticationController.confirmAccount(token.id.toString, redirect.toString).absoluteURL())
-              Ok("Usuario creado correctamente, se ha enviado un correo de confirmación")
+              silhouette.env.eventBus.publish(SignUpEvent(user, request))
+              Ok("Usuario creado correctamente")
             }
           }
         }
       }
       case None => Future(BadRequest("Error en formato de formulario de creacion"))
-    }
-  }
-
-  def confirmAccount(tokenId:String, redirect:String) = Action.async { implicit request =>
-    val tokenUUID = UUID.fromString(tokenId)
-    authLogic.getToken(tokenUUID).flatMap {
-      case None => Future(BadRequest("No se encontró usuario asociado"))
-      case Some(token) if token.isSignUp && !token.isExpired =>
-        authLogic.getUser(token.userId).flatMap {
-          case None => Future(InternalServerError("Error validando cuenta, contacta al administrador"))
-          case Some(user) =>
-            val loginInfo = LoginInfo(CredentialsProvider.ID, user.email)
-            for {
-              _ <- authLogic.confirm(loginInfo)
-              _ <- authLogic.deleteToken(token.id)
-            } yield {
-              silhouette.env.eventBus.publish(SignUpEvent(user, request))
-              Redirect(redirect)
-            }
-        }
-      case Some(token) =>
-        authLogic.deleteToken(token.id)
-        Future(Ok("Enlace vencido, debes solicitar un nuevo link para validar tu cuenta"))
     }
   }
 
@@ -115,46 +88,6 @@ class AuthenticationController @Inject() (
   def signOut = SecuredAction.async { implicit request =>
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, Ok)
-  }
-
-  def sendResetPassword(redirect:String) = Action.async(parse.json) { implicit request =>
-    request.body.validateOpt[ResetPasswordFormEmail].getOrElse(None) match {
-      case None => Future(BadRequest("Error en formato de formulario"))
-      case Some(form) => authLogic.retrieve(LoginInfo(CredentialsProvider.ID, form.email)).flatMap {
-        case None => Future(NotFound("Error validando solicitud, contacta al administrador"))
-        case Some(user) => for {
-          token <- authLogic.create(Token.create(user.id, user.email, isSignUp = false))
-        } yield {
-          mailer.resetPassword(user.email, link = redirect + "?tokenId=" + token.token.toString)
-          Ok("Las instrucciones de cambio de contraseña han sido enviadas al correo del usuario")
-        }
-      }
-    }
-  }
-
-  def resetPassword(tokenId:String) = Action.async(parse.json){implicit request =>
-    request.body.validateOpt[ResetPasswordFormPassword].getOrElse(None) match {
-      case None => Future(BadRequest("Error en formato de formulario"))
-      case Some(form) => {
-        val tokenUUID = UUID.fromString(tokenId)
-        authLogic.getToken(tokenUUID).flatMap {
-          case None => Future(NotFound("Error validando solicitud, contactar al administrador"))
-          case Some(token) if !token.isSignUp && !token.isExpired => {
-            val loginInfo = LoginInfo(CredentialsProvider.ID, token.email)
-            for {
-              _ <- authInfoRepository.save(loginInfo, passwordHasher.hash(form.password))
-              authenticator <- env.authenticatorService.create(loginInfo)
-              value <- env.authenticatorService.init(authenticator)
-              _ <- authLogic.deleteToken(token.id)
-              result <- env.authenticatorService.embed(value, Ok("Cambio de contraseña exitoso"))
-            } yield result
-          }
-          case Some(token) => for {
-            _ <- authLogic.deleteToken(token.id)
-          } yield NotFound("Solicitud de cambio de contraseña vencida, debes realizar una nueva solicitud")
-        }
-      }
-    }
   }
 
   private def authenticatorWithRememberMe(authenticator: JWTAuthenticator, rememberMe: Boolean) = {

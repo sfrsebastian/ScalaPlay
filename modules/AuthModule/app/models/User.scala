@@ -22,14 +22,14 @@ case class User(
   loginInfo:LoginInfo,
   passwordInfo:PasswordInfo,
   roles:Array[String] = Array("user", "admin")
-) extends Row with Identity{
+) extends Identity{
   def fullName = name + " " + lastName
-  def toMin = UserMin(name, lastName, email)
+  def toMin = UserMin(id, name, lastName, fullName , email)
 }
 
-case class UserMin(name:String, lastName:String, email:String)
+case class UserMin(id:Int, name:String, lastName:String, fullName:String, email:String)
 
-object UserMin{
+object UserMin {
   implicit val userMinJsonFormat = Json.format[UserMin]
 }
 
