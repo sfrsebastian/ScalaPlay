@@ -12,6 +12,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.util.Random
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with CrudTest{
 
@@ -160,7 +161,7 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
       "Se debe retornar el objeto eliminado" in {
         val id = Random.nextInt(20)
         val toDelete = seedCollection(id)
-        whenReady(persistence.delete(id + 1)) {
+        whenReady(persistence.delete(id + 1)){
           case None => fail("Se deberia obtener el objeto eliminado")
           case Some(element) =>
             assert(element.id == id + 1, "El id deberia ser el mismo")

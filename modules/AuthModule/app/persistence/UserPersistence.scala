@@ -57,14 +57,14 @@ trait UserPersistenceTrait extends CrudPersistence[User, Users] {
     }
   }
 
-  def update(id: Int, toUpdate: User) : Future[Option[User]] = {
+  override def updateAction(id: Int, toUpdate: User): DBIO[Option[User]] = {
     for {
-      result <- db.run(table.filter(_.id === id).map(updateProjection).update(updateTransform(toUpdate)))
-      updated <- get(id)
-    } yield {
+      result <- table.filter(_.id === id).map(updateProjection).update(updateTransform(toUpdate))
+      updated <- getAction(table.filter(_.id === id))
+    }yield{
       result match{
-        case 1 => updated
-        case _ => None
+        case 1=>updated
+        case _=>None
       }
     }
   }
