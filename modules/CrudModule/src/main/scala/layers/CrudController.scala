@@ -33,10 +33,7 @@ trait CrudController[T, K <: Entity[T]] extends Controller with UserHandler{
       case Some(x) => logic.create(x).map{
         case Some(element) => Created(Json.toJson(element))
         case None => BadRequest("El recurso no pudo ser creado")
-      }.recover{
-        case t:TransactionException => InternalServerError(t.message)
-        case _ => InternalServerError("Error en servidor, reintentar de nuevo")
-      }
+      }.recover(errorHandler)
       case None => Future(BadRequest("Error en formato de contenido"))
     }
   }
@@ -47,10 +44,7 @@ trait CrudController[T, K <: Entity[T]] extends Controller with UserHandler{
         logic.update(id, x).map(_ match{
           case Some(elemento) => Ok(Json.toJson(elemento))
           case None => BadRequest("El recurso no pudo ser actualizado")
-        }).recover{
-          case t:TransactionException => InternalServerError(t.message)
-          case _ => InternalServerError("Error en servidor, reintentar de nuevo")
-        }
+        }).recover(errorHandler)
       }
       case None => Future(BadRequest("Error en formato de contenido"))
     }
@@ -62,9 +56,11 @@ trait CrudController[T, K <: Entity[T]] extends Controller with UserHandler{
         Ok(Json.toJson(x))
       }
       case None => BadRequest("El recurso con id dado no existe")
-    }).recover{
-      case t:TransactionException => InternalServerError(t.message)
-      case _ => InternalServerError("Error en servidor, reintentar de nuevo")
-    }
+    }).recover(errorHandler)
+  }
+
+  def errorHandler: PartialFunction[Throwable, Result] = {
+    case t:TransactionException => InternalServerError(t.message)
+    case _ => InternalServerError("Error en servidor, reintentar de nuevo")
   }
 }
