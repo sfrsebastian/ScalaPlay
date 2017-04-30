@@ -6,4 +6,6 @@
 
 -> /books                           BookModule.Routes
 
+-> /authors                         AuthorModule.Routes
+
 -> /auth                            AuthModule.Routes

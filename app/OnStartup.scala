@@ -2,6 +2,7 @@ package settings
 
 import com.google.inject.Inject
 import auth.models.{User, Users}
+import author.models.{Author, Authors}
 import crud.DatabaseOperations
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
@@ -14,6 +15,7 @@ class OnStartup @Inject()(configuration:Configuration) {
   val db = Database.forConfig("Database")
   val books = TableQuery[Books]
   val users = TableQuery[Users]
+  val authors = TableQuery[Authors]
 
   if(configuration.getBoolean("dropCreate").getOrElse(false)){
     DatabaseOperations.DropCreate[User, Users](db, users)
@@ -28,6 +30,11 @@ class OnStartup @Inject()(configuration:Configuration) {
       _ <- 0 to 19
     }yield factory.manufacturePojo(classOf[Book])
     db.run(books ++= seedCollection)
+
+    val seedAuthors = for {
+      _ <- 0 to 19
+    }yield factory.manufacturePojo(classOf[Author])
+    db.run(authors ++= seedAuthors)
   }
 }
 
