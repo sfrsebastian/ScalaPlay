@@ -12,7 +12,9 @@ lazy val BookModule = (project in file("modules/BookModule")).enablePlugins(Play
 
 lazy val CommentModule = (project in file("modules/CommentModule")).enablePlugins(PlayScala).dependsOn(AuthModule)
 
-lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala, SonarRunnerPlugin).aggregate(AuthModule, AuthorModule, BookModule, CommentModule).dependsOn(AuthModule, AuthorModule, BookModule, CommentModule)
+lazy val EditorialModule = (project in file("modules/EditorialModule")).enablePlugins(PlayScala).dependsOn(AuthModule)
+
+lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala, SonarRunnerPlugin).aggregate(AuthModule, AuthorModule, BookModule, CommentModule, EditorialModule).dependsOn(AuthModule, AuthorModule, BookModule, CommentModule, EditorialModule)
 
 scalaVersion := "2.11.7"
 

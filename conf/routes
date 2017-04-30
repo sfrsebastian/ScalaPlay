@@ -10,4 +10,6 @@
 
 -> /comments                        CommentModule.Routes
 
+-> /editorials                      EditorialModule.Routes
+
 -> /auth                            AuthModule.Routes
