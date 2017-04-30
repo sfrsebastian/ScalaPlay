@@ -1,4 +1,4 @@
-name := "AuthorModule"
+name := "CommentModule"
 
 version := "1.0"
 
