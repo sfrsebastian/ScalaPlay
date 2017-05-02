@@ -4,12 +4,10 @@ import comment.logic.CommentLogicTrait
 import models.comment._
 import com.google.inject.Inject
 import crud.layers.CrudController
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import auth.controllers.AuthUserHandler
 import play.api.mvc.Action
-
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 /**
   * Created by sfrsebastian on 4/26/17.

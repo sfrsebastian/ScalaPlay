@@ -1,11 +1,11 @@
-import author.models.{Author, Authors}
 import author.persistence.AuthorPersistence
 import crud.layers.CrudPersistence
 import crud.tests.CrudPersistenceTestTrait
+import models.author.{AuthorPersistenceModel, AuthorTable}
 
-class AuthorPersistenceTest extends CrudPersistenceTestTrait[Author, Authors]{
+class AuthorPersistenceTest extends CrudPersistenceTestTrait[AuthorPersistenceModel, AuthorTable]{
 
-  override var persistence: CrudPersistence[Author, Authors] = new AuthorPersistence
-  override var seedCollection: Seq[Author] = Nil
-  override def generatePojo(): Author = factory.manufacturePojo(classOf[Author])
+  override var persistence: CrudPersistence[AuthorPersistenceModel, AuthorTable] = new AuthorPersistence
+  override var seedCollection: Seq[AuthorPersistenceModel] = Nil
+  override def generatePojo(): AuthorPersistenceModel = factory.manufacturePojo(classOf[AuthorPersistenceModel])
 }

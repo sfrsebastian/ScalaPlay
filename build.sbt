@@ -8,9 +8,9 @@ lazy val AuthenticationModule = (project in file("modules/util/AuthenticationMod
 
 lazy val BookStoreModels = (project in file("modules/util/BookStoreModels")).enablePlugins(PlayScala).dependsOn(CrudModule)
 
-//lazy val AuthorModule = (project in file("modules/AuthorModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, BookStoreModels)
+lazy val AuthorModule = (project in file("modules/AuthorModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, BookStoreModels)
 
-lazy val BookModule = (project in file("modules/BookModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, BookStoreModels, CommentModule)
+lazy val BookModule = (project in file("modules/BookModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, BookStoreModels, CommentModule, AuthorModule)
 
 lazy val CommentModule = (project in file("modules/CommentModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, BookStoreModels)
 
@@ -20,7 +20,7 @@ lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala, SonarRunn
   .aggregate(
     AuthenticationModule,
     BookStoreModels,
-    //AuthorModule,
+    AuthorModule,
     BookModule,
     CommentModule
     //EditorialModule
@@ -28,7 +28,7 @@ lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala, SonarRunn
   .dependsOn(
     AuthenticationModule,
     BookStoreModels,
-    //AuthorModule,
+    AuthorModule,
     BookModule,
     CommentModule
     //EditorialModule
