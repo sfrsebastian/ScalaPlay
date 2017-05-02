@@ -6,10 +6,10 @@
 
 -> /books                           BookModule.Routes
 
--> /authors                         AuthorModule.Routes
+#-> /authors                         AuthorModule.Routes
 
 -> /comments                        CommentModule.Routes
 
--> /editorials                      EditorialModule.Routes
+#-> /editorials                      EditorialModule.Routes
 
 -> /auth                            AuthModule.Routes

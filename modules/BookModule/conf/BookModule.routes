@@ -7,3 +7,10 @@ PUT     /:id            controllers.book.BookController.update(id: Int)
 POST    /               controllers.book.BookController.create
 
 DELETE  /:id            controllers.book.BookController.delete(id:Int)
+
+#DELEGATES
+GET      /:id/comments               controllers.book.BookController.commentDelegate(id:Int, path: String = "")
+GET      /:id/comments/*path         controllers.book.BookController.commentDelegate(id:Int, path: String)
+PUT      /:id/comments/*path         controllers.book.BookController.commentDelegate(id:Int, path: String)
+POST     /:id/comments               controllers.book.BookController.commentDelegate(id:Int, path: String = "")
+DELETE   /:id/comments/*path         controllers.book.BookController.commentDelegate(id:Int ,path: String)

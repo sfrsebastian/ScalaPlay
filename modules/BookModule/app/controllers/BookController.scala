@@ -3,23 +3,22 @@ package controllers.book
 import auth.controllers.AuthUserHandler
 import crud.layers.CrudController
 import book.logic.BookLogicTrait
-import book.models.{Book, Books}
 import com.google.inject.Inject
+import controllers.comment.CommentController
+import models.book._
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
-
+import models.ModelImplicits._
+import play.api.mvc.Action
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-class BookController @Inject()(override val logic:BookLogicTrait) extends CrudController[Book, Books] with AuthUserHandler {
+class BookController @Inject()(override val logic:BookLogicTrait, val commentController:CommentController) extends CrudController[Book, BookPersistenceModel, BookTable] with AuthUserHandler{
   override implicit val format = Json.format[Book]
 
-/*  override def getAll(start:Option[Int], limit:Option[Int]) = Action.async{implicit request =>
-    println(getIdentity)
-    logic.getAll(start.getOrElse(0), limit.getOrElse(100)).map(elements => Ok(Json.toJson(elements)))
+  def commentDelegate(id:Int, path:String) = Action.async{request =>
+    (request.method, "/" + path)match {
+      case ("GET", "/") => commentController.getFromBook(id)(request)
+      case _ => Future(Ok("/" + path))
+    }
   }
-
-  override def get(id: Int): Action[AnyContent] = Action.async{implicit request =>
-    println(getIdentity)
-    logic.get(id).map(elements => Ok(Json.toJson(elements)))
-  }*/
 }

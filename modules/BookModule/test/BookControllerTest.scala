@@ -1,11 +1,13 @@
 
 import book.logic.{BookLogic, BookLogicTrait}
-import book.models.{Book, Books}
 import controllers.book.BookController
 import crud.tests.CrudControllerTestTrait
+import models.book._
 import play.api.libs.json.Json
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import models.ModelImplicits._
+import models.comment.Comment
 
 /*IMPORTS CON AUTENTICACION/AUTORIZACION
 import com.google.inject.AbstractModule
@@ -28,7 +30,7 @@ import scala.concurrent.Future*/
   * Created by sfrsebastian on 4/12/17.
   */
 
-class BookControllerTest extends CrudControllerTestTrait[Book, Books, BookController, BookLogic] {
+class BookControllerTest extends CrudControllerTestTrait[Book, BookPersistenceModel, BookTable , BookController, BookLogic] {
 
   var logicMock = mock[BookLogic]
 
@@ -36,7 +38,12 @@ class BookControllerTest extends CrudControllerTestTrait[Book, Books, BookContro
 
   implicit val format = Json.format[Book]
 
-  override def generatePojo: Book = factory.manufacturePojo(classOf[Book])
+  override def generatePojo: Book = {
+    val comments = for {
+      _ <- 0 to 19
+    }yield factory.manufacturePojo(classOf[Comment])
+    factory.manufacturePojo(classOf[Book]).copy(comments = comments)
+  }
 
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[BookLogicTrait].toInstance(logicMock))

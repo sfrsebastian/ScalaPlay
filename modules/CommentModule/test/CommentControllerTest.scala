@@ -1,11 +1,12 @@
 
 import comment.logic.{CommentLogic, CommentLogicTrait}
-import comment.models.{Comment, Comments}
+import models.comment._
 import controllers.comment.CommentController
 import crud.tests.CrudControllerTestTrait
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import models.ModelImplicits._
 
 /*IMPORTS CON AUTENTICACION/AUTORIZACION
 import com.google.inject.AbstractModule
@@ -28,7 +29,7 @@ import scala.concurrent.Future*/
   * Created by sfrsebastian on 4/12/17.
   */
 
-class CommentControllerTest extends CrudControllerTestTrait[Comment, Comments, CommentController, CommentLogic] {
+class CommentControllerTest extends CrudControllerTestTrait[Comment, CommentPersistenceModel, CommentTable, CommentController, CommentLogic] {
 
   var logicMock = mock[CommentLogic]
 
