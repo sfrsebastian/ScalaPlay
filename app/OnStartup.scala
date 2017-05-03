@@ -2,13 +2,11 @@ package settings
 
 import com.google.inject.Inject
 import auth.models.{User, Users}
-//import author.models.{Author, Authors}
 import crud.DatabaseOperations
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
-import models.comment.{CommentPersistenceModel, CommentTable}
-//import editorial.models.{Editorial, Editorials}
-import models.book.{BookPersistenceModel, BookTable}
+import comment.model.{CommentPersistenceModel, CommentTable}
+import book.model.{BookPersistenceModel, BookTable}
 import play.api.Configuration
 import uk.co.jemos.podam.api.PodamFactoryImpl
 import scala.util.Random

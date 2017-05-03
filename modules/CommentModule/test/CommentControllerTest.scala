@@ -1,12 +1,11 @@
-
 import comment.logic.{CommentLogic, CommentLogicTrait}
-import models.comment._
+import comment.model._
 import controllers.comment.CommentController
 import crud.tests.CrudControllerTestTrait
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import models.ModelImplicits._
+import model.ModelImplicits._
 
 /*IMPORTS CON AUTENTICACION/AUTORIZACION
 import com.google.inject.AbstractModule

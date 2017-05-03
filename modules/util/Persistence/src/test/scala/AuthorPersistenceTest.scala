@@ -1,0 +1,1 @@
+class AuthorPersistenceTest extends AuthorPersistenceTestTrait

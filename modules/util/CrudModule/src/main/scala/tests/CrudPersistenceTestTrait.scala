@@ -1,4 +1,3 @@
-
 package crud.tests
 
 import crud.layers.CrudPersistence
@@ -39,7 +38,7 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
   }
 
   override def afterAll():Unit = {
-    DatabaseOperations.DropCreate[T,K](persistence.db, persistence.table)
+    DatabaseOperations.Drop[T,K](persistence.db, persistence.table)
   }
 
   def generatePojo:T

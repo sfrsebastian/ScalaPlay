@@ -1,13 +1,12 @@
-
 import book.logic.{BookLogic, BookLogicTrait}
 import controllers.book.BookController
 import crud.tests.CrudControllerTestTrait
-import models.book._
+import book.model._
 import play.api.libs.json.Json
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import models.ModelImplicits._
-import models.comment.Comment
+import comment.model.Comment
+import model.ModelImplicits._
 
 /*IMPORTS CON AUTENTICACION/AUTORIZACION
 import com.google.inject.AbstractModule

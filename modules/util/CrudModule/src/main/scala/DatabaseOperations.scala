@@ -41,7 +41,7 @@ object DatabaseOperations{
     val existing = database.run(MTable.getTables)
     def f = existing.flatMap( v => {
       val names = v.map(mt => mt.name.name)
-      if(!names.contains(table.baseTableRow.tableName)){
+      if(names.contains(table.baseTableRow.tableName)){
         println("Drop de tabla " + table.baseTableRow.tableName)
         database.run(table.schema.drop)
       }

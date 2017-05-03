@@ -1,11 +1,9 @@
-name := "BookModule"
+name := "Logic"
 
 version := "1.0"
 
 scalaVersion := "2.11.7"
 
-routesGenerator := InjectedRoutesGenerator
-
 testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-results")
 
-resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
+resolvers += "Scalaz Bintray Repo" at "https://dl.bintray.com/scalaz/releases"
