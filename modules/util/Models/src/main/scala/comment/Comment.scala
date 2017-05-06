@@ -2,7 +2,6 @@ package comment.model
 
 import book.model.BookMin
 import crud.models.Row
-import model.ModelImplicits._
 
 /**
   * Created by sfrsebastian on 5/1/17.

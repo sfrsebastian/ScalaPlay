@@ -1,14 +1,3 @@
-import author.logic.{AuthorLogic, AuthorLogicTrait}
-import author.model._
-import controllers.author.AuthorController
-import crud.tests.CrudControllerTestTrait
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
-import book.model.BookMin
-import model.ModelImplicits._
-
-
 /*IMPORTS CON AUTENTICACION/AUTORIZACION
 import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.util.PasswordInfo
@@ -30,28 +19,15 @@ import scala.concurrent.Future*/
   * Created by sfrsebastian on 4/12/17.
   */
 
-class AuthorControllerTest extends CrudControllerTestTrait[Author, AuthorPersistenceModel, AuthorTable, AuthorController, AuthorLogic] {
+class AuthorControllerTest extends AuthorControllerTestTrait{
 
-  var logicMock = mock[AuthorLogic]
-
-  var controller = app.injector.instanceOf[AuthorController]
-
-  implicit val format = Json.format[Author]
-
-  override def generatePojo: Author = {
-    val books = for {
-      _ <- 0 to 19
-    }yield factory.manufacturePojo(classOf[BookMin])
-    factory.manufacturePojo(classOf[Author]).copy(books = books)
-  }
-
-  override lazy val app = new GuiceApplicationBuilder()
-    .overrides(bind[AuthorLogicTrait].toInstance(logicMock))
-    //.overrides(new FakeModule())
-    .build
+  /*override lazy val app = new GuiceApplicationBuilder()
+  .overrides(bind[AuthorLogicTrait].toInstance(logicMock))
+  .overrides(new FakeModule())
+  .build
 
 
- /* class FakeModule extends AbstractModule with ScalaModule {
+  class FakeModule extends AbstractModule with ScalaModule {
     def configure() = {
       bind[Environment[AuthenticationEnvironment]].toInstance(env)
     }

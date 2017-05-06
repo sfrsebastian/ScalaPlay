@@ -1,12 +1,3 @@
-
-import editorial.logic.{EditorialLogic, EditorialLogicTrait}
-import editorial.models.{Editorial, Editorials}
-import controllers.editorial.EditorialController
-import crud.tests.CrudControllerTestTrait
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
-
 /*IMPORTS CON AUTENTICACION/AUTORIZACION
 import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.util.PasswordInfo
@@ -28,23 +19,13 @@ import scala.concurrent.Future*/
   * Created by sfrsebastian on 4/12/17.
   */
 
-class EditorialControllerTest extends CrudControllerTestTrait[Editorial, Editorials, EditorialController, EditorialLogic] {
+class EditorialControllerTest extends EditorialPersistenceTestTrait{
+  /*override lazy val app = new GuiceApplicationBuilder()
+  .overrides(bind[AuthorLogicTrait].toInstance(logicMock))
+  .overrides(new FakeModule())
+  .build
 
-  var logicMock = mock[EditorialLogic]
-
-  var controller = app.injector.instanceOf[EditorialController]
-
-  implicit val format = Json.format[Editorial]
-
-  override def generatePojo: Editorial = factory.manufacturePojo(classOf[Editorial])
-
-  override lazy val app = new GuiceApplicationBuilder()
-    .overrides(bind[EditorialLogicTrait].toInstance(logicMock))
-    //.overrides(new FakeModule())
-    .build
-
-
- /* class FakeModule extends AbstractModule with ScalaModule {
+  class FakeModule extends AbstractModule with ScalaModule {
     def configure() = {
       bind[Environment[AuthenticationEnvironment]].toInstance(env)
     }

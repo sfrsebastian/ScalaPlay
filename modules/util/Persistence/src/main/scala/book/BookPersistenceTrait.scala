@@ -1,10 +1,14 @@
 package book.persistence
 
+import author.model.AuthorTable
+import authorbook.model.AuthorBookTable
 import crud.layers.CrudPersistence
 import book.model._
 import comment.model.MinCommentConverter
 import comment.persistence.CommentPersistenceTrait
+import editorial.model.EditorialTable
 import slick.jdbc.PostgresProfile.api._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -13,6 +17,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, BookTable] {
 
   val commentPersistence:CommentPersistenceTrait
+
+  val authorBookTable = TableQuery[AuthorBookTable]
+
+  val authorTable = TableQuery[AuthorTable]
+
+  val editorialTable = TableQuery[EditorialTable]
 
   var table = TableQuery[BookTable]
 
@@ -28,17 +38,31 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
 
   override def getAction(query: Query[BookTable, BookPersistenceModel, Seq]): DBIO[Option[Book]] = {
     for{
-      book <- query.joinLeft(commentPersistence.table).on(_.id === _.bookId).sortBy(_._1.id.asc.nullsLast).result
+      book <- query.joinLeft(commentPersistence.table).on(_.id === _.bookId)
+        .join(authorBookTable).on(_._1.id === _.bookId)
+        .join(authorTable).on(_._2.authorId === _.id)
+        .join(editorialTable).on(_._1._1._1.editorialId === _.id)
+        .result
     }yield {
-      book.groupBy(_._1).map(r => Persistence2Model.convertCurried(r._1)(r._2.flatMap(_._2.map(i=>i)))).headOption
+      book
+        .groupBy(_._1._1._1._1)
+        .map(r=>(r._1,r._2.map(_._1._1._1._2), r._2.map(_._1._2), r._2.map(_._2)))
+        .map(r => Persistence2Model.convertWithRelations(r._1, r._2.flatMap(e=>e).distinct, r._3.distinct, r._4.head)).headOption
     }
   }
 
   override def getAllAction(query: Query[BookTable, BookPersistenceModel, Seq], start: Int, limit: Int): DBIO[Seq[Book]] = {
     for{
-      books <- query.joinLeft(commentPersistence.table).on(_.id === _.bookId).sortBy(_._1.id.asc.nullsLast).result
+      book <- query.joinLeft(commentPersistence.table).on(_.id === _.bookId)
+        .join(authorBookTable).on(_._1.id === _.bookId)
+        .join(authorTable).on(_._2.authorId === _.id)
+        .join(editorialTable).on(_._1._1._1.editorialId === _.id)
+        .result
     }yield {
-      books.groupBy(_._1).map(r => Persistence2Model.convertCurried(r._1)(r._2.flatMap(_._2.map(i=>i)))).toSeq
+      book
+        .groupBy(_._1._1._1._1)
+        .map(r=>(r._1,r._2.map(_._1._1._1._2), r._2.map(_._1._2), r._2.map(_._2)))
+        .map(r => Persistence2Model.convertWithRelations(r._1, r._2.flatMap(e=>e).distinct, r._3.distinct, r._4.head)).toSeq
     }
   }
 

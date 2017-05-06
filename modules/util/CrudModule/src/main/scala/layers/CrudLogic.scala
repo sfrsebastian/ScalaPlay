@@ -12,7 +12,7 @@ trait CrudLogic[S<:Row, T<:Row, K <: Entity[T]] {
 
   def getAll(start:Int = 0, limit:Int = 100):Future[Seq[S]]={
     val query = persistence.table
-    persistence.runAction(persistence.getAllAction(query))
+    persistence.runAction(persistence.getAllAction(query)).map(response=> {println(response); response})
   }
 
   def get(id: Int): Future[Option[S]] = {

@@ -1,5 +1,6 @@
 package author.model
 
+import book.model._
 import crud.models.ModelConverter
 /**
   * Created by sfrsebastian on 4/30/17.
@@ -11,8 +12,15 @@ object AuthorPersistenceConverter extends ModelConverter[Author, AuthorPersisten
 }
 
 object PersistenceAuthorConverter extends ModelConverter[AuthorPersistenceModel, Author]{
+
+  implicit def BookPersistenceModel2Book (t : BookPersistenceModel) : Book = PersistenceBookConverter.convert(t)
+
   override def convert(source: AuthorPersistenceModel) = {
     Author(source.id, source.name, source.lastName, List())
+  }
+
+  def convertWithRelations(source: AuthorPersistenceModel, books:Seq[BookPersistenceModel]) = {
+    Author(source.id, source.name, source.lastName, books.map(b=> BookMinConverter.convert(b:Book)))
   }
 }
 

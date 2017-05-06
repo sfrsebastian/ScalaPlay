@@ -21,7 +21,7 @@ object PersistenceCommentConverter extends ModelConverter[CommentPersistenceMode
   implicit def BookPersistenceModel2Book (t : BookPersistenceModel) : Book = PersistenceBookConverter.convert(t)
 
   override def convert(source: CommentPersistenceModel):Comment  = {
-    Comment(source.id, source.name, source.content, BookMin(source.bookId,"","","",""))
+    Comment(source.id, source.name, source.content, BookMin(source.bookId,"","","","",1))
   }
 
   def convertCurried(source:CommentPersistenceModel): (BookPersistenceModel) => Comment ={
@@ -37,7 +37,7 @@ object CommentMinConverter extends ModelConverter[Comment, CommentMin] {
 
 object MinCommentConverter extends ModelConverter[CommentMin, Comment]{
   override def convert(source: CommentMin):Comment = {
-    Comment(source.id, source.name, source.content, BookMin(1,"","","",""))
+    Comment(source.id, source.name, source.content, BookMin(1,"","","","", 1))
   }
 
   def convertCurried(source:CommentMin): (BookPersistenceModel) => Comment ={
