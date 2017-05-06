@@ -52,7 +52,7 @@ class OnStartup @Inject()(configuration:Configuration) {
 
     val seedBooks = for {
       _ <- 0 to 19
-    }yield factory.manufacturePojo(classOf[BookPersistenceModel]).copy(editorialId = Random.nextInt(20) + 1)
+    }yield factory.manufacturePojo(classOf[BookPersistenceModel]).copy(editorialId = Some(Random.nextInt(20) + 1))
     val action2 = books ++= seedBooks
 
     val seedAuthors = for {

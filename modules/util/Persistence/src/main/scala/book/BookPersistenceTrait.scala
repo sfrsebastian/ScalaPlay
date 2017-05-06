@@ -4,7 +4,6 @@ import author.model.AuthorTable
 import authorbook.model.AuthorBookTable
 import crud.layers.CrudPersistence
 import book.model._
-import comment.model.MinCommentConverter
 import comment.persistence.CommentPersistenceTrait
 import editorial.model.EditorialTable
 import slick.jdbc.PostgresProfile.api._
@@ -30,8 +29,6 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
 
   override implicit def Model2Persistence = BookPersistenceConverter
 
-  override implicit def Persistence2Model = PersistenceBookConverter
-
   def updateTransform(element:BookPersistenceModel): (String, String, String, String) = {
     (element.name, element.description, element.ISBN, element.image)
   }
@@ -41,13 +38,13 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
       book <- query.joinLeft(commentPersistence.table).on(_.id === _.bookId)
         .join(authorBookTable).on(_._1.id === _.bookId)
         .join(authorTable).on(_._2.authorId === _.id)
-        .join(editorialTable).on(_._1._1._1.editorialId === _.id)
+        .joinLeft(editorialTable).on(_._1._1._1.editorialId === _.id)
         .result
     }yield {
       book
         .groupBy(_._1._1._1._1)
         .map(r=>(r._1,r._2.map(_._1._1._1._2), r._2.map(_._1._2), r._2.map(_._2)))
-        .map(r => Persistence2Model.convertWithRelations(r._1, r._2.flatMap(e=>e).distinct, r._3.distinct, r._4.head)).headOption
+        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.map(e=>e.get).distinct, r._3.distinct, r._4.head)).headOption
     }
   }
 
@@ -56,20 +53,20 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
       book <- query.joinLeft(commentPersistence.table).on(_.id === _.bookId)
         .join(authorBookTable).on(_._1.id === _.bookId)
         .join(authorTable).on(_._2.authorId === _.id)
-        .join(editorialTable).on(_._1._1._1.editorialId === _.id)
+        .joinLeft(editorialTable).on(_._1._1._1.editorialId === _.id)
         .result
     }yield {
       book
         .groupBy(_._1._1._1._1)
         .map(r=>(r._1,r._2.map(_._1._1._1._2), r._2.map(_._1._2), r._2.map(_._2)))
-        .map(r => Persistence2Model.convertWithRelations(r._1, r._2.flatMap(e=>e).distinct, r._3.distinct, r._4.head)).toSeq
+        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.map(e=>e.get).distinct, r._3.distinct, r._4.head)).toSeq
     }
   }
 
   override def createAction(element: Book): DBIO[Book] = {
     for{
       created <- super.createAction(element)
-      _ <- DBIO.sequence(element.comments.map(c => commentPersistence.createAction(MinCommentConverter.convertCurried(c)(created))))
+      _ <- DBIO.sequence(element.comments.map(c => commentPersistence.createAction(c)))
       book <- getAction(table.filter(_.id === created.id))
     }yield book.get
   }

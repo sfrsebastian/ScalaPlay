@@ -23,11 +23,9 @@ trait CrudPersistence[S<:Row, T<:Row, K <: Entity[T]]{
 
   implicit def Model2Persistence:ModelConverter[S,T]
 
-  implicit def Persistence2Model:ModelConverter[T,S]
-
   implicit def S2T (s : S)(implicit converter : ModelConverter[S,T]) : T = converter.convert(s)
 
-  implicit def T2S (t : T)(implicit converter : ModelConverter[T,S]) : S = converter.convert(t)
+  implicit def T2S (t : T)(implicit converter : ModelConverter[S,T]) : S = converter.convertInverse(t)
 
   def getAllAction(query: Query[K, T, Seq], start:Int = 0, limit:Int = 100) : DBIO[Seq[S]] = {
     query.drop(start).take(limit).result.map(l => l.map(e=>e:S))

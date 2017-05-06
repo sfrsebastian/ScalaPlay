@@ -1,7 +1,6 @@
 package comment.persistence
 
 import book.model.BookTable
-import book.persistence.BookPersistenceTrait
 import crud.layers.CrudPersistence
 import comment.model._
 import slick.jdbc.PostgresProfile.api._
@@ -19,8 +18,6 @@ trait CommentPersistenceTrait extends CrudPersistence[Comment, CommentPersistenc
 
   override implicit def Model2Persistence = CommentPersistenceConverter
 
-  override implicit def Persistence2Model = PersistenceCommentConverter
-
   override val updateProjection: CommentTable => (Rep[String], Rep[String]) = b => (b.name, b.content)
 
   override def updateTransform(element:CommentPersistenceModel): (String, String) = {
@@ -31,7 +28,7 @@ trait CommentPersistenceTrait extends CrudPersistence[Comment, CommentPersistenc
     for{
       comment <- query.join(bookTable).on(_.bookId === _.id).sortBy(_._1.id.asc.nullsLast).result
     }yield {
-      comment.map(r => Persistence2Model.convertCurried(r._1)(r._2)).headOption
+      comment.map(r => Model2Persistence.convertInverse(r._1, r._2)).headOption
     }
   }
 
@@ -39,7 +36,7 @@ trait CommentPersistenceTrait extends CrudPersistence[Comment, CommentPersistenc
     for{
       comments <- query.join(bookTable).on(_.bookId === _.id).sortBy(_._1.id.asc.nullsLast).result
     }yield {
-      comments.map(r => Persistence2Model.convertCurried(r._1)(r._2))
+      comments.map(r => Model2Persistence.convertInverse(r._1, r._2))
     }
   }
 

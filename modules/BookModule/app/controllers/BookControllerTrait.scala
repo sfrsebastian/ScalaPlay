@@ -3,7 +3,7 @@ package controllers.book
 import auth.controllers.AuthUserHandler
 import author.model.AuthorMin
 import book.logic.BookLogicTrait
-import book.model.{Book, BookPersistenceModel, BookTable}
+import book.model._
 import comment.model.CommentMin
 import controllers.comment.CommentControllerTrait
 import crud.layers.CrudController
@@ -17,15 +17,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by sfrsebastian on 5/2/17.
   */
-trait BookControllerTrait extends CrudController[Book, BookPersistenceModel, BookTable] with AuthUserHandler {
+trait BookControllerTrait extends CrudController[BookForm, BookMin, Book, BookPersistenceModel, BookTable] with AuthUserHandler {
 
   val logic:BookLogicTrait
   val commentController:CommentControllerTrait
 
-  implicit val editorialMinFormat = Json.format[EditorialMin]
   implicit val commentMinFormat = Json.format[CommentMin]
-  implicit val authorMinFormat = Json.format[AuthorMin]
-  override implicit val format = Json.format[Book]
+
+  implicit val formatMin = Json.format[BookMin]
+
+  implicit val formatForm = Json.format[BookForm]
+
+  implicit def Min2Model = BookMinConverter
+
+  implicit def Form2Model = BookFormConverter
 
   def commentDelegate(id:Int, path:String) = Action.async{request =>
     (request.method, "/" + path)match {

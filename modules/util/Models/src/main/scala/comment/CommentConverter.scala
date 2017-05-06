@@ -7,40 +7,51 @@ import book.model._
   * Created by sfrsebastian on 5/1/17.
   */
 object CommentPersistenceConverter extends ModelConverter[Comment, CommentPersistenceModel] {
+
+  implicit def BookPersistenceModel2Book (t : BookPersistenceModel) : Book = BookPersistenceConverter.convertInverse(t)
+
   override def convert(source: Comment): CommentPersistenceModel = {
     CommentPersistenceModel(source.id, source.name, source.content, source.book.id)
   }
 
-  def convertCurried(source:Comment): (Int) => CommentPersistenceModel ={
-    (bookId:Int) => convert(source).copy(bookId=bookId)
-  }
-}
-
-object PersistenceCommentConverter extends ModelConverter[CommentPersistenceModel, Comment] {
-
-  implicit def BookPersistenceModel2Book (t : BookPersistenceModel) : Book = PersistenceBookConverter.convert(t)
-
-  override def convert(source: CommentPersistenceModel):Comment  = {
-    Comment(source.id, source.name, source.content, BookMin(source.bookId,"","","","",1))
+  def convert(source:Comment, bookId:Int): CommentPersistenceModel ={
+    convert(source).copy(bookId=bookId)
   }
 
-  def convertCurried(source:CommentPersistenceModel): (BookPersistenceModel) => Comment ={
-    (book:BookPersistenceModel) => convert(source).copy(book = BookMinConverter.convert(book:Book))
+  override def convertInverse(source: CommentPersistenceModel):Comment  = {
+    Comment(source.id, source.name, source.content, Book(source.bookId,"","","","",Seq(), Seq(), None))
+  }
+
+  def convertInverse(source:CommentPersistenceModel, book:BookPersistenceModel):Comment ={
+    convertInverse(source).copy(book = book)
   }
 }
 
 object CommentMinConverter extends ModelConverter[Comment, CommentMin] {
+
+  implicit def Book2Min (t : Book) : BookMin = BookMinConverter.convert(t)
+
+  implicit def Min2Book (t : BookMin) : Book = BookMinConverter.convertInverse(t)
+
   override def convert(source: Comment):CommentMin  = {
-    CommentMin(source.id, source.name, source.content)
+    CommentMin(source.id, source.content)
+  }
+
+  override def convertInverse(source: CommentMin):Comment = {
+    Comment(source.id, "" , source.content, Book(1,"","","","",Seq(),Seq(),None))
+  }
+
+  def convertInverse(source:CommentMin, book: Book) : Comment ={
+    convertInverse(source).copy(book = book)
   }
 }
 
-object MinCommentConverter extends ModelConverter[CommentMin, Comment]{
-  override def convert(source: CommentMin):Comment = {
-    Comment(source.id, source.name, source.content, BookMin(1,"","","","", 1))
+object CommentFormConverter extends ModelConverter[Comment, CommentForm] {
+  override def convert(source: Comment): CommentForm = {
+    CommentForm(source.content, source.book.id)
   }
 
-  def convertCurried(source:CommentMin): (BookPersistenceModel) => Comment ={
-    (book:BookPersistenceModel) => convert(source).copy(book = BookMinConverter.convert(PersistenceBookConverter.convert(book)))
+  override def convertInverse(source: CommentForm) : Comment  = {
+    Comment(1, "", source.content, Book(source.bookId, "","","","",Seq(), Seq(), None))
   }
 }

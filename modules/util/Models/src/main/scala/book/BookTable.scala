@@ -12,7 +12,7 @@ class BookTable(tag:Tag) extends Entity[BookPersistenceModel](tag, "BOOKS") {
   def description = column[String]("DESCRIPTION")
   def ISBN = column[String]("ISBN")
   def image = column[String]("IMAGE")
-  def editorialId = column[Int]("EDITORIAL_ID")
+  def editorialId = column[Option[Int]]("EDITORIAL_ID")
 
   def editorialFK = foreignKey("EDITORIAL_FK", editorialId, TableQuery[EditorialTable])(_.id, onUpdate=ForeignKeyAction.Restrict)
   // Every table needs a * projection with the same type as the table's type parameter

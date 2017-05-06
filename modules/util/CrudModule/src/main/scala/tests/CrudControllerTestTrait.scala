@@ -2,7 +2,7 @@ package crud.tests
 
 import akka.stream.Materializer
 import crud.layers.{CrudController, CrudLogic}
-import crud.models.{Entity, Row}
+import crud.models.{Entity, ModelConverter, Row}
 import org.mockito.ArgumentMatchers.{any, anyInt}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -23,7 +23,7 @@ import scala.concurrent.Future
 /**
   * Created by sfrsebastian on 4/13/17.
   */
-trait CrudControllerTestTrait[S<:Row, T<:Row, K<:Entity[T], C<:CrudController[S,T,K], L<:CrudLogic[S,T,K]] extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with MockitoSugar with CrudTest{
+trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController[F,M,S,T,K], L<:CrudLogic[S,T,K]] extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with MockitoSugar with CrudTest{
 
   val factory = new PodamFactoryImpl
 
@@ -31,11 +31,17 @@ trait CrudControllerTestTrait[S<:Row, T<:Row, K<:Entity[T], C<:CrudController[S,
 
   var controller: C
 
-  implicit val format:Format[S]
+  implicit val format:Format[F]
 
   implicit lazy val materializer: Materializer = app.materializer
 
-  def generatePojo:S
+  implicit def Form2Model:ModelConverter[S, F]
+
+  implicit def F2S (f : F)(implicit converter : ModelConverter[S,F]) : S = converter.convertInverse(f)
+
+  implicit def S2F (s: S)(implicit converter : ModelConverter[S,F]):F = converter.convert(s)
+
+  def generatePojo:F
 
   override def createTest: Unit = {
     "Al crear un nuevo recurso" must {
@@ -61,7 +67,7 @@ trait CrudControllerTestTrait[S<:Row, T<:Row, K<:Entity[T], C<:CrudController[S,
         val newResource = generatePojo
         val jsonResource = Json.toJson(newResource)
         val request = FakeRequest().withJsonBody(jsonResource)
-        when(logicMock.create(any())) thenReturn Future(Some(newResource))
+        when(logicMock.create(any())) thenReturn Future(Some(newResource:S))
         val result = call(controller.create(), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso obtenido por la logica")
@@ -77,7 +83,7 @@ trait CrudControllerTestTrait[S<:Row, T<:Row, K<:Entity[T], C<:CrudController[S,
         val newResource = generatePojo
         val request = FakeRequest()
         val jsonResource = Json.toJson(newResource)
-        when(logicMock.get(anyInt())) thenReturn Future(Some(newResource))
+        when(logicMock.get(anyInt())) thenReturn Future(Some(newResource:S))
         val result = call(controller.get(id), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso obtenido por la logica")
@@ -102,7 +108,7 @@ trait CrudControllerTestTrait[S<:Row, T<:Row, K<:Entity[T], C<:CrudController[S,
         val newResource = (0 to 20).map(_ => generatePojo)
         val jsonResource = Json.toJson(newResource)
         val request = FakeRequest()
-        when(logicMock.getAll(anyInt(), anyInt())) thenReturn Future(newResource)
+        when(logicMock.getAll(anyInt(), anyInt())) thenReturn Future(newResource.map(e=>e:S))
         val result = call(controller.getAll(None, None), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso obtenido")
@@ -138,7 +144,7 @@ trait CrudControllerTestTrait[S<:Row, T<:Row, K<:Entity[T], C<:CrudController[S,
         val jsonResource = Json.toJson(toUpdate)
         val id = Random.nextInt(20)
         val request = FakeRequest().withJsonBody(Json.toJson(toUpdate))
-        when(logicMock.update(anyInt(), any())) thenReturn Future(Some(toUpdate))
+        when(logicMock.update(anyInt(), any())) thenReturn Future(Some(toUpdate:S))
         val result = call(controller.update(id), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso obtenido")
@@ -164,7 +170,7 @@ trait CrudControllerTestTrait[S<:Row, T<:Row, K<:Entity[T], C<:CrudController[S,
         val jsonResource = Json.toJson(toDelete)
         val id = Random.nextInt(20)
         val request = FakeRequest()
-        when(logicMock.delete(anyInt())) thenReturn Future(Some(toDelete))
+        when(logicMock.delete(anyInt())) thenReturn Future(Some(toDelete:S))
         val result = call(controller.delete(id), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso eliminado")

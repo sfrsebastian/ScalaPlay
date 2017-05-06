@@ -3,9 +3,8 @@ package author.persistence
 import crud.layers.CrudPersistence
 import author.model._
 import authorbook.model.{AuthorBookPersistenceModel, AuthorBookTable}
-import book.model.MinBookConverter
+import book.model.Book
 import book.persistence.BookPersistenceTrait
-import editorial.model.Editorial
 import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -23,8 +22,6 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
 
   override implicit def Model2Persistence = AuthorPersistenceConverter
 
-  override implicit def Persistence2Model = PersistenceAuthorConverter
-
   override val updateProjection: AuthorTable => (Rep[String], Rep[String]) = b => (b.name, b.lastName)
 
   override def updateTransform(element:AuthorPersistenceModel): (String, String) = {
@@ -40,7 +37,7 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
       author
         .groupBy(_._1._1)
         .map(r=>(r._1, r._2.map(_._2)))
-        .map(r => Persistence2Model.convertWithRelations(r._1, r._2.map(e=>e).distinct)).headOption
+        .map(r => Model2Persistence.convertInverse(r._1, r._2.map(e=>e).distinct)).headOption
     }
   }
 
@@ -53,16 +50,23 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
       author
         .groupBy(_._1._1)
         .map(r=>(r._1, r._2.map(_._2)))
-        .map(r => Persistence2Model.convertWithRelations(r._1, r._2.map(e=>e).distinct)).toSeq
+        .map(r => Model2Persistence.convertInverse(r._1, r._2.map(e=>e).distinct)).toSeq
     }
   }
 
   override def createAction(element: Author): DBIO[Author] = {
     for{
       created <- super.createAction(element)
-      _ <- DBIO.sequence(element.books.map(b => bookPersistence.createAction(MinBookConverter.convertWithRelations(b, Seq(),created::Nil, Editorial(b.editorialId,"","", List())))))
+      _ <- DBIO.sequence(element.books.map(b => addBookAction(created.id, b)))
       author <- getAction(table.filter(_.id === created.id))
     }yield author.get
+  }
+
+  def addBookAction(id:Int, book:Book):DBIO[Book] = {
+    for {
+      created <- bookPersistence.createAction(book)
+      _ <- authorBookTable += AuthorBookPersistenceModel(1, "", created.id, id)
+    }yield created
   }
 
   override def updateAction(id: Int, toUpdate: Author): DBIO[Option[Author]] = {

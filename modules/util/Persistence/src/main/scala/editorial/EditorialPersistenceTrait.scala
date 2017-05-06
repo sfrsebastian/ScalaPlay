@@ -1,10 +1,8 @@
 package editorial.persistence
 
-import book.model.{BookTable, PersistenceBookConverter}
+import book.model._
 import crud.layers.CrudPersistence
 import editorial.model._
-import slick.jdbc
-import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -18,7 +16,7 @@ trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPers
 
   override implicit def Model2Persistence = EditorialPersistenceConverter
 
-  override implicit def Persistence2Model = PersistenceEditorialConverter
+  implicit def Book2Persistence (t : BookPersistenceModel) : Book = BookPersistenceConverter.convertInverse(t)
 
   override val updateProjection: EditorialTable => (Rep[String], Rep[String]) = b => (b.name, b.address)
 
@@ -30,7 +28,7 @@ trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPers
     for{
       editorial <- query.joinLeft(booksTable).on(_.id === _.editorialId).result
     }yield{
-      editorial.groupBy(_._1).map(r=> Persistence2Model.convertWithRelations(r._1, r._2.flatMap(_._2.map(b=>PersistenceBookConverter.convert(b))))).headOption
+      editorial.groupBy(_._1).map(r=> Model2Persistence.convertInverse(r._1, r._2.flatMap(_._2.map(b=>b:Book)))).headOption
     }
   }
 
@@ -38,7 +36,7 @@ trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPers
     for{
       editorial <- query.joinLeft(booksTable).on(_.id === _.editorialId).result
     }yield{
-      editorial.groupBy(_._1).map(r=> Persistence2Model.convertWithRelations(r._1, r._2.flatMap(_._2.map(b=>PersistenceBookConverter.convert(b))))).toSeq
+      editorial.groupBy(_._1).map(r=> Model2Persistence.convertInverse(r._1, r._2.flatMap(_._2.map(b=>b:Book)))).toSeq
     }
   }
 
