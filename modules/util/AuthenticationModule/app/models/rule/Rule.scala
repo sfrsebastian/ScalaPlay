@@ -1,4 +1,4 @@
-package auth.models
+package auth.models.rule
 
 import play.api.libs.json.Json
 

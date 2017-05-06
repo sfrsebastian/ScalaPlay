@@ -1,42 +1,47 @@
+import book.model.{BookPersistenceModel, BookTable}
+import book.persistence.BookPersistence
 import comment.model._
 import comment.persistence.CommentPersistence
 import crud.DatabaseOperations
-import crud.layers.CrudPersistence
 import crud.tests.CrudPersistenceTestTrait
 import slick.jdbc.PostgresProfile.api._
-
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.util.Random
 
-trait CommentPersistenceTestTrait extends CrudPersistenceTestTrait[CommentPersistenceModel, CommentTable]{
-  override var persistence: CrudPersistence[CommentPersistenceModel, CommentTable] = new CommentPersistence
-  var bookPersistenceTest = new BookPersistenceTest
-  override var seedCollection: Seq[CommentPersistenceModel] = Nil
-  override def generatePojo(): CommentPersistenceModel = factory.manufacturePojo(classOf[CommentPersistenceModel]).copy(bookId = Random.nextInt(19) + 1)
+trait CommentPersistenceTestTrait extends CrudPersistenceTestTrait[Comment, CommentPersistenceModel, CommentTable]{
+  val bookPersistence = new BookPersistence(persistence)
+  var bookCollection:Seq[BookPersistenceModel] = Nil
+  val generateBookPojo = factory.manufacturePojo(classOf[BookPersistenceModel]).copy(Random.nextInt(19) + 1)
 
-  override def beforeAll(): Unit = {
-    bookPersistenceTest.beforeAll
+  override val persistence = new CommentPersistence
+  override var seedCollection: Seq[CommentPersistenceModel] = Nil
+  override def generatePojo : CommentPersistenceModel = factory.manufacturePojo(classOf[CommentPersistenceModel]).copy(bookId = Random.nextInt(19) + 1)
+  override implicit def Model2Persistence = CommentPersistenceConverter
+  override implicit def Persistence2Model = PersistenceCommentConverter
+
+  override def beforeAll() {
+    DatabaseOperations.createIfNotExist[BookPersistenceModel,BookTable](bookPersistence.db, bookPersistence.table)
     Thread.sleep(1000)
-    DatabaseOperations.createIfNotExist[CommentPersistenceModel,CommentTable](persistence.db, persistence.table)
-    Thread.sleep(1000)
+    super.beforeAll()
   }
 
   override def beforeEach(){
-    bookPersistenceTest.beforeEach
+    bookCollection = Seq()
+    DatabaseOperations.DropCreate[BookPersistenceModel,BookTable](bookPersistence.db, bookPersistence.table)
     Thread.sleep(1000)
-    seedCollection = Seq()
-    DatabaseOperations.DropCreate[CommentPersistenceModel,CommentTable](persistence.db, persistence.table)
-    Thread.sleep(1000)
-    for(_ <- 1 to 20){
-      val pojo = generatePojo
-      seedCollection = seedCollection :+ pojo
-      Await.result(persistence.db.run(persistence.table += pojo), 10.second)
+    for(_ <- 0 to 19){
+      val pojo = generateBookPojo
+      bookCollection = bookCollection :+ pojo
     }
+    Await.result(bookPersistence.db.run(bookPersistence.table ++= bookCollection), 10.second)
+    Thread.sleep(1000)
+    super.beforeEach()
   }
 
-  override def afterAll():Unit = {
-    DatabaseOperations.Drop[CommentPersistenceModel,CommentTable](persistence.db, persistence.table)
-    bookPersistenceTest.afterAll
+  override def afterAll() {
+    super.afterAll()
+    Thread.sleep(1000)
+    DatabaseOperations.Drop[BookPersistenceModel,BookTable](bookPersistence.db, bookPersistence.table)
   }
 }

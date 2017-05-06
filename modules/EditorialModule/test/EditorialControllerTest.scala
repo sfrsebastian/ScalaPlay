@@ -11,7 +11,7 @@ import play.api.libs.json.Json
 import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import java.util.UUID
-import auth.models.User
+import models.user.User
 import auth.settings.AuthenticationEnvironment
 import com.mohiva.play.silhouette.api.{Environment, LoginInfo}
 import com.mohiva.play.silhouette.test._

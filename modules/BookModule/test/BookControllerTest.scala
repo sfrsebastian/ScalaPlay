@@ -5,14 +5,14 @@ import book.model._
 import play.api.libs.json.Json
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import comment.model.Comment
+import comment.model.CommentMin
 import model.ModelImplicits._
 
 /*IMPORTS CON AUTENTICACION/AUTORIZACION
 import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import java.util.UUID
-import auth.models.User
+import models.user.User
 import auth.settings.AuthenticationEnvironment
 import com.mohiva.play.silhouette.api.{Environment, LoginInfo}
 import com.mohiva.play.silhouette.test._
@@ -40,7 +40,7 @@ class BookControllerTest extends CrudControllerTestTrait[Book, BookPersistenceMo
   override def generatePojo: Book = {
     val comments = for {
       _ <- 0 to 19
-    }yield factory.manufacturePojo(classOf[Comment])
+    }yield factory.manufacturePojo(classOf[CommentMin])
     factory.manufacturePojo(classOf[Book]).copy(comments = comments)
   }
 

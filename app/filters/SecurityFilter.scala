@@ -2,7 +2,9 @@ package filters
 
 import akka.stream.Materializer
 import auth.controllers.AuthenticationManager
-import auth.models.{Rule, WithRole, WithRoles}
+import auth.models.role.{WithRole, WithRoles}
+import auth.models.rule.Rule
+import auth.models.user.UserMin
 import auth.settings.AuthenticationEnvironment
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.Silhouette
@@ -10,12 +12,14 @@ import com.typesafe.config.ConfigRenderOptions
 import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc._
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class SecurityFilter @Inject() (implicit val mat: Materializer, ec: ExecutionContext, override val silhouette:Silhouette[AuthenticationEnvironment], conf:Configuration) extends Filter with AuthenticationManager {
 
   val json = conf.getList("security.rules").get.render(ConfigRenderOptions.concise())
   val rules = Json.parse(json).as[List[Rule]]
+  implicit  val userMinFormat = Json.format[UserMin]
 
   def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
     if(!requestHeader.path.contains("auth")){

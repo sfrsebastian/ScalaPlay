@@ -4,6 +4,7 @@ import javax.inject.Inject
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
+import crud.DatabaseOperations
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import slick.jdbc.PostgresProfile.api._
@@ -21,10 +22,10 @@ class PasswordPersistence @Inject()(userPersistence:UserPersistenceTrait) extend
   }
 
   def add(loginInfo:LoginInfo, passwordInfo:PasswordInfo):Future[PasswordInfo] = {
-    userPersistence.updatePasswordInfo(loginInfo, passwordInfo).map{
+    userPersistence.runAction(userPersistence.updatePasswordInfo(loginInfo, passwordInfo).map{
       case Some(user) => user.passwordInfo
       case None => PasswordInfo("","",None)
-    }
+    })
   }
 
   def update(loginInfo:LoginInfo, authInfo:PasswordInfo):Future[PasswordInfo] = {

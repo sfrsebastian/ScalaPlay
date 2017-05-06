@@ -12,15 +12,15 @@ object BookPersistenceConverter extends ModelConverter[Book, BookPersistenceMode
 }
 
 object PersistenceBookConverter extends ModelConverter[BookPersistenceModel, Book]{
-  implicit def Persistence2Model = PersistenceCommentConverter
-  implicit def S2T (comment : CommentPersistenceModel)(implicit converter : ModelConverter[CommentPersistenceModel, Comment]) : Comment = converter.convert(comment)
+
+  implicit def CommentPersistenceModel2Comment (t : CommentPersistenceModel) : Comment = PersistenceCommentConverter.convert(t)
 
   override def convert(source: BookPersistenceModel) = {
     Book(source.id, source.name, source.description, source.ISBN, source.image, List())
   }
 
   def convertCurried(source:BookPersistenceModel): (Seq[CommentPersistenceModel]) => Book ={
-    (comments:Seq[CommentPersistenceModel]) => convert(source).copy(comments=comments.map(e=>e:Comment))
+    (comments:Seq[CommentPersistenceModel]) => convert(source).copy(comments=comments.map(e=>CommentMinConverter.convert(e:Comment)))
   }
 }
 

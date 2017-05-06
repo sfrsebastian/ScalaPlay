@@ -1,7 +1,7 @@
 package settings
 
 import com.google.inject.Inject
-import auth.models.{User, Users}
+import auth.models.user.{UserPersistenceModel, UserTable}
 import crud.DatabaseOperations
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
@@ -9,27 +9,28 @@ import comment.model.{CommentPersistenceModel, CommentTable}
 import book.model.{BookPersistenceModel, BookTable}
 import play.api.Configuration
 import uk.co.jemos.podam.api.PodamFactoryImpl
+
 import scala.util.Random
 
 class OnStartup @Inject()(configuration:Configuration) {
   val factory = new PodamFactoryImpl
   val db = Database.forConfig("Database")
   val books = TableQuery[BookTable]
-  val users = TableQuery[Users]
+  val users = TableQuery[UserTable]
   val comments = TableQuery[CommentTable]
   /*
   val authors = TableQuery[Authors]
   val editorials = TableQuery[Editorials]*/
 
   if(configuration.getBoolean("dropCreate").getOrElse(false)){
-    DatabaseOperations.DropCreate[User, Users](db, users)
+    DatabaseOperations.DropCreate[UserPersistenceModel, UserTable](db, users)
     DatabaseOperations.DropCreate[BookPersistenceModel, BookTable](db, books)
     DatabaseOperations.DropCreate[CommentPersistenceModel, CommentTable](db, comments)
     /*DatabaseOperations.DropCreate[Author, Authors](db, authors)
     DatabaseOperations.DropCreate[Editorial, Editorials](db, editorials)*/
   }
 
-  DatabaseOperations.createIfNotExist[User, Users](db, users)
+  DatabaseOperations.createIfNotExist[UserPersistenceModel, UserTable](db, users)
   DatabaseOperations.createIfNotExist[BookPersistenceModel, BookTable](db, books)
   DatabaseOperations.createIfNotExist[CommentPersistenceModel, CommentTable](db, comments)
 /*  DatabaseOperations.createIfNotExist[Author, Authors](db, authors)
@@ -39,7 +40,7 @@ class OnStartup @Inject()(configuration:Configuration) {
     val seedCollection = for {
       _ <- 0 to 19
     }yield factory.manufacturePojo(classOf[BookPersistenceModel])
-    db.run(books ++= seedCollection)
+    val action1 = books ++= seedCollection
 
     val seedComments = for {
       _ <- 0 to 100
@@ -47,7 +48,8 @@ class OnStartup @Inject()(configuration:Configuration) {
       val comment = factory.manufacturePojo(classOf[CommentPersistenceModel])
       comment.copy(bookId = (Random.nextInt(20) + 1))
     }
-    db.run(comments ++= seedComments)
+    val action2 = comments ++= seedComments
+    db.run(DBIO.seq(action1,action2))
   }
 }
 

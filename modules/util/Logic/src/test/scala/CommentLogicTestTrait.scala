@@ -15,15 +15,11 @@ trait CommentLogicTestTrait extends CrudLogicTestTrait[Comment, CommentPersisten
 
   var logic = new CommentLogic(persistenceMock)
 
-  override implicit def Model2Persistence: ModelConverter[Comment, CommentPersistenceModel] = CommentPersistenceConverter
-
-  override implicit def Persistence2Model: ModelConverter[CommentPersistenceModel, Comment] = PersistenceCommentConverter
-
   override def beforeEach(){
     persistenceMock = mock[CommentPersistence]
     when(persistenceMock.table) thenReturn mock[TableQuery[CommentTable]]
     logic = new CommentLogic(persistenceMock)
   }
 
-  override def generatePojo: CommentPersistenceModel = factory.manufacturePojo(classOf[CommentPersistenceModel])
+  override def generatePojo: Comment = factory.manufacturePojo(classOf[Comment])
 }

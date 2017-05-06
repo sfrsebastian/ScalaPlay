@@ -1,4 +1,4 @@
-package auth.models
+package auth.models.forms
 
 /**
   * Created by sfrsebastian on 4/16/17.

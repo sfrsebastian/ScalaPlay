@@ -1,7 +1,7 @@
 package crud.tests
 
 import crud.layers.CrudPersistence
-import crud.models.{Entity, Row}
+import crud.models.{Entity, ModelConverter, Row}
 import crud.DatabaseOperations
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -14,13 +14,21 @@ import scala.concurrent.duration._
 import scala.util.Random
 import scala.concurrent.ExecutionContext.Implicits.global
 
-trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with CrudTest{
+trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with CrudTest{
 
   private implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   val factory = new PodamFactoryImpl
-  var persistence : CrudPersistence[T, K]
+  val persistence : CrudPersistence[S, T, K]
   var seedCollection:Seq[T]
+
+  implicit def Model2Persistence:ModelConverter[S,T]
+
+  implicit def Persistence2Model:ModelConverter[T,S]
+
+  implicit def S2T (s : S)(implicit converter : ModelConverter[S,T]) : T = converter.convert(s)
+
+  implicit def T2S (t : T)(implicit converter : ModelConverter[T,S]) : S = converter.convert(t)
 
   override def beforeAll(): Unit = {
     DatabaseOperations.createIfNotExist[T,K](persistence.db, persistence.table)
@@ -33,8 +41,9 @@ trait CrudPersistenceTestTrait[T<:Row, K<:Entity[T]] extends PlaySpec with Befor
     for(_ <- 0 to 19){
       val pojo = generatePojo
       seedCollection = seedCollection :+ pojo
-      Await.result(persistence.db.run(persistence.table += pojo), 10.second)
     }
+    Await.result(persistence.db.run(persistence.table ++= seedCollection), 10.second)
+    Thread.sleep(1000)
   }
 
   override def afterAll():Unit = {

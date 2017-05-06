@@ -16,11 +16,12 @@ import com.mohiva.play.silhouette.password.BCryptPasswordHasher
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import auth.logic.AuthLogic
-import auth.models.User
 import auth.persistence._
+import auth.models.user.User
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
 import net.ceedubs.ficus.readers.EnumerationReader._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 

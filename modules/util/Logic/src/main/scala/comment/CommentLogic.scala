@@ -1,5 +1,6 @@
 package comment.logic
 
+import book.persistence.BookPersistenceTrait
 import comment.persistence.CommentPersistenceTrait
 import com.google.inject.Inject
 

@@ -1,9 +1,9 @@
 package auth.controllers
 
-import auth.models.User
 import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
 import com.mohiva.play.silhouette.api.Silhouette
 import auth.settings.AuthenticationEnvironment
+import auth.models.user.User
 
 /**
   * Created by sfrsebastian on 4/15/17.

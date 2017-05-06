@@ -9,17 +9,18 @@ import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordHasher, 
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import auth.logic.AuthLogic
-import auth.models._
 import auth.settings.AuthenticationEnvironment
-import auth.models.{SignInForm, SignUpForm}
+import auth.models.forms._
 import play.api.Configuration
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, Controller}
 import net.ceedubs.ficus.Ficus._
+
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import auth.logic.Implicits.SumDateTime
+import auth.models.user.{User, UserMin}
 
 /**
   * Created by sfrsebastian on 4/15/17.
@@ -38,6 +39,7 @@ class AuthenticationController @Inject() (
 
   implicit val signUpFormat:Format[SignUpForm] = Json.format[SignUpForm]
   implicit val signInFormat:Format[SignInForm] = Json.format[SignInForm]
+  implicit  val format = Json.format[UserMin]
 
   def signUp = Action.async(parse.json){implicit request =>
     request.body.validateOpt[SignUpForm].getOrElse(None) match {

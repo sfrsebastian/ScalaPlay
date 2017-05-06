@@ -1,7 +1,7 @@
 package auth.settings
 import com.mohiva.play.silhouette.api.Env
-import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, JWTAuthenticator}
-import auth.models.User
+import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
+import auth.models.user.User
 
 /**
   * Created by sfrsebastian on 4/15/17.

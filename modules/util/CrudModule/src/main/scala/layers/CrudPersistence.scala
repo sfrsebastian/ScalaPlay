@@ -1,17 +1,18 @@
 package crud.layers
 
+import crud.DatabaseOperations.db
 import crud.exceptions.TransactionException
-import crud.models.Entity
+import crud.models.{Entity, ModelConverter, Row}
 import play.api.libs.concurrent.Execution.Implicits._
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Query
-import scala.concurrent.Future
+
 import scala.util.{Failure, Success}
 
 /**
   * Created by sfrsebastian on 4/10/17.
   */
-trait CrudPersistence[T, K <: Entity[T]]{
+trait CrudPersistence[S<:Row, T<:Row, K <: Entity[T]]{
   def db:Database = Database.forConfig("Database")
 
   var table:TableQuery[K]
@@ -20,28 +21,36 @@ trait CrudPersistence[T, K <: Entity[T]]{
 
   def updateTransform(element:T): Product
 
-  def getAllAction(query: Query[K, T, Seq], start:Int = 0, limit:Int = 100) : DBIO[Seq[T]] = {
-    query.drop(start).take(limit).result
+  implicit def Model2Persistence:ModelConverter[S,T]
+
+  implicit def Persistence2Model:ModelConverter[T,S]
+
+  implicit def S2T (s : S)(implicit converter : ModelConverter[S,T]) : T = converter.convert(s)
+
+  implicit def T2S (t : T)(implicit converter : ModelConverter[T,S]) : S = converter.convert(t)
+
+  def getAllAction(query: Query[K, T, Seq], start:Int = 0, limit:Int = 100) : DBIO[Seq[S]] = {
+    query.drop(start).take(limit).result.map(l => l.map(e=>e:S))
   }
 
-  def getAction(query: Query[K, T, Seq]):DBIO[Option[T]] = {
-    query.result.headOption
+  def getAction(query: Query[K, T, Seq]):DBIO[Option[S]] = {
+    query.result.headOption.map(l => l.map(e=>e:S))
   }
 
-  def createAction(element : T):DBIO[T] = {
-    ((table returning table) += element)
+  def createAction(element : S):DBIO[S] = {
+    ((table returning table) += element).map(e=>e:S)
   }
 
-  def updateAction(id:Int, toUpdate:T) : DBIO[Option[T]]
+  def updateAction(id:Int, toUpdate:S) : DBIO[Option[S]]
 
-  def deleteAction(id:Int):DBIO[Option[T]] = {
+  def deleteAction(id:Int):DBIO[Option[S]] = {
     for {
       toDelete <- getAction(table.filter (_.id === id) )
       result <- table.filter(_.id === id).delete
       //_ <- DBIO.failed(new Exception("Failed"))
     }yield {
       result match{
-        case (1) => toDelete
+        case 1 => toDelete
         case _ => None
       }
     }
@@ -53,35 +62,4 @@ trait CrudPersistence[T, K <: Entity[T]]{
     case Failure(t: Throwable) => throw TransactionException("Error en transacción", t)
     case Success(result) => DBIO.successful(result)
   })
-
-  /*def getAll(start:Int, limit: Int) : Future[Seq[T]] = {
-    getAll(table.sortBy(_.id.asc.nullsLast), start, limit)
-  }
-
-  def getAll(query: Query[K, T, Seq], start:Int = 0, limit:Int = 100):Future[Seq[T]] = {
-    db.run(getAllAction(query, start, limit)).map {
-      case null => List()
-      case x: Seq[T] => x
-    }
-  }
-
-  def get(id: Int): Future[Option[T]] = {
-    get(table.filter(_.id === id))
-  }
-
-  def get(query: Query[K, T, Seq]):Future[Option[T]] = {
-    db.run(getAction(query))
-  }
-
-  def create(element:T): Future[T] = {
-    db.run(transactionResult(createAction(element).transactionally))
-  }
-
-  def update(id: Int, toUpdate: T) : Future[Option[T]] = {
-    db.run(transactionResult(updateAction(id, toUpdate).transactionally))
-  }
-
-  def delete(id: Int): Future[Option[T]] = {
-    db.run(transactionResult(deleteAction(id).transactionally))
-  }*/
 }

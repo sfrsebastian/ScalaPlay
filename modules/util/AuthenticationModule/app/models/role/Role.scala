@@ -1,5 +1,6 @@
-package auth.models
+package auth.models.role
 
+import auth.models.user.User
 import auth.settings.AuthenticationEnvironment
 import com.mohiva.play.silhouette.api.Authorization
 import play.api.mvc.Request

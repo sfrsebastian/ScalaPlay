@@ -3,8 +3,8 @@ package auth.logic
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.services.IdentityService
-import auth.models._
-import auth.persistence.{UserPersistenceTrait}
+import auth.models.user.User
+import auth.persistence.UserPersistenceTrait
 import scala.concurrent.Future
 import slick.jdbc.PostgresProfile.api._
 
@@ -19,5 +19,5 @@ class AuthLogic @Inject() (userPersistence: UserPersistenceTrait) extends Identi
 
   def getUser(id:Int) : Future[Option[User]] = userPersistence.runAction(userPersistence.getAction(userPersistence.table.filter(_.id === id)))
 
-  def confirm(loginInfo:LoginInfo) : Future[Option[User]] = userPersistence.confirm(loginInfo)
+  def confirm(loginInfo:LoginInfo) : Future[Option[User]] = userPersistence.runAction(userPersistence.confirm(loginInfo))
 }

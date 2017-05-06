@@ -1,15 +1,20 @@
 package crud
 
+import crud.exceptions.TransactionException
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.meta.MTable
+
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+import scala.util.{Failure, Success}
 
 /**
   * Created by sfrsebastian on 4/11/17.
   */
 object DatabaseOperations{
+
+  def db:Database = Database.forConfig("Database")
 
   def createIfNotExist[T, K<:Table[T]](database:Database, table:TableQuery[K]) = {
     val existing = database.run(MTable.getTables)
