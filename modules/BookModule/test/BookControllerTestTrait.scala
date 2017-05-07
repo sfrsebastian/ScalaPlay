@@ -10,7 +10,7 @@ import play.api.libs.json.Json
 /**
   * Created by sfrsebastian on 5/6/17.
   */
-trait BookControllerTestTrait extends CrudControllerTestTrait[Book, BookPersistenceModel, BookTable , BookController, BookLogic] {
+/*trait BookControllerTestTrait extends CrudControllerTestTrait[Book, BookPersistenceModel, BookTable , BookController, BookLogic] {
 
   var logicMock = mock[BookLogic]
 
@@ -28,4 +28,4 @@ trait BookControllerTestTrait extends CrudControllerTestTrait[Book, BookPersiste
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[BookLogicTrait].toInstance(logicMock))
     .build
-}
+}*/

@@ -20,9 +20,7 @@ trait CommentPersistenceTrait extends CrudPersistence[Comment, CommentPersistenc
 
   override val updateProjection: CommentTable => (Rep[String], Rep[String]) = b => (b.name, b.content)
 
-  override def updateTransform(element:CommentPersistenceModel): (String, String) = {
-    (element.name, element.content)
-  }
+  override def updateTransform(element:CommentPersistenceModel): (String, String) = (element.name, element.content)
 
   override def getAction(query: Query[CommentTable, CommentPersistenceModel, Seq]): DBIO[Option[Comment]] = {
     for{

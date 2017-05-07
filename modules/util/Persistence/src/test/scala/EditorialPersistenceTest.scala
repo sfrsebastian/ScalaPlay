@@ -1,4 +1,1 @@
-import crud.layers.CrudPersistence
-import crud.tests.CrudPersistenceTestTrait
-
 class EditorialPersistenceTest extends EditorialPersistenceTestTrait

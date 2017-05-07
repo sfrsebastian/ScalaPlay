@@ -1,7 +1,7 @@
 import controllers.editorial.EditorialController
 import crud.tests.CrudControllerTestTrait
 import editorial.logic.{EditorialLogic, EditorialLogicTrait}
-import editorial.model.{Editorial, EditorialPersistenceModel, EditorialTable}
+import editorial.model._
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -9,7 +9,7 @@ import play.api.libs.json.Json
 /**
   * Created by sfrsebastian on 5/6/17.
   */
-trait EditorialControllerTestTrait extends CrudControllerTestTrait[Editorial, EditorialPersistenceModel, EditorialTable, EditorialController, EditorialLogic] {
+/*trait EditorialControllerTestTrait extends CrudControllerTestTrait[EditorialForm, EditorialMin, Editorial, EditorialPersistenceModel, EditorialTable, EditorialController, EditorialLogic] {
 
   var logicMock = mock[EditorialLogic]
 
@@ -22,4 +22,4 @@ trait EditorialControllerTestTrait extends CrudControllerTestTrait[Editorial, Ed
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[EditorialLogicTrait].toInstance(logicMock))
     .build
-}
+}*/

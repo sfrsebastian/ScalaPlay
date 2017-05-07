@@ -11,7 +11,7 @@ class CommentTable(tag:Tag) extends Entity[CommentPersistenceModel](tag, "COMMEN
   def content = column[String]("CONTENT")
   def bookId = column[Int]("BOOK_ID")
 
-  def bookFK = foreignKey("BOOK_FK", bookId, TableQuery[BookTable])(_.id, onUpdate=ForeignKeyAction.Restrict)
+  def bookFK = foreignKey("BOOK_FK", bookId, TableQuery[BookTable])(_.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Cascade)
   // Every table needs a * projection with the same type as the table's type parameter
   def * = (id, name, content, bookId) <> (CommentPersistenceModel.tupled, CommentPersistenceModel.unapply _)
 }

@@ -1,92 +1,83 @@
-import author.model.{AuthorPersistenceModel, AuthorTable}
+import author.model.{Author, AuthorPersistenceModel, AuthorTable}
 import authorbook.model.{AuthorBookPersistenceModel, AuthorBookTable}
 import book.model._
 import book.persistence.BookPersistence
 import comment.model.{CommentPersistenceModel, CommentTable}
 import comment.persistence.CommentPersistence
-import crud.DatabaseOperations
 import crud.tests.CrudPersistenceTestTrait
+import editorial.model.{EditorialPersistenceModel, EditorialTable}
 import slick.jdbc.PostgresProfile.api._
-
-import scala.concurrent.Await
+import slick.lifted.TableQuery
 import scala.util.Random
-import scala.concurrent.duration._
 
 trait BookPersistenceTestTrait extends CrudPersistenceTestTrait[Book, BookPersistenceModel, BookTable]{
-  var authorTable = TableQuery[AuthorTable]
+
+  override val tables = Seq(
+    TableQuery[EditorialTable],
+    TableQuery[BookTable],
+    TableQuery[AuthorTable],
+    TableQuery[CommentTable],
+    TableQuery[AuthorBookTable]
+  )
+
+  override val persistence = new BookPersistence(new CommentPersistence)
+  override var seedCollection: Seq[Book] = Nil
+
+  override def generatePojo: Book = {
+    val authors = for {
+      _ <- 0 to 2
+    }yield factory.manufacturePojo(classOf[Author]).copy(id = Random.nextInt(20) + 1)
+    factory.manufacturePojo(classOf[Book]).copy(id = Random.nextInt(20) + 1, authors = authors, comments = Seq())
+  }
+
+  override implicit def Persistence2Model = BookPersistenceConverter
+
+  var editorialCollection:Seq[EditorialPersistenceModel] = Nil
+  def generateEditorialPojo() = factory.manufacturePojo(classOf[EditorialPersistenceModel])
+
   var authorCollection:Seq[AuthorPersistenceModel] = Nil
   def generateAuthorPojo() = factory.manufacturePojo(classOf[AuthorPersistenceModel])
 
-  var authorBookTable = TableQuery[AuthorBookTable]
   var authorBookCollection:Seq[AuthorBookPersistenceModel] = Nil
-  def generateAuthorBookPojo() = factory.manufacturePojo(classOf[AuthorBookPersistenceModel]).copy(bookId = (Random.nextInt(19) + 1), authorId = (Random.nextInt(19) + 1))
+  def generateAuthorBookPojo() = factory.manufacturePojo(classOf[AuthorBookPersistenceModel]).copy(authorId = (Random.nextInt(20) + 1))
 
   var commentCollection:Seq[CommentPersistenceModel] = Nil
-  def generateCommentPojo() = factory.manufacturePojo(classOf[CommentPersistenceModel]).copy(bookId = Random.nextInt(19) + 1)
+  def generateCommentPojo() = factory.manufacturePojo(classOf[CommentPersistenceModel]).copy(bookId = Random.nextInt(20) + 1)
 
-  override val persistence = new BookPersistence(new CommentPersistence)
-  override var seedCollection: Seq[BookPersistenceModel] = Nil
-  override def generatePojo: BookPersistenceModel = factory.manufacturePojo(classOf[BookPersistenceModel])
-  override implicit def Model2Persistence = BookPersistenceConverter
-  override implicit def Persistence2Model = PersistenceBookConverter
-
-  override def beforeAll(): Unit = {
-    super.beforeAll()
-    Thread.sleep(1000)
-    DatabaseOperations.createIfNotExist[AuthorPersistenceModel,AuthorTable](persistence.db, authorTable)
-    Thread.sleep(1000)
-    DatabaseOperations.createIfNotExist[CommentPersistenceModel,CommentTable](persistence.db, persistence.commentPersistence.table)
-    Thread.sleep(1000)
-    DatabaseOperations.createIfNotExist[AuthorBookPersistenceModel, AuthorBookTable](persistence.db, authorBookTable)
-  }
-
-  override def beforeEach(){
-    DatabaseOperations.Drop[CommentPersistenceModel,CommentTable](persistence.db, persistence.commentPersistence.table)
-    Thread.sleep(1000)
-    DatabaseOperations.Drop[AuthorBookPersistenceModel,AuthorBookTable](persistence.db, authorBookTable)
-    Thread.sleep(1000)
-    DatabaseOperations.Drop[BookPersistenceModel, BookTable](persistence.db, persistence.table)
-    Thread.sleep(1000)
-    DatabaseOperations.createIfNotExist[BookPersistenceModel, BookTable](persistence.db, persistence.table)
-    Thread.sleep(1000)
-    super.beforeEach()
-    Thread.sleep(1000)
-    DatabaseOperations.DropCreate[AuthorPersistenceModel, AuthorTable](persistence.db, authorTable)
-    Thread.sleep(1000)
-    DatabaseOperations.createIfNotExist[CommentPersistenceModel,CommentTable](persistence.db, persistence.commentPersistence.table)
-    Thread.sleep(1000)
-    DatabaseOperations.createIfNotExist[AuthorBookPersistenceModel,AuthorBookTable](persistence.db, authorBookTable)
-    Thread.sleep(1000)
-    commentCollection = Seq()
-    for(_ <- 0 to 19){
-      val pojo = generateCommentPojo
-      commentCollection = commentCollection :+ pojo
-    }
-    Await.result(persistence.db.run(persistence.commentPersistence.table ++= commentCollection), 10.second)
-    Thread.sleep(1000)
+  override def populateDatabase = {
+    editorialCollection = Seq()
+    seedCollection = Seq()
     authorCollection = Seq()
-    for(_ <- 0 to 19){
-      val pojo = generateAuthorPojo
-      authorCollection = authorCollection :+ pojo
-    }
-    Await.result(persistence.db.run(authorTable ++= authorCollection), 10.second)
-    Thread.sleep(1000)
+    commentCollection = Seq()
     authorBookCollection = Seq()
-    for(_ <- 0 to 19){
-      val pojo = generateAuthorBookPojo
-      authorBookCollection = authorBookCollection :+ pojo
-    }
-    Await.result(persistence.db.run(authorBookTable ++= authorBookCollection), 10.second)
-  }
 
-  override def afterAll():Unit = {
-    DatabaseOperations.Drop[CommentPersistenceModel,CommentTable](persistence.db, persistence.commentPersistence.table)
-    Thread.sleep(1000)
-    DatabaseOperations.Drop[AuthorBookPersistenceModel,AuthorBookTable](persistence.db, authorBookTable)
-    Thread.sleep(1000)
-    DatabaseOperations.Drop[AuthorPersistenceModel, AuthorTable](persistence.db, authorTable)
-    Thread.sleep(1000)
-    super.afterAll()
+    editorialCollection = for {
+      _ <- 0 to 19
+    }yield generateEditorialPojo
+    val action1 = TableQuery[EditorialTable] ++= editorialCollection
+
+    seedCollection = for {
+      i <- 0 to 19
+    }yield generatePojo.copy(id = i+1)
+    val action2 = TableQuery[BookTable] ++= seedCollection.map(b=>b:BookPersistenceModel)
+
+    authorCollection = for {
+      _ <- 0 to 19
+    }yield generateAuthorPojo
+    val action3 = TableQuery[AuthorTable] ++= authorCollection
+
+    commentCollection = for {
+      _ <- 0 to 100
+    }yield generateCommentPojo
+    val action4 = TableQuery[CommentTable] ++= commentCollection
+
+    authorBookCollection = for {
+      book <- seedCollection
+      author <- book.authors
+    }yield generateAuthorBookPojo.copy(bookId = book.id, authorId = author.id)
+    val action5 = TableQuery[AuthorBookTable] ++= authorBookCollection
+
+    DBIO.seq(action1, action2, action3, action4, action5)
   }
 
   override def assertByProperties(e1: BookPersistenceModel, e2: BookPersistenceModel): Unit = {
@@ -95,4 +86,10 @@ trait BookPersistenceTestTrait extends CrudPersistenceTestTrait[Book, BookPersis
     assert(e1.ISBN == e2.ISBN, "El ISBN deberia ser el mismo")
     assert(e1.image == e2.image, "La imagen deberia ser la misma")
   }
+
+  override def createTest: Unit = {
+    super.createTest
+
+  }
+
 }

@@ -78,11 +78,12 @@ object BookMinConverter extends ModelConverter[Book, BookMin] {
 }
 
 object BookFormConverter extends ModelConverter[Book, BookForm] {
+
   override def convert(source: Book): BookForm = {
-    BookForm(source.name, source.description, source.ISBN, source.image, source.editorial.map(e=>e.id))
+    BookForm(source.name, source.description, source.ISBN, source.image, source.authors.map(_.id) ,source.editorial.map(e=>e.id))
   }
 
   override def convertInverse(source: BookForm) : Book  = {
-    Book(1, source.name, source.description,source.ISBN,source.image, Seq(), Seq(), None)
+    Book(1, source.name, source.description,source.ISBN,source.image, Seq(), source.authorsId.map(Author(_,"","",Seq())) ,source.editorialId.map(Editorial(_,"","",Seq())))
   }
 }

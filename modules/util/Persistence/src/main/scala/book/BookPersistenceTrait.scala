@@ -1,7 +1,7 @@
 package book.persistence
 
 import author.model.AuthorTable
-import authorbook.model.AuthorBookTable
+import authorbook.model.{AuthorBookPersistenceModel, AuthorBookTable}
 import crud.layers.CrudPersistence
 import book.model._
 import comment.persistence.CommentPersistenceTrait
@@ -44,7 +44,7 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
       book
         .groupBy(_._1._1._1._1)
         .map(r=>(r._1,r._2.map(_._1._1._1._2), r._2.map(_._1._2), r._2.map(_._2)))
-        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.map(e=>e.get).distinct, r._3.distinct, r._4.head)).headOption
+        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.flatMap(e=>e).distinct, r._3.distinct, r._4.head)).headOption
     }
   }
 
@@ -59,13 +59,14 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
       book
         .groupBy(_._1._1._1._1)
         .map(r=>(r._1,r._2.map(_._1._1._1._2), r._2.map(_._1._2), r._2.map(_._2)))
-        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.map(e=>e.get).distinct, r._3.distinct, r._4.head)).toSeq
+        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.flatMap(e=>e).distinct, r._3.distinct, r._4.head)).toSeq
     }
   }
 
   override def createAction(element: Book): DBIO[Book] = {
     for{
       created <- super.createAction(element)
+      _ <- DBIO.seq(authorBookTable ++= element.authors.map(u => AuthorBookPersistenceModel(1,"",created.id, u.id)))
       _ <- DBIO.sequence(element.comments.map(c => commentPersistence.createAction(c)))
       book <- getAction(table.filter(_.id === created.id))
     }yield book.get
@@ -81,14 +82,5 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
         case _=> None
       }
     }
-  }
-
-  override def deleteAction(id: Int): DBIO[Option[Book]] = {
-    for{
-      book <- getAction(table.filter(_.id === id))
-      comments <- commentPersistence.getAllAction(commentPersistence.table.filter(_.bookId === id))
-      _ <- DBIO.sequence(comments.map(c=>commentPersistence.deleteAction(c.id)))
-      _ <- super.deleteAction(id)
-    }yield book
   }
 }

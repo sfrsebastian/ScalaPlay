@@ -1,6 +1,5 @@
 package crud.layers
 
-import crud.DatabaseOperations.db
 import crud.exceptions.TransactionException
 import crud.models.{Entity, ModelConverter, Row}
 import play.api.libs.concurrent.Execution.Implicits._

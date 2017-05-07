@@ -1,56 +1,42 @@
 package crud
 
-import crud.exceptions.TransactionException
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.meta.MTable
-
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.util.{Failure, Success}
 
 /**
   * Created by sfrsebastian on 4/11/17.
   */
 object DatabaseOperations{
 
-  def db:Database = Database.forConfig("Database")
-
-  def createIfNotExist[T, K<:Table[T]](database:Database, table:TableQuery[K]) = {
+  def createIfNotExist[K<:Table[_]](database:Database, table:TableQuery[K]) = {
     val existing = database.run(MTable.getTables)
-    def f = existing.flatMap( v => {
+    val f = existing.map( v => {
       val names = v.map(mt => mt.name.name)
       if(!names.contains(table.baseTableRow.tableName)){
-        println("Create de tabla " + table.baseTableRow.tableName)
-        database.run(table.schema.create)
+        println("CREATE de tabla " + table.baseTableRow.tableName)
+        Some(table.schema.create)
       }
-      existing
+      else{
+        None
+      }
     })
     Await.result(f, 10.second)
   }
 
-  def DropCreate[T, K<:Table[T]](database:Database, table:TableQuery[K]) = {
+  def Drop[K <: Table[_]](database:Database, table:TableQuery[K]) = {
     val existing = database.run(MTable.getTables)
-    def f = existing.flatMap( v => {
+    def f = existing.map( v => {
       val names = v.map(mt => mt.name.name)
       if(names.contains(table.baseTableRow.tableName)){
-        println("Drop Create de tabla " + table.baseTableRow.tableName)
-        database.run(table.schema.drop.andThen(table.schema.create))
+        println("DROP de tabla " + table.baseTableRow.tableName)
+        Some(table.schema.drop)
       }
-      existing
-    })
-    Await.result(f, 10.second)
-  }
-
-  def Drop[T ,K <: Table[T]](database:Database, table:TableQuery[K]) = {
-    val existing = database.run(MTable.getTables)
-    def f = existing.flatMap( v => {
-      val names = v.map(mt => mt.name.name)
-      if(names.contains(table.baseTableRow.tableName)){
-        println("Drop de tabla " + table.baseTableRow.tableName)
-        database.run(table.schema.drop)
+      else{
+        None
       }
-      existing
     })
     Await.result(f, 10.second)
   }

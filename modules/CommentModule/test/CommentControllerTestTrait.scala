@@ -9,7 +9,7 @@ import play.api.libs.json.Json
 /**
   * Created by sfrsebastian on 5/6/17.
   */
-trait CommentControllerTestTrait extends CrudControllerTestTrait[Comment, CommentPersistenceModel, CommentTable, CommentController, CommentLogic] {
+/*trait CommentControllerTestTrait extends CrudControllerTestTrait[Comment, CommentPersistenceModel, CommentTable, CommentController, CommentLogic] {
 
   var logicMock = mock[CommentLogic]
 
@@ -22,4 +22,4 @@ trait CommentControllerTestTrait extends CrudControllerTestTrait[Comment, Commen
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[CommentLogicTrait].toInstance(logicMock))
     .build
-}
+}*/

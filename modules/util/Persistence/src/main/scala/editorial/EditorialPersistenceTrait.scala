@@ -12,6 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPersistenceModel, EditorialTable] {
   var table = TableQuery[EditorialTable]
+
   val booksTable = TableQuery[BookTable]
 
   override implicit def Model2Persistence = EditorialPersistenceConverter
@@ -20,9 +21,7 @@ trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPers
 
   override val updateProjection: EditorialTable => (Rep[String], Rep[String]) = b => (b.name, b.address)
 
-  override def updateTransform(element:EditorialPersistenceModel): (String, String) = {
-    (element.name, element.address)
-  }
+  override def updateTransform(element:EditorialPersistenceModel): (String, String) = (element.name, element.address)
 
   override def getAction(query: Query[EditorialTable, EditorialPersistenceModel, Seq]): DBIO[Option[Editorial]] = {
     for{

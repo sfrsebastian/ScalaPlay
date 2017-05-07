@@ -9,7 +9,8 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play._
 import slick.jdbc.PostgresProfile.api._
 import uk.co.jemos.podam.api.PodamFactoryImpl
-import scala.concurrent.Await
+
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.util.Random
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,38 +20,48 @@ trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec wi
   private implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   val factory = new PodamFactoryImpl
+
   val persistence : CrudPersistence[S, T, K]
-  var seedCollection:Seq[T]
 
-  implicit def Model2Persistence:ModelConverter[S,T]
+  var seedCollection:Seq[S]
 
-  implicit def Persistence2Model:ModelConverter[T,S]
-
-  implicit def S2T (s : S)(implicit converter : ModelConverter[S,T]) : T = converter.convert(s)
-
-  implicit def T2S (t : T)(implicit converter : ModelConverter[T,S]) : S = converter.convert(t)
-
-  override def beforeAll(): Unit = {
-    DatabaseOperations.createIfNotExist[T,K](persistence.db, persistence.table)
-  }
-
-  override def beforeEach(){
+  def populateDatabase = {
     seedCollection = Seq()
-    DatabaseOperations.DropCreate[T,K](persistence.db, persistence.table)
-    Thread.sleep(1000)
     for(_ <- 0 to 19){
       val pojo = generatePojo
       seedCollection = seedCollection :+ pojo
     }
-    Await.result(persistence.db.run(persistence.table ++= seedCollection), 10.second)
-    Thread.sleep(1000)
+    DBIO.seq(persistence.table ++= seedCollection.map(e=>e:T))
+  }
+
+  val tables:Seq[TableQuery[_<:Entity[_<:Row]]]
+
+  implicit def Persistence2Model:ModelConverter[S,T]
+
+  implicit def S2T (s : S)(implicit converter : ModelConverter[S,T]) : T = converter.convert(s)
+
+  implicit def T2S (t : T)(implicit converter : ModelConverter[S,T]) : S = converter.convertInverse(t)
+
+  override def beforeEach(){
+    val dropSequence = persistence.db.run(DBIO.sequence(tables.reverse.flatMap(table => DatabaseOperations.Drop(persistence.db, table))))
+
+    Await.result(dropSequence, 10.second)
+
+    val createSequence = persistence.db.run(DBIO.sequence(tables.flatMap(table => DatabaseOperations.createIfNotExist(persistence.db, table))))
+
+    Await.result(createSequence, 10.second)
+
+    val populateSequence = persistence.db.run(populateDatabase)
+
+    Await.result(populateSequence, 10.second)
   }
 
   override def afterAll():Unit = {
-    DatabaseOperations.Drop[T,K](persistence.db, persistence.table)
+    val dropSequence = persistence.db.run(DBIO.sequence(tables.reverse.flatMap(table => DatabaseOperations.Drop(persistence.db, table))))
+    Await.result(dropSequence, 10.second)
   }
 
-  def generatePojo:T
+  def generatePojo:S
 
   def assertByProperties(e1:T, e2:T):Unit = {
     assert(e1.name == e2.name, "El nombre deberia ser el mismo")
@@ -190,7 +201,7 @@ trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec wi
         val id = Random.nextInt(20)
         whenReady(persistence.runAction(persistence.deleteAction(id + 1))) {
           case None => fail("Se deberia obtener el objeto eliminado")
-          case Some(_) =>
+          case Some(book) =>
             whenReady(persistence.db.run(persistence.table.filter(_.id === (id + 1)).result.headOption)){
               case Some(_) => fail("No se deberia encontrar el elemento eliminado")
               case None => succeed

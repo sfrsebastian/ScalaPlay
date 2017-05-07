@@ -19,7 +19,7 @@ import scala.concurrent.Future*/
   * Created by sfrsebastian on 4/12/17.
   */
 
-class BookControllerTest extends BookControllerTestTrait{
+class BookControllerTest {// extends BookControllerTestTrait{
 
   /*
   override lazy val app = new GuiceApplicationBuilder()

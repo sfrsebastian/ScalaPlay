@@ -1,6 +1,7 @@
+import author.AuthorForm
 import author.logic.{AuthorLogic, AuthorLogicTrait}
-import author.model.{Author, AuthorPersistenceModel, AuthorTable}
-import book.model.BookMin
+import author.model.{Author, AuthorMin, AuthorPersistenceModel, AuthorTable}
+import book.model.{Book, BookMin}
 import controllers.author.AuthorController
 import crud.tests.CrudControllerTestTrait
 import play.api.inject.bind
@@ -10,7 +11,7 @@ import play.api.libs.json.Json
 /**
   * Created by sfrsebastian on 5/6/17.
   */
-trait AuthorControllerTestTrait extends CrudControllerTestTrait[Author, AuthorPersistenceModel, AuthorTable, AuthorController, AuthorLogic] {
+/*trait AuthorControllerTestTrait extends CrudControllerTestTrait[AuthorForm, AuthorMin, Author, AuthorPersistenceModel, AuthorTable, AuthorController, AuthorLogic] {
 
   var logicMock = mock[AuthorLogic]
 
@@ -21,11 +22,11 @@ trait AuthorControllerTestTrait extends CrudControllerTestTrait[Author, AuthorPe
   override def generatePojo: Author = {
     val books = for {
       _ <- 0 to 19
-    }yield factory.manufacturePojo(classOf[BookMin])
+    }yield factory.manufacturePojo(classOf[Book])
     factory.manufacturePojo(classOf[Author]).copy(books = books)
   }
 
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[AuthorLogicTrait].toInstance(logicMock))
     .build
-}
+}*/
