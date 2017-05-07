@@ -1,55 +1,37 @@
-import author.model.AuthorTable
-import authorbook.model.AuthorBookTable
-import book.model.{Book, BookPersistenceModel, BookTable}
 import book.persistence.BookPersistence
 import comment.model._
 import comment.persistence.CommentPersistence
 import crud.tests.CrudPersistenceTestTrait
-import editorial.model.EditorialTable
-import slick.jdbc.PostgresProfile.api._
-import slick.lifted.TableQuery
+import persistence.DatabasePopulator
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.util.Random
 
 trait CommentPersistenceTestTrait extends CrudPersistenceTestTrait[Comment, CommentPersistenceModel, CommentTable]{
 
-  override val tables = Seq(
-    TableQuery[EditorialTable],
-    TableQuery[BookTable],
-    TableQuery[AuthorTable],
-    TableQuery[CommentTable],
-    TableQuery[AuthorBookTable]
-  )
+  override val tables = DatabasePopulator.tables
 
   override val persistence = new CommentPersistence
-  override var seedCollection: Seq[Comment] = Nil
-  override def generatePojo : Comment = {
-    val book = factory.manufacturePojo(classOf[Book]).copy(id = Random.nextInt(20) + 1)
-    factory.manufacturePojo(classOf[Comment]).copy(book = book)
-  }
-  override implicit def Persistence2Model = CommentPersistenceConverter
-
   val bookPersistence = new BookPersistence(persistence)
 
-  var bookCollection:Seq[BookPersistenceModel] = Nil
-  val generateBookPojo = factory.manufacturePojo(classOf[BookPersistenceModel])
+  override var seedCollection: Seq[Comment] = Seq()
+
+  override def generatePojo : Comment = {
+    DatabasePopulator.generateComment.copy(book = Random.shuffle(DatabasePopulator.books).take(1).head)
+  }
+
+  override implicit def Persistence2Model = CommentPersistenceConverter
 
   override def populateDatabase = {
-    seedCollection = Seq()
-    bookCollection = Seq()
+    val populate = DatabasePopulator.populate
+    seedCollection = DatabasePopulator.comments
+    populate
+  }
 
-    bookCollection = for {
-      _ <- 0 to 19
-    }yield generateBookPojo
-    val action1 = TableQuery[BookTable] ++= bookCollection
-
-    seedCollection = for {
-      _ <- 0 to 19
-    }yield generatePojo
-    val action2 = TableQuery[CommentTable] ++= seedCollection.map(c=>c:CommentPersistenceModel)
-
-    DBIO.seq(action1, action2)
+  override def assertByProperties(e1: CommentPersistenceModel, e2: CommentPersistenceModel, compareRefs:Boolean = true): Unit = {
+    super.assertByProperties(e1, e2)
+    assert(e1.content == e2.content, "El contenido deberia ser el mismo")
+    if(compareRefs){
+      assert(e1.bookId == e2.bookId, "El libro referenciado deberia ser el mismo")
+    }
   }
 }

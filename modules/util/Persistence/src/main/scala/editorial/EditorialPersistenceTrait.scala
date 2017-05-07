@@ -3,6 +3,7 @@ package editorial.persistence
 import book.model._
 import crud.layers.CrudPersistence
 import editorial.model._
+import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,6 +37,19 @@ trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPers
       editorial <- query.joinLeft(booksTable).on(_.id === _.editorialId).result
     }yield{
       editorial.groupBy(_._1).map(r=> Model2Persistence.convertInverse(r._1, r._2.flatMap(_._2.map(b=>b:Book)))).toSeq
+    }
+  }
+
+  override def deleteAction(id: Int): DBIO[Option[Editorial]] = {
+    for{
+      toDelete <- getAction(table.filter(_.id === id))
+      _ <- booksTable.filter(_.editorialId === id).map(_.editorialId).update(null)
+      result <- table.filter(_.id === id).delete
+    }yield{
+      result match{
+        case 1 => toDelete
+        case _ => None
+      }
     }
   }
 

@@ -67,7 +67,7 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
     for{
       created <- super.createAction(element)
       _ <- DBIO.seq(authorBookTable ++= element.authors.map(u => AuthorBookPersistenceModel(1,"",created.id, u.id)))
-      _ <- DBIO.sequence(element.comments.map(c => commentPersistence.createAction(c)))
+      _ <- DBIO.sequence(element.comments.map(c => commentPersistence.createAction(c.copy(book = created))))
       book <- getAction(table.filter(_.id === created.id))
     }yield book.get
   }

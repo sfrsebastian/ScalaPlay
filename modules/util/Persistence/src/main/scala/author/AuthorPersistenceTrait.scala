@@ -6,7 +6,6 @@ import authorbook.model.{AuthorBookPersistenceModel, AuthorBookTable}
 import book.model.Book
 import book.persistence.BookPersistenceTrait
 import slick.jdbc.PostgresProfile.api._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -30,34 +29,38 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
 
   override def getAction(query: Query[AuthorTable, AuthorPersistenceModel, Seq]): DBIO[Option[Author]] = {
     for{
-      author <- query.join(authorBookTable).on(_.id === _.authorId)
-        .join(bookPersistence.table).on(_._2.bookId === _.id)
+      author <- query
+        .joinLeft(
+          authorBookTable.join(bookPersistence.table).on(_.bookId === _.id)
+        ).on(_.id === _._1.authorId)
         .result
     }yield {
       author
-        .groupBy(_._1._1)
-        .map(r=>(r._1, r._2.map(_._2)))
-        .map(r => Model2Persistence.convertInverse(r._1, r._2.map(e=>e).distinct)).headOption
+        .groupBy(_._1)
+        .map(r=>(r._1, r._2.flatMap(_._2).map(_._2)))
+        .map(r => Model2Persistence.convertInverse(r._1, r._2.distinct)).headOption
     }
   }
 
   override def getAllAction(query: Query[AuthorTable, AuthorPersistenceModel, Seq], start: Int, limit: Int): DBIO[Seq[Author]] = {
     for{
-      author <- query.join(authorBookTable).on(_.id === _.authorId)
-        .join(bookPersistence.table).on(_._2.bookId === _.id)
+      author <- query
+        .joinLeft(
+          authorBookTable.join(bookPersistence.table).on(_.bookId === _.id)
+        ).on(_.id === _._1.authorId)
         .result
     }yield {
       author
-        .groupBy(_._1._1)
-        .map(r=>(r._1, r._2.map(_._2)))
-        .map(r => Model2Persistence.convertInverse(r._1, r._2.map(e=>e).distinct)).toSeq
+        .groupBy(_._1)
+        .map(r=>(r._1, r._2.flatMap(_._2).map(_._2)))
+        .map(r => Model2Persistence.convertInverse(r._1, r._2.distinct)).toSeq
     }
   }
 
   override def createAction(element: Author): DBIO[Author] = {
     for{
       created <- super.createAction(element)
-      _ <- DBIO.sequence(element.books.map(b => addBookAction(created.id, b)))
+      _ <- DBIO.sequence(element.books.map(b => bookPersistence.createAction(b.copy(authors = created::Nil))))
       author <- getAction(table.filter(_.id === created.id))
     }yield author.get
   }
