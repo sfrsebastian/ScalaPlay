@@ -1,9 +1,9 @@
 package book.model
 
-import author.model.{Author, AuthorMin}
+import author.model.Author
 import crud.models.Row
-import comment.model.{Comment, CommentMin}
-import editorial.model.{Editorial, EditorialMin}
+import comment.model.Comment
+import editorial.model.Editorial
 
 /**
   * Created by sfrsebastian on 4/30/17.

@@ -34,7 +34,8 @@ trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPers
 
   override def getAllAction(query: Query[EditorialTable, EditorialPersistenceModel, Seq], start: Int, limit: Int): DBIO[Seq[Editorial]] = {
     for{
-      editorial <- query.joinLeft(booksTable).on(_.id === _.editorialId).result
+      editorial <- query.joinLeft(booksTable).on(_.id === _.editorialId)
+        .drop(start).take(limit).result
     }yield{
       editorial.groupBy(_._1).map(r=> Model2Persistence.convertInverse(r._1, r._2.flatMap(_._2.map(b=>b:Book)))).toSeq
     }

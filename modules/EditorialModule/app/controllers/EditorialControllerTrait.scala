@@ -1,7 +1,6 @@
 package controllers.editorial
 
 import auth.controllers.AuthUserHandler
-import author.model.AuthorMin
 import book.model.BookMin
 import comment.model.CommentMin
 import crud.layers.CrudController

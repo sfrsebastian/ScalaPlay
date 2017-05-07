@@ -4,7 +4,6 @@ import auth.models.user.User
 import auth.settings.AuthenticationEnvironment
 import com.mohiva.play.silhouette.api.Authorization
 import play.api.mvc.Request
-
 import scala.concurrent.Future
 
 /**

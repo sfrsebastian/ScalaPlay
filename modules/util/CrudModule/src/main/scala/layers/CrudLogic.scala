@@ -10,7 +10,7 @@ trait CrudLogic[S<:Row, T<:Row, K <: Entity[T]] {
 
   val persistence:CrudPersistence[S, T, K]
 
-  def getAll(start:Int = 0, limit:Int = 100):Future[Seq[S]]={
+  def getAll(start:Int = 0, limit:Int = Int.MaxValue):Future[Seq[S]]={
     val query = persistence.table
     persistence.runAction(persistence.getAllAction(query)).map(response=> response)
   }

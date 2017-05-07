@@ -14,8 +14,6 @@ import play.api.libs.json.{Format, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.co.jemos.podam.api.PodamFactoryImpl
-import uk.co.jemos.podam.common.PodamCollection
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Random
 import scala.concurrent.Future
@@ -31,17 +29,25 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
 
   var controller: C
 
-  implicit val format:Format[F]
+  implicit val formatMin:Format[M]
+
+  implicit val formatForm:Format[F]
 
   implicit lazy val materializer: Materializer = app.materializer
 
-  implicit def Form2Model:ModelConverter[S, F]
+  implicit def Model2Form:ModelConverter[S, F]
+
+  implicit def Model2Min:ModelConverter[S, M]
 
   implicit def F2S (f : F)(implicit converter : ModelConverter[S,F]) : S = converter.convertInverse(f)
 
   implicit def S2F (s: S)(implicit converter : ModelConverter[S,F]):F = converter.convert(s)
 
-  def generatePojo:F
+  implicit def M2S (f : M)(implicit converter : ModelConverter[S,M]) : S = converter.convertInverse(f)
+
+  implicit def S2M (s: S)(implicit converter : ModelConverter[S,M]):M = converter.convert(s)
+
+  def generatePojo:S
 
   override def createTest: Unit = {
     "Al crear un nuevo recurso" must {
@@ -55,7 +61,7 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
 
       "Se deberia retornar el mensaje esperado cuando el recurso no pudo ser creado" in {
         val newResource = generatePojo
-        val request = FakeRequest().withJsonBody(Json.toJson(newResource))
+        val request = FakeRequest().withJsonBody(Json.toJson(newResource:F))
         when(logicMock.create(any())) thenReturn Future(None)
         val result = call(controller.create(), request)
         val response = contentAsString(result)
@@ -65,12 +71,13 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
 
       "Se deberia retornar el recurso creado cuando si pudo ser creado" in {
         val newResource = generatePojo
-        val jsonResource = Json.toJson(newResource)
-        val request = FakeRequest().withJsonBody(jsonResource)
-        when(logicMock.create(any())) thenReturn Future(Some(newResource:S))
+        val jsonResourceForm = Json.toJson(newResource:F)
+        val jsonResourceMin = Json.toJson(newResource:M)
+        val request = FakeRequest().withJsonBody(jsonResourceForm)
+        when(logicMock.create(any())) thenReturn Future(Some(newResource))
         val result = call(controller.create(), request)
         val jsonResponse = contentAsJson(result)
-        assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso obtenido por la logica")
+        assert(jsonResponse == jsonResourceMin, "El json recibido debe corresponder al recurso obtenido por la logica")
         assert(status(result) == CREATED, "El codigo de respuesta debe ser 201")
       }
     }
@@ -82,8 +89,8 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
         val id = Random.nextInt(20)
         val newResource = generatePojo
         val request = FakeRequest()
-        val jsonResource = Json.toJson(newResource)
-        when(logicMock.get(anyInt())) thenReturn Future(Some(newResource:S))
+        val jsonResource = Json.toJson(newResource:M)
+        when(logicMock.get(anyInt())) thenReturn Future(Some(newResource))
         val result = call(controller.get(id), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso obtenido por la logica")
@@ -106,9 +113,9 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
     "Al solicitar todos los recursos" must {
       "Se debe recibir el json de la coleccion solicitada" in {
         val newResource = (0 to 20).map(_ => generatePojo)
-        val jsonResource = Json.toJson(newResource)
+        val jsonResource = Json.toJson(newResource.map(e=>e:M))
         val request = FakeRequest()
-        when(logicMock.getAll(anyInt(), anyInt())) thenReturn Future(newResource.map(e=>e:S))
+        when(logicMock.getAll(anyInt(), anyInt())) thenReturn Future(newResource)
         val result = call(controller.getAll(None, None), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso obtenido")
@@ -131,7 +138,7 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
       "Se deberia retornar el mensaje esperado cuando el elemento no pudo ser actualizado" in {
         val toUpdate = generatePojo
         val id = Random.nextInt(20)
-        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate))
+        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:F))
         when(logicMock.update(anyInt(), any())) thenReturn Future(None)
         val result = call(controller.update(id), request)
         val response = contentAsString(result)
@@ -141,10 +148,10 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
 
       "Se deberia retornar el elemento creado cuando si pudo ser actualizado" in {
         val toUpdate = generatePojo
-        val jsonResource = Json.toJson(toUpdate)
+        val jsonResource = Json.toJson(toUpdate:M)
         val id = Random.nextInt(20)
-        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate))
-        when(logicMock.update(anyInt(), any())) thenReturn Future(Some(toUpdate:S))
+        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:F))
+        when(logicMock.update(anyInt(), any())) thenReturn Future(Some(toUpdate))
         val result = call(controller.update(id), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso obtenido")
@@ -167,10 +174,10 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
 
       "Se deberia retornar el recurso eliminado cuando la operacion es exitosa" in {
         val toDelete = generatePojo
-        val jsonResource = Json.toJson(toDelete)
+        val jsonResource = Json.toJson(toDelete:M)
         val id = Random.nextInt(20)
         val request = FakeRequest()
-        when(logicMock.delete(anyInt())) thenReturn Future(Some(toDelete:S))
+        when(logicMock.delete(anyInt())) thenReturn Future(Some(toDelete))
         val result = call(controller.delete(id), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso eliminado")

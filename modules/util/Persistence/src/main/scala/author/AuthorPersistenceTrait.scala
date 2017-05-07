@@ -48,6 +48,7 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
         .joinLeft(
           authorBookTable.join(bookPersistence.table).on(_.bookId === _.id)
         ).on(_.id === _._1.authorId)
+        .drop(start).take(limit)
         .result
     }yield {
       author

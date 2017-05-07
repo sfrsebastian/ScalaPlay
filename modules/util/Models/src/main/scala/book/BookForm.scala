@@ -1,7 +1,5 @@
 package book.model
 
-import author.AuthorForm
-
 /**
   * Created by sfrsebastian on 5/6/17.
   */

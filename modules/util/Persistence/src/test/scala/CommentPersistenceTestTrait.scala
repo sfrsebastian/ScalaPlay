@@ -3,7 +3,6 @@ import comment.model._
 import comment.persistence.CommentPersistence
 import crud.tests.CrudPersistenceTestTrait
 import persistence.DatabasePopulator
-
 import scala.util.Random
 
 trait CommentPersistenceTestTrait extends CrudPersistenceTestTrait[Comment, CommentPersistenceModel, CommentTable]{

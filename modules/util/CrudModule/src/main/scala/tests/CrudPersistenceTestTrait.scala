@@ -15,7 +15,7 @@ import scala.util.Random
 
 trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with CrudTest{
 
-  private implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
+  implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   val factory = new PodamFactoryImpl
 
@@ -115,7 +115,7 @@ trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec wi
   def getAllTest:Unit={
     "Al solicitar multiples objetos" must {
       "Solicitar todos: La longitud de la lista de objetos recibida debe ser la misma que la de objetos semilla" in {
-        whenReady(persistence.runAction(persistence.getAllAction(persistence.table, 0, 100))){
+        whenReady(persistence.runAction(persistence.getAllAction(persistence.table))){
           case Nil => fail("La coleccion no deberia ser vacia")
           case elements => assert(elements.length == seedCollection.length, "La cantidad de objetos recibida debe ser la misma que los objetos semilla")
         }
@@ -132,7 +132,11 @@ trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec wi
       }
 
       "La longitud de la lista de objetos recibida debe ser menor o igual a la especificada por los parametros de paginacion" in {
-        assert(true)
+        val limit = Random.nextInt(seedCollection.length - 1) + 1
+        whenReady(persistence.runAction(persistence.getAllAction(persistence.table, 0, limit))){
+          case Nil => fail("La coleccion no deberia ser vacia")
+          case elements => assert(elements.length <= limit, "La cantidad de objetos recibidos debe ser menor a " + limit)
+        }
       }
     }
   }

@@ -1,6 +1,6 @@
 package comment.model
 
-import book.model.{Book, BookMin}
+import book.model.Book
 import crud.models.Row
 
 /**

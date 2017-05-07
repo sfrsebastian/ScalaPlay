@@ -25,12 +25,12 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
 
   var table = TableQuery[BookTable]
 
-  val updateProjection: BookTable => (Rep[String], Rep[String], Rep[String], Rep[String]) = b => (b.name, b.description, b.ISBN, b.image)
+  val updateProjection: BookTable => (Rep[String], Rep[String], Rep[String], Rep[String], Rep[Option[Int]]) = b => (b.name, b.description, b.ISBN, b.image, b.editorialId)
 
   override implicit def Model2Persistence = BookPersistenceConverter
 
-  def updateTransform(element:BookPersistenceModel): (String, String, String, String) = {
-    (element.name, element.description, element.ISBN, element.image)
+  def updateTransform(element:BookPersistenceModel): (String, String, String, String, Option[Int]) = {
+    (element.name, element.description, element.ISBN, element.image, element.editorialId)
   }
 
   override def getAction(query: Query[BookTable, BookPersistenceModel, Seq]): DBIO[Option[Book]] = {
@@ -54,6 +54,7 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
         .join(authorBookTable).on(_._1.id === _.bookId)
         .join(authorTable).on(_._2.authorId === _.id)
         .joinLeft(editorialTable).on(_._1._1._1.editorialId === _.id)
+        .drop(start).take(limit)
         .result
     }yield {
       book

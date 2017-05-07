@@ -32,7 +32,8 @@ trait CommentPersistenceTrait extends CrudPersistence[Comment, CommentPersistenc
 
   override def getAllAction(query: Query[CommentTable, CommentPersistenceModel, Seq], start: Int, limit: Int): DBIO[Seq[Comment]] = {
     for{
-      comments <- query.join(bookTable).on(_.bookId === _.id).sortBy(_._1.id.asc.nullsLast).result
+      comments <- query.join(bookTable).on(_.bookId === _.id).sortBy(_._1.id.asc.nullsLast)
+        .drop(start).take(limit).result
     }yield {
       comments.map(r => Model2Persistence.convertInverse(r._1, r._2))
     }

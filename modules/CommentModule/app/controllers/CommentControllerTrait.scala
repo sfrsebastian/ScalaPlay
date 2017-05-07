@@ -1,15 +1,11 @@
 package controllers.comment
 
 import auth.controllers.AuthUserHandler
-import author.model.AuthorMin
-import book.model.BookMin
 import comment.logic.CommentLogicTrait
 import comment.model._
 import crud.layers.CrudController
-import editorial.model.EditorialMin
 import play.api.libs.json.Json
 import play.api.mvc.Action
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**

@@ -1,8 +1,6 @@
 package book.model
 
-import author.model.AuthorMin
 import comment.model.CommentMin
-import editorial.model.EditorialMin
 
 /**
   * Created by sfrsebastian on 5/6/17.

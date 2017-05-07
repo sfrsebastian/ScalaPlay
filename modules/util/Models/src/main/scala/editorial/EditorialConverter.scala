@@ -33,10 +33,6 @@ object EditorialMinConverter extends ModelConverter[Editorial, EditorialMin] {
   override def convertInverse(source: EditorialMin):Editorial = {
     Editorial(source.id, source.name, source.address, Seq())
   }
-
-/*  def convertInverse(source: EditorialMin, books:Seq[Book]):Editorial = {
-    Editorial(source.id, source.name, source.address, books)
-  }*/
 }
 
 object EditorialFormConverter extends ModelConverter[Editorial, EditorialForm] {

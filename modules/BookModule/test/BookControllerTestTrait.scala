@@ -1,5 +1,5 @@
 import book.logic.{BookLogic, BookLogicTrait}
-import book.model.{Book, BookPersistenceModel, BookTable}
+import book.model._
 import comment.model.CommentMin
 import controllers.book.BookController
 import crud.tests.CrudControllerTestTrait
@@ -10,22 +10,25 @@ import play.api.libs.json.Json
 /**
   * Created by sfrsebastian on 5/6/17.
   */
-/*trait BookControllerTestTrait extends CrudControllerTestTrait[Book, BookPersistenceModel, BookTable , BookController, BookLogic] {
+trait BookControllerTestTrait extends CrudControllerTestTrait[BookForm, BookMin, Book, BookPersistenceModel, BookTable , BookController, BookLogic] {
 
   var logicMock = mock[BookLogic]
 
   var controller = app.injector.instanceOf[BookController]
 
-  implicit val format = Json.format[Book]
+  implicit val formatCommentMin = Json.format[CommentMin]
 
-  override def generatePojo: Book = {
-    val comments = for {
-      _ <- 0 to 19
-    }yield factory.manufacturePojo(classOf[CommentMin])
-    factory.manufacturePojo(classOf[Book]).copy(comments = comments)
-  }
+  implicit val formatMin = Json.format[BookMin]
+
+  implicit val formatForm = Json.format[BookForm]
+
+  override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(authors = Seq(), comments = Seq())
+
+  implicit def Model2Form = BookFormConverter
+
+  implicit def Model2Min = BookMinConverter
 
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[BookLogicTrait].toInstance(logicMock))
     .build
-}*/
+}

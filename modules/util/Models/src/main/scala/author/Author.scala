@@ -1,7 +1,7 @@
 package author.model
 
 import crud.models.Row
-import book.model.{Book, BookMin}
+import book.model.Book
 
 /**
   * Created by sfrsebastian on 4/30/17.

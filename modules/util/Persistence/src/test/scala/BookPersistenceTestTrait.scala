@@ -5,7 +5,6 @@ import comment.persistence.CommentPersistence
 import crud.tests.CrudPersistenceTestTrait
 import persistence.DatabasePopulator
 import slick.jdbc.PostgresProfile.api._
-
 import scala.util.Random
 
 trait BookPersistenceTestTrait extends CrudPersistenceTestTrait[Book, BookPersistenceModel, BookTable]{
@@ -31,9 +30,7 @@ trait BookPersistenceTestTrait extends CrudPersistenceTestTrait[Book, BookPersis
     assert(e1.description == e2.description, "La descripcion deberia ser la misma")
     assert(e1.ISBN == e2.ISBN, "El ISBN deberia ser el mismo")
     assert(e1.image == e2.image, "La imagen deberia ser la misma")
-    if(compareRefs){
-      assert(e1.editorialId == e2.editorialId, "La referencia a la editorial deberia ser la misma")
-    }
+    assert(e1.editorialId == e2.editorialId, "La referencia a la editorial deberia ser la misma")
   }
 
   override def createTest: Unit = {

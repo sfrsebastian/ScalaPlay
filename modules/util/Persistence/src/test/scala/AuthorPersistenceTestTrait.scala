@@ -1,13 +1,11 @@
 import author.model._
 import author.persistence.AuthorPersistence
-import authorbook.model.AuthorBookTable
 import book.model.Book
 import book.persistence.BookPersistence
 import comment.persistence.CommentPersistence
 import crud.tests.CrudPersistenceTestTrait
 import persistence.DatabasePopulator
 import slick.jdbc.PostgresProfile.api._
-
 import scala.util.Random
 
 /**

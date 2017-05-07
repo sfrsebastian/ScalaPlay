@@ -1,7 +1,6 @@
 package auth.models.user
 
 import java.util.UUID
-
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 import crud.models.Row

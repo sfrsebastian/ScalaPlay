@@ -1,7 +1,6 @@
 package auth.models.user
 
 import java.util.UUID
-
 import crud.models.Row
 
 /**

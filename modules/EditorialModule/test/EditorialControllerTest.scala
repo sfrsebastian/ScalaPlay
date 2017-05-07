@@ -19,7 +19,7 @@ import scala.concurrent.Future*/
   * Created by sfrsebastian on 4/12/17.
   */
 
-class EditorialControllerTest {//extends EditorialPersistenceTestTrait{
+class EditorialControllerTest extends EditorialPersistenceTestTrait{
   /*override lazy val app = new GuiceApplicationBuilder()
   .overrides(bind[AuthorLogicTrait].toInstance(logicMock))
   .overrides(new FakeModule())

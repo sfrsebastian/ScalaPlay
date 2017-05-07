@@ -15,7 +15,6 @@ import play.api.Configuration
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, Controller}
 import net.ceedubs.ficus.Ficus._
-
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -26,7 +25,6 @@ import auth.models.user.{User, UserMin}
   * Created by sfrsebastian on 4/15/17.
   */
 
-object AuthenticationController
 class AuthenticationController @Inject() (
                                            override val silhouette: Silhouette[AuthenticationEnvironment],
                                            env:Environment[AuthenticationEnvironment],

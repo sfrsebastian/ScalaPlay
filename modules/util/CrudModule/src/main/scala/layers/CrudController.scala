@@ -33,7 +33,7 @@ trait CrudController[F, M, S<:Row, T<:Row , K <: Entity[T]] extends Controller w
   implicit def S2F (s: S)(implicit converter : ModelConverter[S,F]):F = converter.convert(s)
 
   def getAll(start:Option[Int], limit:Option[Int]) = Action.async{
-    logic.getAll(start.getOrElse(0), limit.getOrElse(100)).map(elements => Ok(Json.toJson(elements.map(e=>e:M))))
+    logic.getAll(start.getOrElse(0), limit.getOrElse(Int.MaxValue)).map(elements => Ok(Json.toJson(elements.map(e=>e:M))))
   }
 
   def get(id:Int) = Action.async{
