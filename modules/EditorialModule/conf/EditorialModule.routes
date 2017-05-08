@@ -7,3 +7,9 @@ PUT     /:id            controllers.editorial.EditorialController.update(id: Int
 POST    /               controllers.editorial.EditorialController.create
 
 DELETE  /:id            controllers.editorial.EditorialController.delete(id:Int)
+
+GET     /:editorialId/books      controllers.book.BookController.getEditorialBooks(editorialId:Int)
+
+GET     /:editorialId/books/:bookId controllers.book.BookController.getEditorialBook(editorialId:Int, bookId:Int)
+
+-> /                    BookModule.Routes

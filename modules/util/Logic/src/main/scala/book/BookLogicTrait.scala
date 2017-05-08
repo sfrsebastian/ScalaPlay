@@ -8,6 +8,7 @@ import scala.concurrent.Future
 import slick.jdbc.PostgresProfile.api._
 
 trait BookLogicTrait extends CrudLogic[Book, BookPersistenceModel, BookTable] {
+
   val persistence : BookPersistenceTrait
 
   override def create(element: Book): Future[Option[Book]] = {
@@ -18,5 +19,14 @@ trait BookLogicTrait extends CrudLogic[Book, BookPersistenceModel, BookTable] {
         case None => super.create(element)
       }
     })
+  }
+
+  def getAuthorBooks(authorId: Int):Future[Seq[Book]] = {
+    persistence.runAction(persistence.getAllAction(persistence.table))
+      .map(s=>s.filter(e=>e.authors.map(_.id).contains(authorId)))
+  }
+
+  def getEditorialBooks(editorialId: Int):Future[Seq[Book]] = {
+    persistence.runAction(persistence.getAllAction(persistence.table.filter(_.editorialId === editorialId)))
   }
 }

@@ -23,7 +23,16 @@ trait CommentControllerTrait extends CrudController[CommentForm, CommentMin, Com
 
   implicit def Form2Model = CommentFormConverter
 
-  def getFromBook(id:Int) = Action.async {
-    logic.getFromBook(id).map(elements => Ok(Json.toJson(elements.map(e=>e:CommentMin))))
+  def getBookComments(bookId:Int) = Action.async {
+    logic.getBookComments(bookId).map(books => Ok(Json.toJson(books.map(e=>e:CommentMin))))
+  }
+
+  def getBookComment(bookId:Int, commentId:Int) = Action.async{
+    logic.get(commentId).map(c => {
+      c match {
+        case Some(comment) if comment.bookId == bookId => Ok(Json.toJson(comment:CommentMin))
+        case _ => NotFound("No se encontró el comentario solicitado")
+      }
+    })
   }
 }

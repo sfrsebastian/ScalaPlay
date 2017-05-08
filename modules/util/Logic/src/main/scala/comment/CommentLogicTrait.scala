@@ -13,7 +13,7 @@ trait CommentLogicTrait extends CrudLogic[Comment, CommentPersistenceModel, Comm
 
   val persistence : CommentPersistenceTrait
 
-  def getFromBook(id: Int):Future[Seq[Comment]] = {
+  def getBookComments(id: Int):Future[Seq[Comment]] = {
     persistence.runAction(persistence.getAllAction(persistence.table.filter(_.bookId === id))).map(s=>s.map(e=>e:Comment))
   }
 }
