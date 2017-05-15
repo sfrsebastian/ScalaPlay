@@ -21,7 +21,7 @@ import scala.concurrent.Future
 /**
   * Created by sfrsebastian on 4/13/17.
   */
-trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController[F,M,S,T,K], L<:CrudLogic[S,T,K]] extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with MockitoSugar with CrudTest{
+trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController[M,S,T,K], L<:CrudLogic[S,T,K]] extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with MockitoSugar with CrudTest{
 
   val factory = new PodamFactoryImpl
 
@@ -31,17 +31,9 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
 
   implicit val formatMin:Format[M]
 
-  implicit val formatForm:Format[F]
-
   implicit lazy val materializer: Materializer = app.materializer
 
-  implicit def Model2Form:ModelConverter[S, F]
-
   implicit def Model2Min:ModelConverter[S, M]
-
-  implicit def F2S (f : F)(implicit converter : ModelConverter[S,F]) : S = converter.convertInverse(f)
-
-  implicit def S2F (s: S)(implicit converter : ModelConverter[S,F]):F = converter.convert(s)
 
   implicit def M2S (f : M)(implicit converter : ModelConverter[S,M]) : S = converter.convertInverse(f)
 
@@ -61,7 +53,7 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
 
       "Se deberia retornar el mensaje esperado cuando el recurso no pudo ser creado" in {
         val newResource = generatePojo
-        val request = FakeRequest().withJsonBody(Json.toJson(newResource:F))
+        val request = FakeRequest().withJsonBody(Json.toJson(newResource:M))
         when(logicMock.create(any())) thenReturn Future(None)
         val result = call(controller.create(), request)
         val response = contentAsString(result)
@@ -71,7 +63,7 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
 
       "Se deberia retornar el recurso creado cuando si pudo ser creado" in {
         val newResource = generatePojo
-        val jsonResourceForm = Json.toJson(newResource:F)
+        val jsonResourceForm = Json.toJson(newResource:M)
         val jsonResourceMin = Json.toJson(newResource:M)
         val request = FakeRequest().withJsonBody(jsonResourceForm)
         when(logicMock.create(any())) thenReturn Future(Some(newResource))
@@ -138,7 +130,7 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
       "Se deberia retornar el mensaje esperado cuando el elemento no pudo ser actualizado" in {
         val toUpdate = generatePojo
         val id = Random.nextInt(20)
-        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:F))
+        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:M))
         when(logicMock.update(anyInt(), any())) thenReturn Future(None)
         val result = call(controller.update(id), request)
         val response = contentAsString(result)
@@ -150,7 +142,7 @@ trait CrudControllerTestTrait[F, M, S<:Row, T<:Row, K<:Entity[T], C<:CrudControl
         val toUpdate = generatePojo
         val jsonResource = Json.toJson(toUpdate:M)
         val id = Random.nextInt(20)
-        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:F))
+        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:M))
         when(logicMock.update(anyInt(), any())) thenReturn Future(Some(toUpdate))
         val result = call(controller.update(id), request)
         val jsonResponse = contentAsJson(result)

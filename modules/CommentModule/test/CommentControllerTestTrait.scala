@@ -10,7 +10,7 @@ import play.api.libs.json.Json
 /**
   * Created by sfrsebastian on 5/6/17.
   */
-trait CommentControllerTestTrait extends CrudControllerTestTrait[CommentForm, CommentMin, Comment, CommentPersistenceModel, CommentTable, CommentController, CommentLogic] {
+trait CommentControllerTestTrait extends CrudControllerTestTrait[CommentDetail, CommentMin, Comment, CommentPersistenceModel, CommentTable, CommentController, CommentLogic] {
 
   var logicMock = mock[CommentLogic]
 
@@ -18,7 +18,7 @@ trait CommentControllerTestTrait extends CrudControllerTestTrait[CommentForm, Co
 
   implicit val formatMin = Json.format[CommentMin]
 
-  implicit val formatForm = Json.format[CommentForm]
+  implicit val formatForm = Json.format[CommentDetail]
 
   override def generatePojo: Comment = factory.manufacturePojo(classOf[Comment]).copy(book = Book(1,"","","","",Seq(),Seq(),None))
 

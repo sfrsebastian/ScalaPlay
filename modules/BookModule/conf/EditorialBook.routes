@@ -1,0 +1,3 @@
+GET     /:editorialId/books      controllers.book.BookController.getEditorialBooks(editorialId:Int)
+
+GET     /:editorialId/books/:bookId controllers.book.BookController.getEditorialBook(editorialId:Int, bookId:Int)

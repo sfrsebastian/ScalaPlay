@@ -1,38 +1,57 @@
 package controllers.comment
 
 import auth.controllers.AuthUserHandler
+import book.logic.BookLogicTrait
+import book.model.{Book, BookMin}
 import comment.logic.CommentLogicTrait
 import comment.model._
 import crud.layers.CrudController
 import play.api.libs.json.Json
-import play.api.mvc.Action
+import play.api.mvc.{Action, Result}
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * Created by sfrsebastian on 5/2/17.
   */
-trait CommentControllerTrait extends CrudController[CommentForm, CommentMin, Comment, CommentPersistenceModel, CommentTable] with AuthUserHandler{
+trait CommentControllerTrait extends CrudController[CommentDetail, Comment, CommentPersistenceModel, CommentTable] with AuthUserHandler{
 
   val logic:CommentLogicTrait
 
-  implicit val formatMin = Json.format[CommentMin]
+  val bookLogic:BookLogicTrait
 
-  implicit val formatForm = Json.format[CommentForm]
+  implicit val formatBookMin = Json.format[BookMin]
 
-  implicit def Min2Model = CommentMinConverter
+  implicit val formatDetail = Json.format[CommentDetail]
 
-  implicit def Form2Model = CommentFormConverter
+  implicit def Detail2Model = CommentDetailConverter
 
-  def getBookComments(bookId:Int) = Action.async {
-    logic.getBookComments(bookId).map(books => Ok(Json.toJson(books.map(e=>e:CommentMin))))
+  def getBookComments(bookId:Int, start:Option[Int], limit:Option[Int]) = Action.async {
+    for{
+      book <- bookLogic.get(bookId)
+      comments <- logic.getAll(start.getOrElse(0), limit.getOrElse(Int.MaxValue), bookId)
+    }yield validateBook(book, Ok(Json.toJson(comments.map(e => e: CommentDetail))))
   }
 
   def getBookComment(bookId:Int, commentId:Int) = Action.async{
-    logic.get(commentId).map(c => {
-      c match {
-        case Some(comment) if comment.bookId == bookId => Ok(Json.toJson(comment:CommentMin))
-        case _ => NotFound("No se encontró el comentario solicitado")
-      }
-    })
+    for{
+      book <- bookLogic.get(bookId)
+      comment <- logic.get(bookId, commentId)
+    }yield validateBook(book, validateComment(comment))
+  }
+
+  def validateBook(book:Option[Book], f: Result) = {
+    book match {
+      case Some(_) => f
+      case None => NotFound("No se encontró el libro solicitado")
+    }
+  }
+
+  def validateComment(comment:Option[Comment]) = {
+    comment match {
+      case Some(c) => Ok(Json.toJson(c:CommentDetail))
+      case None => NotFound("No se encontró el comentario solicitado")
+    }
   }
 }

@@ -1,7 +1,7 @@
-import author.AuthorForm
+import author.AuthorDetail
 import author.logic.{AuthorLogic, AuthorLogicTrait}
 import author.model._
-import book.model.BookMin
+import book.model.BookDTO
 import comment.model.CommentMin
 import controllers.author.AuthorController
 import crud.tests.CrudControllerTestTrait
@@ -12,7 +12,7 @@ import play.api.libs.json.Json
 /**
   * Created by sfrsebastian on 5/6/17.
   */
-trait AuthorControllerTestTrait extends CrudControllerTestTrait[AuthorForm, AuthorMin, Author, AuthorPersistenceModel, AuthorTable, AuthorController, AuthorLogic] {
+trait AuthorControllerTestTrait extends CrudControllerTestTrait[AuthorDetail, AuthorDTO, Author, AuthorPersistenceModel, AuthorTable, AuthorController, AuthorLogic] {
 
   var logicMock = mock[AuthorLogic]
 
@@ -20,17 +20,17 @@ trait AuthorControllerTestTrait extends CrudControllerTestTrait[AuthorForm, Auth
 
   implicit val formatCommentMin = Json.format[CommentMin]
 
-  implicit val formatBookMin = Json.format[BookMin]
+  implicit val formatBookMin = Json.format[BookDTO]
 
-  implicit val formatMin = Json.format[AuthorMin]
+  implicit val formatMin = Json.format[AuthorDTO]
 
-  implicit val formatForm = Json.format[AuthorForm]
+  implicit val formatForm = Json.format[AuthorDetail]
 
   override def generatePojo: Author = factory.manufacturePojo(classOf[Author]).copy(books = Seq())
 
-  implicit def Model2Form = AuthorFormConverter
+  implicit def Model2Form = AuthorDetailDTOConverter
 
-  implicit def Model2Min = AuthorMinConverter
+  implicit def Model2Min = AuthorDTOConverter
 
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[AuthorLogicTrait].toInstance(logicMock))

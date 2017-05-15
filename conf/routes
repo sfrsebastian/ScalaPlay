@@ -3,11 +3,12 @@
 # ~~~~
 
 # Map static resources from the /public folder to the /assets URL path
--> /books                           BookModule.Routes
 
 -> /authors                         AuthorModule.Routes
 
--> /comments                        CommentModule.Routes
+-> /books                            BookModule.Routes
+
+#-> /comments                        CommentModule.Routes
 
 -> /editorials                      EditorialModule.Routes
 

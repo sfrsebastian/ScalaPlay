@@ -36,21 +36,13 @@ object BookPersistenceConverter extends ModelConverter[Book, BookPersistenceMode
 
 object BookMinConverter extends ModelConverter[Book, BookMin] {
 
-  implicit def Comment2Min (t : Comment) : CommentMin = CommentMinConverter.convert(t)
-  implicit def Author2Min (t : Author) : AuthorMin = AuthorMinConverter.convert(t)
-  implicit def Editorial2Min (t : Editorial) : EditorialMin = EditorialMinConverter.convert(t)
-  implicit def Min2Comment (t : CommentMin) : Comment = CommentMinConverter.convertInverse(t)
-  implicit def Min2Author (t : AuthorMin) : Author = AuthorMinConverter.convertInverse(t)
-  implicit def Min2Editorial (t : EditorialMin) : Editorial = EditorialMinConverter.convertInverse(t)
-
   override def convert(source: Book):BookMin  = {
     BookMin(
       source.id,
       source.name,
       source.description,
       source.ISBN,
-      source.image,
-      source.comments.map(c=>c:CommentMin)
+      source.image
     )
   }
 
@@ -61,7 +53,7 @@ object BookMinConverter extends ModelConverter[Book, BookMin] {
       source.description,
       source.ISBN,
       source.image,
-      source.comments.map(c => c:Comment),
+      Seq(),
       Seq(),
       None
     )
@@ -77,13 +69,19 @@ object BookMinConverter extends ModelConverter[Book, BookMin] {
   }
 }
 
-object BookFormConverter extends ModelConverter[Book, BookForm] {
+object BookDetailConverter extends ModelConverter[Book, BookDetail] {
+  implicit def Author2Min (t : Author) : AuthorMin = AuthorMinConverter.convert(t)
+  implicit def Comment2Min (t : Comment) : CommentMin = CommentMinConverter.convert(t)
+  implicit def Min2Author (t : AuthorMin) : Author = AuthorMinConverter.convertInverse(t)
+  implicit def Min2Comment (t : CommentMin) : Comment = CommentMinConverter.convertInverse(t)
+  implicit def Editorial2Min (t : Editorial) : EditorialMin = EditorialMinConverter.convert(t)
+  implicit def Min2Editorial (t : EditorialMin) : Editorial = EditorialMinConverter.convertInverse(t)
 
-  override def convert(source: Book): BookForm = {
-    BookForm(source.name, source.description, source.ISBN, source.image, source.authors.map(_.id) ,source.editorial.map(e=>e.id))
+  override def convert(source: Book): BookDetail = {
+    BookDetail(source.id, source.name, source.description, source.ISBN, source.image, source.authors.map(a => a:AuthorMin), source.comments.map(c => c:CommentMin), source.editorial.map(e=>e:EditorialMin))
   }
 
-  override def convertInverse(source: BookForm) : Book  = {
-    Book(1, source.name, source.description,source.ISBN,source.image, Seq(), source.authorsId.map(Author(_,"","",Seq())) ,source.editorialId.map(Editorial(_,"","",Seq())))
+  override def convertInverse(source: BookDetail) : Book  = {
+    Book(source.id, source.name, source.description,source.ISBN,source.image, source.comments.map(c=>c:Comment), source.authors.map(a=>a:Author), source.editorial.map(e=>e:Editorial))
   }
 }

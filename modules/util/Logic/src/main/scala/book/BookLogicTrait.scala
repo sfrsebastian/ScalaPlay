@@ -21,9 +21,21 @@ trait BookLogicTrait extends CrudLogic[Book, BookPersistenceModel, BookTable] {
     })
   }
 
-  def getAuthorBooks(authorId: Int):Future[Seq[Book]] = {
+  def getBooksFromAuthor(authorId: Int):Future[Seq[Book]] = {
     persistence.runAction(persistence.getAllAction(persistence.table))
       .map(s=>s.filter(e=>e.authors.map(_.id).contains(authorId)))
+  }
+
+  def removeBookFromAuthor(authorId:Int, bookId:Int): Future[Option[Book]]= {
+    persistence.runAction(persistence.removeBookFromAuthorAction(authorId, bookId))
+  }
+
+  def addBookToAuthor(authorId:Int, bookId:Int) : Future[Option[Book]] = {
+    persistence.runAction(persistence.addBookToAuthorAction(authorId, bookId))
+  }
+
+  def replaceBooksFromAuthor(authorId:Int, books:Seq[Book]):Future[Seq[Book]] ={
+    persistence.runAction(persistence.replaceBooksFromAuthorAction(authorId, books))
   }
 
   def getEditorialBooks(editorialId: Int):Future[Seq[Book]] = {

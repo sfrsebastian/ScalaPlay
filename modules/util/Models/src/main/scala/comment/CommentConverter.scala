@@ -27,31 +27,31 @@ object CommentPersistenceConverter extends ModelConverter[Comment, CommentPersis
   }
 }
 
-object CommentMinConverter extends ModelConverter[Comment, CommentMin] {
+object CommentDetailConverter extends ModelConverter[Comment, CommentDetail] {
 
   implicit def Book2Min (t : Book) : BookMin = BookMinConverter.convert(t)
 
   implicit def Min2Book (t : BookMin) : Book = BookMinConverter.convertInverse(t)
 
-  override def convert(source: Comment):CommentMin  = {
-    CommentMin(source.id, source.content)
+  override def convert(source: Comment):CommentDetail  = {
+    CommentDetail(source.id, source.content, source.book:BookMin)
   }
 
-  override def convertInverse(source: CommentMin):Comment = {
-    Comment(source.id, "" , source.content, Book(1,"","","","",Seq(),Seq(),None))
+  override def convertInverse(source: CommentDetail):Comment = {
+    Comment(source.id, "" , source.content, source.book:Book)
   }
 
-  def convertInverse(source:CommentMin, book: Book) : Comment ={
+  def convertInverse(source:CommentDetail, book: Book) : Comment ={
     convertInverse(source).copy(book = book)
   }
 }
 
-object CommentFormConverter extends ModelConverter[Comment, CommentForm] {
-  override def convert(source: Comment): CommentForm = {
-    CommentForm(source.content, source.book.id)
+object CommentMinConverter extends ModelConverter[Comment, CommentMin] {
+  override def convert(source: Comment): CommentMin = {
+    CommentMin(source.id, source.content)
   }
 
-  override def convertInverse(source: CommentForm) : Comment  = {
-    Comment(1, "", source.content, Book(source.bookId, "","","","",Seq(), Seq(), None))
+  override def convertInverse(source: CommentMin) : Comment  = {
+    Comment(1, "", source.content, Book(1, "","","","",Seq(), Seq(), None))
   }
 }

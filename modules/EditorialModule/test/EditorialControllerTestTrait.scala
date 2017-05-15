@@ -1,4 +1,4 @@
-import book.model.BookMin
+import book.model.BookDTO
 import comment.model.CommentMin
 import controllers.editorial.EditorialController
 import crud.tests.CrudControllerTestTrait
@@ -11,7 +11,7 @@ import play.api.libs.json.Json
 /**
   * Created by sfrsebastian on 5/6/17.
   */
-trait EditorialControllerTestTrait extends CrudControllerTestTrait[EditorialForm, EditorialMin, Editorial, EditorialPersistenceModel, EditorialTable, EditorialController, EditorialLogic] {
+trait EditorialControllerTestTrait extends CrudControllerTestTrait[EditorialMin, EditorialDetail, Editorial, EditorialPersistenceModel, EditorialTable, EditorialController, EditorialLogic] {
 
   var logicMock = mock[EditorialLogic]
 
@@ -19,11 +19,11 @@ trait EditorialControllerTestTrait extends CrudControllerTestTrait[EditorialForm
 
   implicit val formatCommentMin = Json.format[CommentMin]
 
-  implicit val formatBookMin = Json.format[BookMin]
+  implicit val formatBookMin = Json.format[BookDTO]
 
-  implicit val formatMin = Json.format[EditorialMin]
+  implicit val formatMin = Json.format[EditorialDetail]
 
-  implicit val formatForm = Json.format[EditorialForm]
+  implicit val formatForm = Json.format[EditorialMin]
 
   override def generatePojo: Editorial = factory.manufacturePojo(classOf[Editorial]).copy(books = Seq())
 

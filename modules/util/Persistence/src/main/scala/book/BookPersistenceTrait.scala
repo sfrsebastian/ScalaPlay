@@ -84,4 +84,32 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
       }
     }
   }
+
+  def addBookToAuthorAction(authorId:Int, bookId:Int):DBIO[Option[Book]] = {
+    for{
+      _ <- authorBookTable += AuthorBookPersistenceModel(1,"", bookId, authorId)
+      book <- getAction(table.filter(_.id === bookId))
+    }yield book
+  }
+
+  def removeBookFromAuthorAction (authorId:Int, bookId:Int):DBIO[Option[Book]] = {
+    for{
+      result <- authorBookTable.filter(r=> r.authorId === authorId && r.bookId === bookId).delete
+      book <- getAction(table.filter(_.id === bookId))
+    }yield {
+      result match {
+        case 1 => book
+        case 0 => None
+      }
+    }
+  }
+
+  def replaceBooksFromAuthorAction(authorId:Int, books:Seq[Book]): DBIO[Seq[Book]] = {
+    for{
+      _ <- authorBookTable.filter(_.authorId === authorId).delete
+      result <- DBIO.sequence(books.map(b => addBookToAuthorAction(authorId, b.id)))
+    }yield{
+      result.flatten
+    }
+  }
 }

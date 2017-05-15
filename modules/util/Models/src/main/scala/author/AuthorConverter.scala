@@ -1,6 +1,6 @@
 package author.model
 
-import author.AuthorForm
+import author.AuthorDetail
 import book.model._
 import crud.models.ModelConverter
 /**
@@ -27,21 +27,23 @@ object AuthorMinConverter extends ModelConverter[Author, AuthorMin] {
   implicit def Min2Book (t : BookMin) : Book = BookMinConverter.convertInverse(t)
 
   override def convert(source: Author) : AuthorMin  = {
-    AuthorMin(source.id, source.name, source.lastName, books = source.books.map(b=>b:BookMin))
+    AuthorMin(source.id, source.name, source.lastName)
   }
 
   override def convertInverse(source: AuthorMin): Author = {
-    Author(source.id, source.name, source.lastName, source.books.map(b=>b:Book))
+    Author(source.id, source.name, source.lastName, Seq())
   }
 }
 
-object AuthorFormConverter extends ModelConverter[Author, AuthorForm] {
+object AuthorDetailConverter extends ModelConverter[Author, AuthorDetail] {
+  implicit def Book2Detail (t : Book) : BookMin = BookMinConverter.convert(t)
+  implicit def Detail2Book (t : BookMin) : Book = BookMinConverter.convertInverse(t)
 
-  override def convert(source: Author): AuthorForm = {
-    AuthorForm(source.name, source.lastName)
+  override def convert(source: Author): AuthorDetail = {
+    AuthorDetail(source.id, source.name, source.lastName, source.books.map(b=> b:BookMin))
   }
 
-  override def convertInverse(source: AuthorForm) : Author  = {
-    Author(1, source.name, source.lastName, List())
+  override def convertInverse(source: AuthorDetail) : Author  = {
+    Author(source.id, source.name, source.lastName, source.books.map(b=>b:Book))
   }
 }

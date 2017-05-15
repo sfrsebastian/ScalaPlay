@@ -8,8 +8,6 @@ POST    /               controllers.editorial.EditorialController.create
 
 DELETE  /:id            controllers.editorial.EditorialController.delete(id:Int)
 
-GET     /:editorialId/books      controllers.book.BookController.getEditorialBooks(editorialId:Int)
+-> /                    EditorialBook.Routes
 
-GET     /:editorialId/books/:bookId controllers.book.BookController.getEditorialBook(editorialId:Int, bookId:Int)
-
--> /                    BookModule.Routes
+->     /:editorialId/books/               CommentModule.Routes

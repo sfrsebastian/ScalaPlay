@@ -1,6 +1,6 @@
 package editorial.model
 
-import book.model.{Book, BookMin, BookMinConverter}
+import book.model._
 import crud.models.ModelConverter
 
 /**
@@ -21,27 +21,27 @@ object EditorialPersistenceConverter extends ModelConverter[Editorial, Editorial
   }
 }
 
-object EditorialMinConverter extends ModelConverter[Editorial, EditorialMin] {
+object EditorialDetailConverter extends ModelConverter[Editorial, EditorialDetail] {
 
   implicit def Book2Min (t : Book) : BookMin = BookMinConverter.convert(t)
   implicit def Min2Book (t : BookMin) : Book = BookMinConverter.convertInverse(t)
 
-  override def convert(source: Editorial):EditorialMin  = {
-    EditorialMin(source.id, source.name, source.address, source.books.map(b => b:BookMin))
+  override def convert(source: Editorial):EditorialDetail  = {
+    EditorialDetail(source.id, source.name, source.address, source.books.map(b => b:BookMin))
   }
 
-  override def convertInverse(source: EditorialMin):Editorial = {
-    Editorial(source.id, source.name, source.address, Seq())
+  override def convertInverse(source: EditorialDetail):Editorial = {
+    Editorial(source.id, source.name, source.address, source.books.map(b=>b:Book))
   }
 }
 
-object EditorialFormConverter extends ModelConverter[Editorial, EditorialForm] {
+object EditorialMinConverter extends ModelConverter[Editorial, EditorialMin] {
 
-  override def convert(source: Editorial): EditorialForm = {
-    EditorialForm(source.name, source.address)
+  override def convert(source: Editorial): EditorialMin = {
+    EditorialMin(source.id, source.name, source.address)
   }
 
-  override def convertInverse(source: EditorialForm) : Editorial  = {
-    Editorial(1, source.name, source.address, List())
+  override def convertInverse(source: EditorialMin) : Editorial  = {
+    Editorial(source.id, source.name, source.address, List())
   }
 }

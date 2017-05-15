@@ -10,17 +10,13 @@ import play.api.libs.json.Json
 /**
   * Created by sfrsebastian on 5/6/17.
   */
-trait EditorialControllerTrait extends CrudController[EditorialForm, EditorialMin, Editorial, EditorialPersistenceModel, EditorialTable] with AuthUserHandler {
+trait EditorialControllerTrait extends CrudController[EditorialDetail, Editorial, EditorialPersistenceModel, EditorialTable] with AuthUserHandler {
 
   implicit val formatCommentMin = Json.format[CommentMin]
 
   implicit val formatBookMin = Json.format[BookMin]
 
-  implicit val formatMin = Json.format[EditorialMin]
+  implicit val formatDetail = Json.format[EditorialDetail]
 
-  implicit val formatForm = Json.format[EditorialForm]
-
-  implicit def Min2Model = EditorialMinConverter
-
-  implicit def Form2Model = EditorialFormConverter
+  implicit def Detail2Model = EditorialDetailConverter
 }

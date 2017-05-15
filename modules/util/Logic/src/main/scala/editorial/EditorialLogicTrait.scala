@@ -1,5 +1,5 @@
 package editorial.logic
-
+import slick.jdbc.PostgresProfile.api._
 import crud.layers.CrudLogic
 import editorial.model.{Editorial, EditorialPersistenceModel, EditorialTable}
 import editorial.persistence.EditorialPersistenceTrait

@@ -8,8 +8,6 @@ POST    /               controllers.book.BookController.create
 
 DELETE  /:id            controllers.book.BookController.delete(id:Int)
 
-GET     /:bookId/comments   controllers.comment.CommentController.getBookComments(bookId:Int)
-
-GET     /:bookId/comments/:commentId controllers.comment.CommentController.getBookComment(bookId:Int, commentId:Int)
+-> /                    BookAuthor.Routes
 
 ->      /                   CommentModule.Routes
