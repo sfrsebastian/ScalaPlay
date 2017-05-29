@@ -6,19 +6,19 @@ lazy val CrudModule = (project in file("modules/util/CrudModule"))
 
 lazy val AuthenticationModule = (project in file("modules/util/AuthenticationModule")).enablePlugins(PlayScala).dependsOn(CrudModule)
 
-lazy val Models = (project in file("modules/util/Models")).dependsOn(CrudModule)
+lazy val Models = (project in file("modules/Models")).dependsOn(CrudModule)
 
-lazy val Persistence = (project in file("modules/util/Persistence")).dependsOn(Models)
+lazy val Persistence = (project in file("modules/Persistence")).dependsOn(Models)
 
-lazy val Logic = (project in file("modules/util/Logic")).dependsOn(Persistence)
+lazy val Logic = (project in file("modules/Logic")).dependsOn(Persistence)
 
-lazy val AuthorModule = (project in file("modules/AuthorModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, Logic, BookModule)
+lazy val AuthorModule = (project in file("modules/Services/AuthorModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, Logic, BookModule)
 
-lazy val BookModule = (project in file("modules/BookModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, Logic, CommentModule)
+lazy val BookModule = (project in file("modules/Services/BookModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, Logic, CommentModule)
 
-lazy val CommentModule = (project in file("modules/CommentModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, Logic)
+lazy val CommentModule = (project in file("modules/Services/CommentModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, Logic)
 
-lazy val EditorialModule = (project in file("modules/EditorialModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, Logic, BookModule)
+lazy val EditorialModule = (project in file("modules/Services/EditorialModule")).enablePlugins(PlayScala).dependsOn(AuthenticationModule, Logic, BookModule)
 
 lazy val `bookstore` = (project in file(".")).enablePlugins(PlayScala, SonarRunnerPlugin)
   .aggregate(

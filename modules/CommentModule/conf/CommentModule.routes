@@ -1,9 +1,0 @@
-GET     /:bookId/comments                       controllers.comment.CommentController.getBookComments(bookId:Int, start:Option[Int], limit:Option[Int])
-
-GET     /:bookId/comments/:commentId            controllers.comment.CommentController.getBookComment(bookId:Int, commentId : Int)
-
-#PUT     /:bookId/comments/:commentId            controllers.comment.CommentController.update(commentId : Int)
-
-#POST    /:bookId/comments                       controllers.comment.CommentController.create
-
-#DELETE  /:bookId/comments/:commentId            controllers.comment.CommentController.delete(commentId:Int)

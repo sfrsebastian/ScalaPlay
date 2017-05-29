@@ -1,0 +1,9 @@
+GET     /                                       controllers.comment.CommentController.getAll(start:Option[Int], limit:Option[Int])
+
+GET     /:id                                    controllers.comment.CommentController.get(id:Int)
+
+PUT     /:id                                    controllers.comment.CommentController.update(id : Int)
+
+POST    /                                       controllers.comment.CommentController.create
+
+DELETE  /:id                                    controllers.comment.CommentController.delete(id:Int)

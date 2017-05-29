@@ -35,7 +35,10 @@ trait CrudPersistence[S<:Row, T<:Row, K <: Entity[T]]{
   }
 
   def createAction(element : S):DBIO[S] = {
-    ((table returning table) += element).map(e=>e:S)
+    for{
+      created <- (table returning table) += element
+      queried <- getAction(table.filter(_.id === created.id))
+    }yield queried.get
   }
 
   def updateAction(id:Int, toUpdate:S) : DBIO[Option[S]]

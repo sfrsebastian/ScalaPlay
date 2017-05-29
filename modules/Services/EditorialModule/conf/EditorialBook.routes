@@ -1,0 +1,7 @@
+GET     /:editorialId/books      controllers.editorial.EditorialBookController.getBooksFromEditorial(editorialId:Int)
+
+GET     /:editorialId/books/:bookId controllers.editorial.EditorialBookController.getBookFromEditorial(editorialId:Int, bookId:Int)
+
+PUT /:editorialId/books/:bookId controllers.editorial.EditorialBookController.addBookToEditorial(editorialId:Int, bookId:Int)
+
+DELETE /:editorialId/books/:bookId controllers.editorial.EditorialBookController.removeBookFromEditorial(editorialId:Int, bookId:Int)

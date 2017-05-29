@@ -1,0 +1,11 @@
+GET     /               controllers.editorial.EditorialController.getAll(start:Option[Int], limit:Option[Int])
+
+GET     /:id            controllers.editorial.EditorialController.get(id: Int)
+
+PUT     /:id            controllers.editorial.EditorialController.update(id: Int)
+
+POST    /               controllers.editorial.EditorialController.create
+
+DELETE  /:id            controllers.editorial.EditorialController.delete(id:Int)
+
+-> /                    EditorialBook.Routes

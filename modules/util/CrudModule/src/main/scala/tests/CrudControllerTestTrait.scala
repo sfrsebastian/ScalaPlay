@@ -14,6 +14,7 @@ import play.api.libs.json.{Format, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.co.jemos.podam.api.PodamFactoryImpl
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Random
 import scala.concurrent.Future
@@ -29,11 +30,11 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
 
   var controller: C
 
-  implicit val formatMin:Format[M]
+  implicit val formatDetail:Format[M]
 
   implicit lazy val materializer: Materializer = app.materializer
 
-  implicit def Model2Min:ModelConverter[S, M]
+  implicit def Model2Detail:ModelConverter[S, M]
 
   implicit def M2S (f : M)(implicit converter : ModelConverter[S,M]) : S = converter.convertInverse(f)
 
