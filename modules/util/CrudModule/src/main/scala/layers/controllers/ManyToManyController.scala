@@ -33,7 +33,7 @@ trait ManyToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row
   def getResourcesFromSource(sourceId:Int) = Action.async {
     val result = for{
       a <- sourceLogic.get(sourceId)
-      _ <- predicate(a.isDefined)(ServiceLayerException("El autor dado no existe"))
+      _ <- predicate(a.isDefined)(ServiceLayerException("El origen dado no existe"))
       r <- destinationLogic.getResourcesFromSource(a.get)
     }yield Ok(Json.toJson(r.map(e=>e:D)))
     result.recover(errorHandler)
@@ -42,10 +42,10 @@ trait ManyToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row
   def getResourceFromSource(sourceId:Int, destinationId:Int) = Action.async{
     val result = for {
       a <- sourceLogic.get(sourceId)
-      _ <- predicate(a.isDefined)(ServiceLayerException("El autor dado no existe"))
+      _ <- predicate(a.isDefined)(ServiceLayerException("El origen dado no existe"))
       b <- destinationLogic.get(destinationId)
-      _ <- predicate(b.isDefined)(ServiceLayerException("El libro solicitado no existe"))
-      _ <- predicate(inverseRelationMapper(b.get).map(_.id).contains(sourceId))(new ServiceLayerException("El libro no se encuentra asociado al autor dado"))
+      _ <- predicate(b.isDefined)(ServiceLayerException("El destino solicitado no existe"))
+      _ <- predicate(inverseRelationMapper(b.get).map(_.id).contains(sourceId))(new ServiceLayerException("El destino no se encuentra asociado al origen dado"))
     }yield Ok(Json.toJson(b.get: D))
     result.recover(errorHandler)
   }
@@ -53,16 +53,12 @@ trait ManyToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row
   def addResourceToSource(sourceId:Int, destinationId:Int) = Action.async{
     val result = for {
       a <- sourceLogic.get(sourceId)
-      _ <- predicate(a.isDefined)(ServiceLayerException("El autor dado no existe"))
+      _ <- predicate(a.isDefined)(ServiceLayerException("El origen dado no existe"))
       b <- destinationLogic.get(destinationId)
-      _ <- predicate(b.isDefined)(ServiceLayerException("El libro solicitado no existe"))
+      _ <- predicate(b.isDefined)(ServiceLayerException("El destino solicitado no existe"))
       c <- destinationLogic.addResourceToSource(a.get, b.get)
-    }yield{
-      c match {
-        case Some(destination) => Ok(Json.toJson(destination:D))
-        case None => InternalServerError("Se presento un error asociando el libro al autor")
-      }
-    }
+      _ <- predicate(c.isDefined)(ServiceLayerException("Se presento un error asociando el destino al origen"))
+    }yield Ok(Json.toJson(c.get:D))
     result.recover(errorHandler)
   }
 
@@ -71,7 +67,7 @@ trait ManyToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row
       case Some(x) => {
         val result = for{
           a <- sourceLogic.get(sourceId)
-          _ <- predicate(a.isDefined)(ServiceLayerException("El autor dado no existe"))
+          _ <- predicate(a.isDefined)(ServiceLayerException("El origen dado no existe"))
           r <- destinationLogic.replaceResourcesFromSource(a.get, x.map(b=>b:S))
         }yield Ok(Json.toJson(r.map(b => b:D)))
         result.recover(errorHandler)
@@ -83,17 +79,13 @@ trait ManyToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row
   def deleteResourceFromSource(sourceId:Int, destinationId:Int) = Action.async{
     val result = for{
       a <- sourceLogic.get(sourceId)
-      _ <- predicate(a.isDefined)(ServiceLayerException("El autor dado no existe"))
+      _ <- predicate(a.isDefined)(ServiceLayerException("El origen dado no existe"))
       b <- destinationLogic.get(destinationId)
-      _ <- predicate(b.isDefined)(ServiceLayerException("El libro solicitado no existe"))
-      _ <- predicate(relationMapper(a.get).map(_.id).contains(destinationId))(new ServiceLayerException("El libro no se encuentra asociado al autor dado"))
+      _ <- predicate(b.isDefined)(ServiceLayerException("El destino solicitado no existe"))
+      _ <- predicate(relationMapper(a.get).map(_.id).contains(destinationId))(new ServiceLayerException("El destino no se encuentra asociado al origen dado"))
       deleted <- destinationLogic.removeResourceFromSource(a.get, b.get)
-    }yield{
-      deleted match {
-        case Some(destination) => Ok(Json.toJson(destination:D))
-        case None => InternalServerError("Se presento un error eliminando el libro del autor")
-      }
-    }
+      _ <- predicate(deleted.isDefined)(ServiceLayerException("Se presento un error eliminando el destino del origen"))
+    }yield Ok(Json.toJson(deleted.get:D))
     result.recover(errorHandler)
   }
 }
