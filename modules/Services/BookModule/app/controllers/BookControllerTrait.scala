@@ -1,17 +1,12 @@
 package controllers.book
 
 import auth.controllers.AuthUserHandler
-import author.logic.AuthorLogicTrait
 import author.model.AuthorMin
-import book.logic.BookLogicTrait
 import book.model._
 import comment.model.CommentMin
 import editorial.model.EditorialMin
 import layers.controllers.CrudController
 import play.api.libs.json.Json
-import play.api.mvc.Action
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by sfrsebastian on 5/2/17.

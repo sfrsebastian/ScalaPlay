@@ -10,11 +10,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 trait ManyToManyLogic[S2<:Row, S<:Row, T<:Row, K <: Entity[T]] {
 
   val persistence: CrudPersistence[S, T, K] with ManyToManyPersistence[S2, S]
-  def inverseRelationMapper(destination:S):Seq[S2]
+  def inverseManyToManyRelationMapper(destination:S):Seq[S2]
 
   def getResourcesFromSource(source: S2):Future[Seq[S]] = {
     persistence.runAction(persistence.getAllAction(persistence.table))
-      .map(s=>s.filter(e=>inverseRelationMapper(e).map(_.id).contains(source.id)))
+      .map(s=>s.filter(e=>inverseManyToManyRelationMapper(e).map(_.id).contains(source.id)))
   }
 
   def addResourceToSource(source:S2, destination:S) : Future[Option[S]] = {

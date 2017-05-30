@@ -4,15 +4,16 @@ import author.model.{Author, AuthorTable}
 import authorbook.model.{AuthorBookPersistenceModel, AuthorBookTable}
 import book.model._
 import comment.persistence.CommentPersistenceTrait
-import editorial.model.EditorialTable
-import layers.persistence.{CrudPersistence, ManyToManyPersistence}
+import editorial.model.{Editorial, EditorialTable}
+import layers.persistence.{CrudPersistence, ManyToManyPersistence, OneToManyPersistence}
 import slick.jdbc.PostgresProfile.api._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by sfrsebastian on 4/10/17.
   */
-trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, BookTable] with ManyToManyPersistence[Author, Book] {
+trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, BookTable] with ManyToManyPersistence[Author, Book] with OneToManyPersistence[Editorial, Book]{
 
   val commentPersistence:CommentPersistenceTrait
 
@@ -112,10 +113,10 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
     }
   }
 
-  def updateBookEditorialAction(editorialId:Option[Int], bookId:Int) : DBIO[Option[Book]] = {
+  override def updateEntitySourceAction(editorial:Option[Editorial], book:Book) : DBIO[Option[Book]] = {
     for{
-      result <- table.filter(_.id === bookId).map(_.editorialId).update(editorialId)
-      book <- getAction(table.filter(_.id === bookId))
+      result <- table.filter(_.id === book.id).map(_.editorialId).update(editorial.map(_.id))
+      book <- getAction(table.filter(_.id === book.id))
     }yield {
       result match{
         case 1 => book

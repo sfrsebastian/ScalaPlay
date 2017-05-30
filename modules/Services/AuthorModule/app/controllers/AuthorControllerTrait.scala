@@ -2,7 +2,6 @@ package controllers.author
 
 import auth.controllers.AuthUserHandler
 import author.AuthorDetail
-import author.logic.AuthorLogicTrait
 import author.model._
 import book.model.BookMin
 import layers.controllers.CrudController
