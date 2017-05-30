@@ -7,7 +7,6 @@ import comment.persistence.CommentPersistenceTrait
 import editorial.model.EditorialTable
 import layers.persistence.{CrudPersistence, ManyToManyPersistence}
 import slick.jdbc.PostgresProfile.api._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**

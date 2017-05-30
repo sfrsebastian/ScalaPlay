@@ -13,8 +13,6 @@ import play.api.libs.json.Json
   */
 trait AuthorControllerTrait extends CrudController[AuthorDetail, Author, AuthorPersistenceModel, AuthorTable] with AuthUserHandler {
 
-  val logic:AuthorLogicTrait
-
   implicit val bookMinFormat=Json.format[BookMin]
 
   implicit val formatDetail = Json.format[AuthorDetail]

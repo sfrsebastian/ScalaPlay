@@ -18,9 +18,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 trait BookControllerTrait extends CrudController[BookDetail, Book, BookPersistenceModel, BookTable] with AuthUserHandler {
 
-  val logic:BookLogicTrait
-  val authorLogic:AuthorLogicTrait
-
   implicit val commentMinFormat = Json.format[CommentMin]
 
   implicit val authorMin = Json.format[AuthorMin]
