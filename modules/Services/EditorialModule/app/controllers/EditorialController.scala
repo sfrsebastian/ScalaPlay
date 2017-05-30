@@ -1,7 +1,8 @@
 package controllers.editorial
 
 import com.google.inject.Inject
-import editorial.logic.EditorialLogicTrait
+import controllers.traits.EditorialControllerTrait
+import editorial.traits.EditorialLogicTrait
 /**
   * Created by sfrsebastian on 4/26/17.
   */

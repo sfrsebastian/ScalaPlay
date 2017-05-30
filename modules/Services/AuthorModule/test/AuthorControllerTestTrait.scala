@@ -1,6 +1,7 @@
 import author.AuthorDetail
-import author.logic.{AuthorLogic, AuthorLogicTrait}
+import author.logic.AuthorLogic
 import author.model._
+import author.traits.AuthorLogicTrait
 import book.model.{BookDTO, BookMin}
 import comment.model.CommentMin
 import controllers.author.AuthorController

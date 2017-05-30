@@ -1,6 +1,7 @@
 import book.model.{Book, BookMin}
-import comment.logic.{CommentLogic, CommentLogicTrait}
+import comment.logic.CommentLogic
 import comment.model._
+import comment.traits.CommentLogicTrait
 import controllers.comment.CommentController
 import crud.tests.CrudControllerTestTrait
 import play.api.inject.bind

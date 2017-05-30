@@ -1,4 +1,4 @@
-package controllers.book
+package controllers.traits
 
 import auth.controllers.AuthUserHandler
 import book.model.{Book, BookMin, BookPersistenceModel, BookTable}

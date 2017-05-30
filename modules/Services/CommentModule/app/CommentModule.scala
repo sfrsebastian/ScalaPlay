@@ -1,11 +1,14 @@
 package comment.settings
 
-import author.logic.{AuthorLogic, AuthorLogicTrait}
+import author.logic.AuthorLogic
 import author.persistence.{AuthorPersistence, AuthorPersistenceTrait}
-import book.logic.{BookLogic, BookLogicTrait}
+import author.traits.AuthorLogicTrait
+import book.logic.BookLogic
 import book.persistence.{BookPersistence, BookPersistenceTrait}
-import comment.logic.{CommentLogic, CommentLogicTrait}
+import book.traits.BookLogicTrait
+import comment.logic.CommentLogic
 import comment.persistence.{CommentPersistence, CommentPersistenceTrait}
+import comment.traits.CommentLogicTrait
 import play.api.{Configuration, Environment}
 import play.api.inject.Module
 

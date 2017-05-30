@@ -1,7 +1,8 @@
 import akka.stream.Materializer
 import author.model.{Author, AuthorMin}
-import book.logic.{BookLogic, BookLogicTrait}
+import book.logic.BookLogic
 import book.model.{Book, BookDetail, BookDetailConverter, BookMin}
+import book.traits.BookLogicTrait
 import comment.model.CommentMin
 import controllers.author.AuthorBookController
 import crud.models.ModelConverter

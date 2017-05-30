@@ -3,8 +3,9 @@ import book.model.{BookDetail, BookMin}
 import comment.model.CommentMin
 import controllers.editorial.EditorialController
 import crud.tests.CrudControllerTestTrait
-import editorial.logic.{EditorialLogic, EditorialLogicTrait}
+import editorial.logic.EditorialLogic
 import editorial.model._
+import editorial.traits.EditorialLogicTrait
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json

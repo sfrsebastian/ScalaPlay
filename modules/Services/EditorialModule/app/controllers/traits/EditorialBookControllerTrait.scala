@@ -1,4 +1,4 @@
-package controllers.editorial
+package controllers.traits
 
 import auth.controllers.AuthUserHandler
 import author.model.AuthorMin

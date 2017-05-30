@@ -1,16 +1,12 @@
-package controllers.comment
+package controllers.traits
 
 import auth.controllers.AuthUserHandler
-import book.logic.BookLogicTrait
-import book.model.{Book, BookMin}
-import comment.logic.CommentLogicTrait
+import book.model.BookMin
+import book.traits.BookLogicTrait
 import comment.model._
+import comment.traits.CommentLogicTrait
 import layers.controllers.CrudController
 import play.api.libs.json.Json
-import play.api.mvc.{Action, Result}
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 /**
   * Created by sfrsebastian on 5/2/17.

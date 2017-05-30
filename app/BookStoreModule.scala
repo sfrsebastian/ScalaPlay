@@ -7,6 +7,6 @@ import com.google.inject.AbstractModule
   */
 class BookStoreModule extends AbstractModule {
   override def configure() = {
-    bind(classOf[OnStartup]).asEagerSingleton()
+    bind(classOf[OnStartup]).asEagerSingleton();
   }
 }

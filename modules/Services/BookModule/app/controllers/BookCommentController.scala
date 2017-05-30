@@ -1,10 +1,11 @@
 package controllers.book
 
-import book.logic.BookLogicTrait
 import book.model.BookMin
+import book.traits.BookLogicTrait
 import com.google.inject.Inject
-import comment.logic.CommentLogicTrait
 import comment.model._
+import comment.traits.CommentLogicTrait
+import controllers.traits.BookCommentControllerTrait
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 

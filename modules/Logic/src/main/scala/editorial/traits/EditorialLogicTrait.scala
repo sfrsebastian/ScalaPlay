@@ -1,4 +1,4 @@
-package editorial.logic
+package editorial.traits
 
 import editorial.model.{Editorial, EditorialPersistenceModel, EditorialTable}
 import layers.logic.CrudLogic

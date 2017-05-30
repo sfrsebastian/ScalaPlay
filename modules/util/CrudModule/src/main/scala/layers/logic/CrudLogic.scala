@@ -3,7 +3,6 @@ package layers.logic
 import crud.models.{Entity, Row}
 import layers.persistence.CrudPersistence
 import slick.jdbc.PostgresProfile.api._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

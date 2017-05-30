@@ -1,6 +1,7 @@
 package author.logic
 
 import author.persistence.AuthorPersistenceTrait
+import author.traits.AuthorLogicTrait
 import com.google.inject.Inject
 
 /**

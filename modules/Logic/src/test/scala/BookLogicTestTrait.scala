@@ -1,7 +1,7 @@
 import book.logic.BookLogic
 import book.model._
 import book.persistence.BookPersistence
-import comment.logic.{CommentLogic, CommentLogicTrait}
+import comment.logic.CommentLogic
 import crud.models.ModelConverter
 import crud.tests.CrudLogicTestTrait
 import org.mockito.ArgumentMatchers.any

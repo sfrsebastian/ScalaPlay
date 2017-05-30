@@ -1,4 +1,4 @@
-package comment.logic;
+package comment.traits
 
 import comment.model._
 import layers.logic.CrudLogic

@@ -7,9 +7,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by sfrsebastian on 5/29/17.
   */
-trait ManyToManyLogic[S2<:Row, S<:Row, T<:Row, K <: Entity[T]] {
+trait ManyToManyLogic[S2<:Row, S<:Row, T<:Row, K <: Entity[T]]{
 
   val persistence: CrudPersistence[S, T, K] with ManyToManyPersistence[S2, S]
+
   def inverseManyToManyRelationMapper(destination:S):Seq[S2]
 
   def getResourcesFromSource(source: S2):Future[Seq[S]] = {

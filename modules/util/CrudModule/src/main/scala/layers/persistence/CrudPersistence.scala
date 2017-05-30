@@ -47,7 +47,6 @@ trait CrudPersistence[S<:Row, T<:Row, K <: Entity[T]]{
     for {
       toDelete <- getAction(table.filter (_.id === id) )
       result <- table.filter(_.id === id).delete
-      //_ <- DBIO.failed(new Exception("Failed"))
     }yield {
       result match{
         case 1 => toDelete

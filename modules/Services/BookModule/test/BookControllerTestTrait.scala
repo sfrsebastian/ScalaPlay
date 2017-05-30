@@ -1,6 +1,7 @@
 import author.model.AuthorMin
-import book.logic.{BookLogic, BookLogicTrait}
+import book.logic.BookLogic
 import book.model._
+import book.traits.BookLogicTrait
 import comment.model.CommentMin
 import controllers.book.BookController
 import crud.tests.CrudControllerTestTrait

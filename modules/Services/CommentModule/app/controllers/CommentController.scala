@@ -1,8 +1,9 @@
 package controllers.comment
 
-import book.logic.BookLogicTrait
+import book.traits.BookLogicTrait
 import com.google.inject.Inject
-import comment.logic.CommentLogicTrait
+import comment.traits.CommentLogicTrait
+import controllers.traits.CommentControllerTrait
 
 /**
   * Created by sfrsebastian on 4/26/17.

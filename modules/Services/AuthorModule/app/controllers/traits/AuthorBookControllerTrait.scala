@@ -1,4 +1,4 @@
-package controllers.author
+package controllers.traits
 
 import auth.controllers.AuthUserHandler
 import author.model.{Author, AuthorMin, AuthorPersistenceModel, AuthorTable}

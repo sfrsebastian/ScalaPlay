@@ -1,10 +1,11 @@
 package controllers.author
 
-import author.logic.AuthorLogicTrait
-import book.logic.BookLogicTrait
+import author.traits.AuthorLogicTrait
+import book.traits.AuthorBookLogicTrait
 import com.google.inject.Inject
+import controllers.traits.AuthorBookControllerTrait
 
 /**
   * Created by sfrsebastian on 5/15/17.
   */
-class AuthorBookController@Inject()(val sourceLogic:AuthorLogicTrait, val destinationLogic:BookLogicTrait) extends AuthorBookControllerTrait
+class AuthorBookController@Inject()(val sourceLogic:AuthorLogicTrait, val destinationLogic:AuthorBookLogicTrait) extends AuthorBookControllerTrait
