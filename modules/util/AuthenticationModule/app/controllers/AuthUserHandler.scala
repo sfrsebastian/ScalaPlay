@@ -1,7 +1,7 @@
 package auth.controllers
 
 import auth.models.user.UserMin
-import layers.UserHandler
+import layers.controllers.mixins.UserHandler
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContent, Request}
 

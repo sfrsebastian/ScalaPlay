@@ -1,4 +1,4 @@
-package layers
+package layers.controllers.mixins
 
 import play.api.mvc.{AnyContent, Request}
 

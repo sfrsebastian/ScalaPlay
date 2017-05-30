@@ -1,13 +1,13 @@
 package crud.tests
 
 import akka.stream.Materializer
-import crud.layers.{CrudController, CrudLogic}
 import crud.models.{Entity, ModelConverter, Row}
+import layers.controllers.CrudController
+import layers.logic.CrudLogic
 import org.mockito.ArgumentMatchers.{any, anyInt}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.{Format, Json}
@@ -22,7 +22,7 @@ import scala.concurrent.Future
 /**
   * Created by sfrsebastian on 4/13/17.
   */
-trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController[M,S,T,K], L<:CrudLogic[S,T,K]] extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with MockitoSugar with CrudTest{
+trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController[M,S,T,K], L<:CrudLogic[S,T,K]] extends PlaySpec with GuiceOneAppPerSuite with ScalaFutures with MockitoSugar with CrudTest{
 
   val factory = new PodamFactoryImpl
 

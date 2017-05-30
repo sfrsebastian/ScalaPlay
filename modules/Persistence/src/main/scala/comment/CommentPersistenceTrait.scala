@@ -1,8 +1,8 @@
 package comment.persistence
 
 import book.model.BookTable
-import crud.layers.CrudPersistence
 import comment.model._
+import layers.persistence.CrudPersistence
 import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global

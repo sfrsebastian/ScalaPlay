@@ -1,18 +1,17 @@
-package crud.layers
+package layers.controllers
 
-import crud.exceptions.TransactionException
 import crud.models.{Entity, ModelConverter, Row}
-import layers.UserHandler
+import layers.controllers.mixins._
+import layers.logic.CrudLogic
 import play.api.libs.json.{Format, Json}
 import play.api.mvc._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
   * Created by sfrsebastian on 4/12/17.
   */
-trait CrudController[D, S<:Row, T<:Row , K <: Entity[T]] extends Controller with UserHandler{
+trait CrudController[D, S<:Row, T<:Row , K <: Entity[T]] extends Controller with UserHandler with ErrorHandler{
 
   val logic:CrudLogic[S, T, K]
 
@@ -65,10 +64,5 @@ trait CrudController[D, S<:Row, T<:Row , K <: Entity[T]] extends Controller with
       }
       case None => BadRequest("El recurso con id dado no existe")
     }).recover(errorHandler)
-  }
-
-  def errorHandler: PartialFunction[Throwable, Result] = {
-    case t:TransactionException => InternalServerError(t.message)
-    case _ => InternalServerError("Error en servidor, reintentar de nuevo")
   }
 }

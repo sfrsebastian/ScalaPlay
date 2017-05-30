@@ -5,7 +5,7 @@ import book.logic.BookLogicTrait
 import book.model.{Book, BookMin}
 import comment.logic.CommentLogicTrait
 import comment.model._
-import crud.layers.CrudController
+import layers.controllers.CrudController
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Result}
 

@@ -1,14 +1,15 @@
 package crud.tests
 
-import crud.layers.CrudPersistence
 import crud.models.{Entity, ModelConverter, Row}
 import crud.DatabaseOperations
+import layers.persistence.CrudPersistence
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play._
 import slick.jdbc.PostgresProfile.api._
 import uk.co.jemos.podam.api.PodamFactoryImpl
+
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.util.Random

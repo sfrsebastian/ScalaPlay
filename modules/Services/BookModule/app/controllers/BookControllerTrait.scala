@@ -6,10 +6,11 @@ import author.model.AuthorMin
 import book.logic.BookLogicTrait
 import book.model._
 import comment.model.CommentMin
-import crud.layers.CrudController
 import editorial.model.EditorialMin
+import layers.controllers.CrudController
 import play.api.libs.json.Json
 import play.api.mvc.Action
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**

@@ -1,8 +1,8 @@
 package editorial.persistence
 
 import book.model._
-import crud.layers.CrudPersistence
 import editorial.model._
+import layers.persistence.CrudPersistence
 import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global

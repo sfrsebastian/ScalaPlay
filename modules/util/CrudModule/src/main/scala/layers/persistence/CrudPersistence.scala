@@ -1,4 +1,4 @@
-package crud.layers
+package layers.persistence
 
 import crud.exceptions.TransactionException
 import crud.models.{Entity, ModelConverter, Row}

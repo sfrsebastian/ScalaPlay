@@ -1,6 +1,5 @@
 package auth.persistence
 
-import crud.layers.CrudPersistence
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Rep
 
@@ -8,6 +7,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import auth.models.user._
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
+import layers.persistence.CrudPersistence
 
 /**
   * Created by sfrsebastian on 4/14/17.

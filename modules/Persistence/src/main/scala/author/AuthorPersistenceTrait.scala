@@ -1,17 +1,18 @@
 package author.persistence
 
-import crud.layers.CrudPersistence
 import author.model._
 import authorbook.model.{AuthorBookPersistenceModel, AuthorBookTable}
 import book.model.Book
 import book.persistence.BookPersistenceTrait
+import layers.persistence.{CrudPersistence, ManyToManyPersistence}
 import slick.jdbc.PostgresProfile.api._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by sfrsebastian on 4/26/17.
   */
-trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceModel,AuthorTable] {
+trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceModel,AuthorTable] with ManyToManyPersistence[Book, Author] {
 
   val bookPersistence:BookPersistenceTrait
 
@@ -85,17 +86,17 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
     }
   }
 
-  def addAuthorToBookAction(bookId:Int, authorId:Int):DBIO[Option[Author]] = {
+  override def addEntityToSourceAction(book:Book, author:Author):DBIO[Option[Author]] = {
     for{
-      _ <- authorBookTable += AuthorBookPersistenceModel(1,"", bookId, authorId)
-      author <- getAction(table.filter(_.id === authorId))
+      _ <- authorBookTable += AuthorBookPersistenceModel(1,"", book.id, author.id)
+      author <- getAction(table.filter(_.id === author.id))
     }yield author
   }
 
-  def removeAuthorFromBookAction (bookId:Int, authorId:Int):DBIO[Option[Author]] = {
+  override def removeEntityFromSourceAction (book:Book, author:Author):DBIO[Option[Author]] = {
     for{
-      result <- authorBookTable.filter(r=> r.authorId === authorId && r.bookId === bookId).delete
-      author <- getAction(table.filter(_.id === authorId))
+      result <- authorBookTable.filter(r=> r.authorId === author.id && r.bookId === book.id).delete
+      author <- getAction(table.filter(_.id === author.id))
     }yield {
       result match {
         case 1 => author
@@ -104,10 +105,10 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
     }
   }
 
-  def replaceAuthorsFromBookAction(bookId:Int, authors:Seq[Author]): DBIO[Seq[Author]] = {
+  override def replaceEntitiesFromSourceAction(book:Book, authors:Seq[Author]): DBIO[Seq[Author]] = {
     for{
-      _ <- authorBookTable.filter(_.bookId === bookId).delete
-      result <- DBIO.sequence(authors.map(b => addAuthorToBookAction(bookId, b.id)))
+      _ <- authorBookTable.filter(_.bookId === book.id).delete
+      result <- DBIO.sequence(authors.map(a => addEntityToSourceAction(book, a)))
     }yield{
       result.flatten
     }

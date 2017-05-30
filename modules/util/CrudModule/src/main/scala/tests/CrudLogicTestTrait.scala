@@ -1,7 +1,8 @@
 package crud.tests
 
-import crud.layers.{CrudLogic, CrudPersistence}
 import crud.models.{Entity, Row}
+import layers.logic.CrudLogic
+import layers.persistence.CrudPersistence
 import org.mockito.ArgumentMatchers.{any, anyInt}
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach

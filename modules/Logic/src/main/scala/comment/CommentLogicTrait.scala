@@ -1,10 +1,8 @@
 package comment.logic;
 
 import comment.persistence.CommentPersistenceTrait
-import crud.layers.CrudLogic
 import comment.model._
-import slick.jdbc.PostgresProfile.api._
-import scala.concurrent.ExecutionContext.Implicits.global
+import layers.logic.CrudLogic
 /**
   * Created by sfrsebastian on 4/26/17.
   */

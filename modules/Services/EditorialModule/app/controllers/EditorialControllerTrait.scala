@@ -3,8 +3,8 @@ package controllers.editorial
 import auth.controllers.AuthUserHandler
 import book.model.BookMin
 import comment.model.CommentMin
-import crud.layers.CrudController
 import editorial.model._
+import layers.controllers.CrudController
 import play.api.libs.json.Json
 
 /**

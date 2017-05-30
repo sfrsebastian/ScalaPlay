@@ -1,9 +1,9 @@
-GET     /:authorId/books                controllers.author.AuthorBookController.getBooksFromAuthor(authorId:Int)
+GET     /:authorId/books                controllers.author.AuthorBookController.getResourcesFromSource(authorId:Int)
 
-GET     /:authorId/books/:bookId        controllers.author.AuthorBookController.getBookFromAuthor(authorId:Int, bookId:Int)
+GET     /:authorId/books/:bookId        controllers.author.AuthorBookController.getResourceFromSource(authorId:Int, bookId:Int)
 
-PUT     /:authorId/books                controllers.author.AuthorBookController.replaceBooksFromAuthor(authorId:Int)
+PUT     /:authorId/books                controllers.author.AuthorBookController.replaceResourcesFromSource(authorId:Int)
 
-PUT     /:authorId/books/:bookId        controllers.author.AuthorBookController.addBookToAuthor(authorId:Int, bookId:Int)
+PUT     /:authorId/books/:bookId        controllers.author.AuthorBookController.addResourceToSource(authorId:Int, bookId:Int)
 
-DELETE  /:authorId/books/:bookId        controllers.author.AuthorBookController.deleteBookFromAuthor(authorId:Int, bookId:Int)
+DELETE  /:authorId/books/:bookId        controllers.author.AuthorBookController.deleteResourceFromSource(authorId:Int, bookId:Int)
