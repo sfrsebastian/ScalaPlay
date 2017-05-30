@@ -1,7 +1,8 @@
-package crud.tests
+package tests.controllers
 
 import akka.stream.Materializer
 import crud.models.{Entity, ModelConverter, Row}
+import crud.tests.CrudTest
 import layers.controllers.CrudController
 import layers.logic.CrudLogic
 import org.mockito.ArgumentMatchers.{any, anyInt}
@@ -16,8 +17,8 @@ import play.api.test.Helpers._
 import uk.co.jemos.podam.api.PodamFactoryImpl
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Random
 import scala.concurrent.Future
+import scala.util.Random
 
 /**
   * Created by sfrsebastian on 4/13/17.

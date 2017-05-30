@@ -50,7 +50,7 @@ trait ManyToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row
     result.recover(errorHandler)
   }
 
-  def addResourceToSource(sourceId:Int, destinationId:Int) = Action.async{
+  def associateResourceToSource(sourceId:Int, destinationId:Int) = Action.async{
     val result = for {
       a <- sourceLogic.get(sourceId)
       _ <- predicate(a.isDefined)(ServiceLayerException("El origen dado no existe"))

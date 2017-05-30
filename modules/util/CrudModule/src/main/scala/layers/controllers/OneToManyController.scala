@@ -42,14 +42,14 @@ trait OneToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row,
       a <- sourceLogic.get(sourceId)
       _ <- predicate(a.isDefined)(ServiceLayerException("La editorial dado no existe"))
       b <- destinationLogic.get(destinationId)
-      _ <- predicate(a.isDefined)(ServiceLayerException("El libro dado no existe"))
+      _ <- predicate(b.isDefined)(ServiceLayerException("El libro dado no existe"))
       r <- Future(a.flatMap(c => relationMapper(c).find(_.id == destinationId)))
       _ <- predicate(r.isDefined)(ServiceLayerException("El libro dado no esta asociado a la editorial dada"))
     }yield Ok(Json.toJson(b.get:D))
     result.recover(errorHandler)
   }
 
-  def associateResourceInSource(sourceId:Int, destinationId:Int) = Action.async{
+  def associateResourceToSource(sourceId:Int, destinationId:Int) = Action.async{
     val result = for{
       a <- sourceLogic.get(sourceId)
       _ <- predicate(a.isDefined)(ServiceLayerException("La editorial dada no existe"))
@@ -67,6 +67,8 @@ trait OneToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row,
       _ <- predicate(a.isDefined)(ServiceLayerException("La editorial dada no existe"))
       b <- destinationLogic.get(destinationId)
       _ <- predicate(b.isDefined)(ServiceLayerException("El libro dado no existe"))
+      r <- Future(a.flatMap(c => relationMapper(c).find(_.id == destinationId)))
+      _ <- predicate(r.isDefined)(ServiceLayerException("El libro dado no esta asociado a la editorial dada"))
       c <- destinationLogic.updateResourceToSourceRelation(None, b.get)
       _ <- predicate(c.isDefined)(ServiceLayerException("Error actualizando asociacion editorial-libro"))
     }yield Ok(Json.toJson(c.get:D))

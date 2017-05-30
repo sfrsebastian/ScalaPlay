@@ -10,7 +10,7 @@ import editorial.model.EditorialMin
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import tests.ManyToManyControllerTestTrait
+import tests.controllers.ManyToManyControllerTestTrait
 
 /**
   * Created by sfrsebastian on 5/29/17.

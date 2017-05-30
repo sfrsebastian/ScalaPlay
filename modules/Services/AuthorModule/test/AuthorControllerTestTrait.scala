@@ -5,10 +5,10 @@ import author.traits.AuthorLogicTrait
 import book.model.{BookDTO, BookMin}
 import comment.model.CommentMin
 import controllers.author.AuthorController
-import crud.tests.CrudControllerTestTrait
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import tests.controllers.CrudControllerTestTrait
 
 /**
   * Created by sfrsebastian on 5/6/17.

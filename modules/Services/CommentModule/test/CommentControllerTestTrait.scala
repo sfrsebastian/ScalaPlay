@@ -3,10 +3,10 @@ import comment.logic.CommentLogic
 import comment.model._
 import comment.traits.CommentLogicTrait
 import controllers.comment.CommentController
-import crud.tests.CrudControllerTestTrait
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import tests.controllers.CrudControllerTestTrait
 
 /**
   * Created by sfrsebastian on 5/6/17.

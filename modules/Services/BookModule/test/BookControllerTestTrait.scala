@@ -4,11 +4,11 @@ import book.model._
 import book.traits.BookLogicTrait
 import comment.model.CommentMin
 import controllers.book.BookController
-import crud.tests.CrudControllerTestTrait
 import editorial.model.EditorialMin
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import tests.controllers.CrudControllerTestTrait
 
 /**
   * Created by sfrsebastian on 5/6/17.
