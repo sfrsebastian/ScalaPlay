@@ -1,10 +1,11 @@
+package traits
+
 import comment.logic.CommentLogic
 import comment.model._
 import comment.persistence.CommentPersistence
-import crud.models.ModelConverter
-import crud.tests.CrudLogicTestTrait
 import org.mockito.Mockito._
 import slick.jdbc.PostgresProfile.api._
+import tests.logic.CrudLogicTestTrait
 
 /**
   * Created by sfrsebastian on 4/12/17.

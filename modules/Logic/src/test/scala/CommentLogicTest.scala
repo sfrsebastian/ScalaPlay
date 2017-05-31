@@ -1,3 +1,5 @@
+import traits.CommentLogicTestTrait
+
 /**
   * Created by sfrsebastian on 5/2/17.
   */

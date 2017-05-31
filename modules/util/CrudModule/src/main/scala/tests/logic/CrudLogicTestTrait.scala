@@ -1,6 +1,7 @@
-package crud.tests
+package tests.logic
 
 import crud.models.{Entity, Row}
+import crud.tests.CrudTest
 import layers.logic.CrudLogic
 import layers.persistence.CrudPersistence
 import org.mockito.ArgumentMatchers.{any, anyInt}

@@ -1,6 +1,7 @@
+package traits
+
 import author.model.AuthorMin
-import book.model.{BookDetail, BookMin}
-import comment.model.CommentMin
+import book.model.BookMin
 import controllers.editorial.EditorialController
 import editorial.logic.EditorialLogic
 import editorial.model._

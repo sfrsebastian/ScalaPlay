@@ -1,3 +1,5 @@
+package traits
+
 import book.logic.BookLogic
 import book.model._
 import book.traits.BookLogicTrait

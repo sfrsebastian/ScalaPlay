@@ -1,9 +1,10 @@
+package traits
+
 import author.AuthorDetail
 import author.logic.AuthorLogic
 import author.model._
 import author.traits.AuthorLogicTrait
-import book.model.{BookDTO, BookMin}
-import comment.model.CommentMin
+import book.model.BookMin
 import controllers.author.AuthorController
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder

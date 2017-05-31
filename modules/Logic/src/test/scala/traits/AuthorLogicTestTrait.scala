@@ -1,9 +1,11 @@
+package traits
+
 import author.logic.AuthorLogic
 import author.model._
 import author.persistence.AuthorPersistence
-import crud.tests.CrudLogicTestTrait
 import org.mockito.Mockito._
 import slick.jdbc.PostgresProfile.api._
+import tests.logic.CrudLogicTestTrait
 
 /**
   * Created by sfrsebastian on 4/12/17.

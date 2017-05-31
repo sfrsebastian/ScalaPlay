@@ -1,3 +1,5 @@
+package traits
+
 import author.model._
 import author.traits.BookAuthorLogicTrait
 import author.{AuthorDetail, BookAuthorLogic}

@@ -1,3 +1,5 @@
+package traits
+
 import author.logic.AuthorLogic
 import author.model.{Author, AuthorMin, AuthorPersistenceModel, AuthorTable}
 import author.traits.AuthorLogicTrait

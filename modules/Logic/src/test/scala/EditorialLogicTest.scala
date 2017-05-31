@@ -1,3 +1,5 @@
+import traits.EditorialLogicTestTrait
+
 /**
   * Created by sfrsebastian on 4/12/17.
   */

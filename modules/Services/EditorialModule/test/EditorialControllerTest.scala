@@ -1,3 +1,5 @@
+import traits.EditorialControllerTestTrait
+
 /*IMPORTS CON AUTENTICACION/AUTORIZACION
 import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.util.PasswordInfo

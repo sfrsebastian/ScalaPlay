@@ -1,11 +1,10 @@
-import author.{AuthorDetail, BookAuthorLogic}
+package traits
+
 import author.model._
-import author.traits.BookAuthorLogicTrait
-import book.logic.{BookLogic, EditorialBookLogic}
+import book.logic.EditorialBookLogic
 import book.model._
-import book.traits.{BookLogicTrait, EditorialBookLogicTrait}
+import book.traits.EditorialBookLogicTrait
 import comment.model.CommentMin
-import controllers.book.BookAuthorController
 import controllers.editorial.EditorialBookController
 import editorial.logic.EditorialLogic
 import editorial.model.{Editorial, EditorialMin, EditorialPersistenceModel, EditorialTable}

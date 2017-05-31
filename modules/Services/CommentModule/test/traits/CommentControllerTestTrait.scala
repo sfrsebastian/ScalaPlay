@@ -1,3 +1,5 @@
+package traits
+
 import book.model.{Book, BookMin}
 import comment.logic.CommentLogic
 import comment.model._

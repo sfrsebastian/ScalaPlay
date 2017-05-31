@@ -1,12 +1,13 @@
+package traits
+
 import book.logic.BookLogic
 import book.model._
 import book.persistence.BookPersistence
-import comment.logic.CommentLogic
-import crud.models.ModelConverter
-import crud.tests.CrudLogicTestTrait
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import slick.jdbc.PostgresProfile.api._
+import tests.logic.CrudLogicTestTrait
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

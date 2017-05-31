@@ -1,3 +1,5 @@
+package traits
+
 import author.model.AuthorMin
 import book.logic.BookLogic
 import book.model._
