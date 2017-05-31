@@ -1,8 +1,9 @@
 package layers.controllers.mixins
 
-import crud.exceptions.{ServiceLayerException, TransactionException}
+import crud.exceptions.{LogicLayerException, ServiceLayerException, TransactionException}
 import play.api.mvc.Result
 import play.api.mvc.Results._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -19,6 +20,7 @@ trait ErrorHandler{
   def errorHandler: PartialFunction[Throwable, Result] = {
     case e: TransactionException => InternalServerError(e.message)
     case e: ServiceLayerException => BadRequest(e.getMessage)
+    case e: LogicLayerException => BadRequest(e.getMessage)
     case _ => InternalServerError("Se presento un error en el servidor")
   }
 }
