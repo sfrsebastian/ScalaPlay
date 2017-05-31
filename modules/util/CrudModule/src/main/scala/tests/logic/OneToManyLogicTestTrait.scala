@@ -1,8 +1,8 @@
 package tests.logic
 
 import crud.models.{Entity, Row}
-import layers.logic.{CrudLogic, ManyToManyLogic, OneToManyLogic}
-import layers.persistence.{CrudPersistence, ManyToManyPersistence, OneToManyPersistence}
+import layers.logic.OneToManyLogic
+import layers.persistence.{CrudPersistence, OneToManyPersistence}
 import org.mockito.ArgumentMatchers.{any, anyInt}
 import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
@@ -11,7 +11,6 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import slick.dbio.DBIO
 import uk.co.jemos.podam.api.PodamFactoryImpl
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

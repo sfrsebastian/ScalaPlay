@@ -204,7 +204,7 @@ trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec wi
         val id = Random.nextInt(seedCollection.length)
         whenReady(persistence.runAction(persistence.deleteAction(id + 1))) {
           case None => fail("Se deberia obtener el objeto eliminado")
-          case Some(book) =>
+          case Some(_) =>
             whenReady(persistence.db.run(persistence.table.filter(_.id === (id + 1)).result.headOption)){
               case Some(_) => fail("No se deberia encontrar el elemento eliminado")
               case None => succeed
