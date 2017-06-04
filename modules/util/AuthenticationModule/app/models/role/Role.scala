@@ -1,3 +1,9 @@
+/*
+ * Realizado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package auth.models.role
 
 import auth.models.user.User
@@ -7,13 +13,7 @@ import play.api.mvc.Request
 import scala.concurrent.Future
 
 /**
-  * Created by sfrsebastian on 4/17/17.
-  */
-
-/**
-  * Only allows those users that have at least a service of the selected.
-  * Master service is always allowed.
-  * Ex: WithService("serviceA", "serviceB") => only users with services "serviceA" OR "serviceB" (or "master") are allowed.
+  * Autoriza a los usuarios que cuenten con alguno de los roles dados o rol de administrador
   */
 case class WithRole(anyOf: String*) extends Authorization[User, AuthenticationEnvironment#A] {
   def isAuthorized[A](user: User, authenticator: AuthenticationEnvironment#A)(implicit r: Request[A]) = Future.successful {
@@ -26,9 +26,7 @@ object WithRole {
 }
 
 /**
-  * Only allows those users that have every of the selected services.
-  * Master service is always allowed.
-  * Ex: Restrict("serviceA", "serviceB") => only users with services "serviceA" AND "serviceB" (or "master") are allowed.
+  * Autoriza a los usuarios que cuenten con todos los roles dados o rol de administrador
   */
 case class WithRoles(allOf: String*) extends Authorization[User, AuthenticationEnvironment#A] {
   def isAuthorized[A](user: User, authenticator: AuthenticationEnvironment#A)(implicit r: Request[A]) = Future.successful {

@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package auth.persistence
 
 import javax.inject.Inject
@@ -9,7 +15,9 @@ import scala.concurrent.Future
 import slick.jdbc.PostgresProfile.api._
 
 /**
-  * Created by sfrsebastian on 4/15/17.
+  * Persistencia de contraseña
+  * Se inyecta como un delegado de Silhouette
+  * @param userPersistence
   */
 class PasswordPersistence @Inject()(userPersistence:UserPersistenceTrait) extends DelegableAuthInfoDAO[PasswordInfo]{
 

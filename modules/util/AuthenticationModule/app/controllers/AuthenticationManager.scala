@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package auth.controllers
 
 import com.mohiva.play.silhouette.api.actions.{SecuredRequest, UserAwareRequest}
@@ -6,7 +12,7 @@ import auth.settings.AuthenticationEnvironment
 import auth.models.user.User
 
 /**
-  * Created by sfrsebastian on 4/15/17.
+  * Define las acciones de autenticación y autorización
   */
 trait AuthenticationManager{
   def silhouette: Silhouette[AuthenticationEnvironment]

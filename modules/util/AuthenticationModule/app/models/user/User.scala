@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package auth.models.user
 
 import java.util.UUID
@@ -8,7 +14,16 @@ import auth.models.forms.SignUpForm
 import play.api.libs.json.Json
 
 /**
-  * Created by sfrsebastian on 4/14/17.
+  * Modelo de usuario
+  * @param id
+  * @param uuid
+  * @param name
+  * @param lastName
+  * @param confirmed
+  * @param email
+  * @param loginInfo
+  * @param passwordInfo
+  * @param roles
   */
 case class User(
   id:Int,
@@ -25,6 +40,9 @@ case class User(
   def toMin = UserMin(id, name, lastName, fullName, email)
 }
 
+/**
+  * Objeto de compañia de modelo de usuario
+  */
 object User{
   implicit val passwordInfoJsonFormat = Json.format[PasswordInfo]
   implicit val userJsonFormat = Json.format[User]

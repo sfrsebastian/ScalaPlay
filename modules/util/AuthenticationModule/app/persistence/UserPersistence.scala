@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package auth.persistence
 
 import auth.models.user.{User, UserTable}
@@ -6,8 +12,10 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.ExecutionContext.Implicits.global
+
 /**
-  * Created by sfrsebastian on 5/5/17.
+  * Persistencia de usuario
+  * Se inteyecta como delegado a Silhouette
   */
 class UserPersistence extends UserPersistenceTrait {
 

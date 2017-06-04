@@ -1,3 +1,10 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
+
 package auth.settings
 
 import com.google.inject.{AbstractModule, Provides}
@@ -20,13 +27,12 @@ import auth.persistence._
 import auth.models.user.User
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
+//Dependencia necesaria
 import net.ceedubs.ficus.readers.EnumerationReader._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
-
 /**
-  * Created by sfrsebastian on 4/15/17.
+  * Modulo que define la inyección de dependencias de silhouette
   */
 class AuthModule extends AbstractModule with ScalaModule {
 

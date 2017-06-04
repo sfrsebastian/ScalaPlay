@@ -1,10 +1,28 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package auth.models.user
 
 import java.util.UUID
 import crud.models.Row
 
 /**
-  * Created by sfrsebastian on 5/5/17.
+  * Modelo de persistencia de usuario
+  * @param id
+  * @param uuid
+  * @param name
+  * @param lastName
+  * @param confirmed
+  * @param email
+  * @param loginProviderID
+  * @param loginProviderKey
+  * @param hasher
+  * @param password
+  * @param salt
+  * @param roles
   */
 case class UserPersistenceModel(
    id: Int,

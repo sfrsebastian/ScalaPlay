@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package controllers.auth
 
 import auth.controllers.AuthenticationManager
@@ -22,9 +28,16 @@ import auth.logic.Implicits.SumDateTime
 import auth.models.user.{User, UserMin}
 
 /**
-  * Created by sfrsebastian on 4/15/17.
+  * Controlador encargado de manejar la autenticación de usuarios
+  * @param silhouette
+  * @param env
+  * @param authInfoRepository
+  * @param credentialsProvider
+  * @param authLogic
+  * @param passwordHasher
+  * @param configuration
+  * @param clock
   */
-
 class AuthenticationController @Inject() (
                                            override val silhouette: Silhouette[AuthenticationEnvironment],
                                            env:Environment[AuthenticationEnvironment],
@@ -35,10 +48,24 @@ class AuthenticationController @Inject() (
                                            configuration: Configuration,
                                            clock:Clock) extends Controller with AuthenticationManager{
 
+  /**
+    * El formato del formulario de registro
+    */
   implicit val signUpFormat:Format[SignUpForm] = Json.format[SignUpForm]
+
+  /**
+    * El formato del formulario de inicio de sesion
+    */
   implicit val signInFormat:Format[SignInForm] = Json.format[SignInForm]
+
+  /**
+    * El formato del usuario autenticado
+    */
   implicit  val format = Json.format[UserMin]
 
+  /**
+    * Servicio que registra a un usuario
+    */
   def signUp = Action.async(parse.json){implicit request =>
     request.body.validateOpt[SignUpForm].getOrElse(None) match {
       case Some(form) => {
@@ -61,6 +88,9 @@ class AuthenticationController @Inject() (
     }
   }
 
+  /**
+    * Servicio que inicia la sesión de un usuario
+    */
   def signIn = Action.async(parse.json) { implicit request =>
     request.body.validateOpt[SignInForm].getOrElse(None) match {
       case None => Future(BadRequest("Error en formato de formulario"))
@@ -85,11 +115,21 @@ class AuthenticationController @Inject() (
     }
   }
 
+  /**
+    * Servicio que cierra la sesion de un usuario
+    * @return
+    */
   def signOut = SecuredAction.async { implicit request =>
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, Ok)
   }
 
+  /**
+    * Retoran el autenticador del usuario que inicia sesión
+    * @param authenticator
+    * @param rememberMe
+    * @return
+    */
   private def authenticatorWithRememberMe(authenticator: JWTAuthenticator, rememberMe: Boolean) = {
     if (rememberMe) {
       authenticator.copy(
@@ -100,18 +140,15 @@ class AuthenticationController @Inject() (
     else
       authenticator
   }
+
+  /**
+    * Define la fecha de expiración del token a crear
+    */
   private lazy val rememberMeParams: (FiniteDuration, Option[FiniteDuration]) = {
     val cfg = configuration.getConfig("silhouette.authenticator.rememberMe").get.underlying
     (
       cfg.as[FiniteDuration]("authenticatorExpiry"),
       cfg.getAs[FiniteDuration]("authenticatorIdleTimeout")
     )
-  }
-
-  def index = UserAwareAction.async { implicit request =>
-    request.identity match{
-      case Some(user) => Future(Ok(Json.toJson(user.toMin)))
-      case None => Future(Ok("No hay usuario autenticado"))
-    }
   }
 }

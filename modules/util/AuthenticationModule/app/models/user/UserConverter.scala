@@ -1,10 +1,17 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package auth.models.user
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import crud.models.ModelConverter
+
 /**
-  * Created by sfrsebastian on 4/30/17.
+  * Convertidor de modelo de usuario a modelo de persistencia
   */
 object UserPersistenceConverter extends ModelConverter[User, UserPersistenceModel] {
   override def convert(source: User): UserPersistenceModel = {

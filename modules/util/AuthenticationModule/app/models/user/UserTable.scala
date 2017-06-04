@@ -1,13 +1,20 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package auth.models.user
 
-/**
-  * Created by sfrsebastian on 5/5/17.
-  */
 import java.util.UUID
 import crud.models.Entity
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Tag
 
+/**
+  * Modelo de tabla de usuario
+  * @param tag
+  */
 class UserTable(tag:Tag) extends Entity[UserPersistenceModel](tag, "USERS") {
   def uuid = column[UUID]("UUID")
   override val name = column[String]("FIRST_NAME")
