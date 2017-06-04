@@ -46,6 +46,7 @@ scalaVersion := "2.11.7"
 
 routesGenerator := InjectedRoutesGenerator
 
+//Solo se ejecuta una prueba a la vez
 concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"

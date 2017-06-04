@@ -1,14 +1,8 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
-
-# Map static resources from the /public folder to the /assets URL path
+# Define las rutas de primer nivel de la aplicación
 
 -> /authors                         AuthorModule.Routes
 
 -> /books                            BookModule.Routes
-
-#-> /comments                        CommentModule.Routes
 
 -> /editorials                      EditorialModule.Routes
 
