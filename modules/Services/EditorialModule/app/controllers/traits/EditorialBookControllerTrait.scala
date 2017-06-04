@@ -20,7 +20,7 @@ trait EditorialBookControllerTrait extends OneToManyController[Editorial, Editor
 
   implicit val formatDetail = Json.format[BookDetail]
 
-  implicit def Detail2Model = BookDetailConverter
+  implicit val Model2Detail = BookDetailConverter
 
   def relationMapper(editorial:Editorial):Seq[Book] = editorial.books
 }

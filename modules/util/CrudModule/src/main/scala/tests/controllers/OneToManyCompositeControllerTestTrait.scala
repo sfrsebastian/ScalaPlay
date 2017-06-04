@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package tests.controllers
 
 import akka.stream.Materializer
@@ -18,33 +24,78 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
-  * Created by sfrsebastian on 5/30/17.
+  * Trait genérico para probar el controlador de una relación uno a muchos composite
+  * @tparam S2 El modelo de negocio de la entidad origen
+  * @tparam T2 El modelo de persistencia de la entidad origen
+  * @tparam K2 El modelo de tabla de la entidad origen
+  * @tparam D El modelo detalle de la entidad destino
+  * @tparam S El modelo de negocio de la entidad destino
+  * @tparam T El modelo de persistencia de la entidad destino
+  * @tparam K El modelo de tabla de la entidad destino
+  * @tparam C La clase del controlador
+  * @tparam H La logica de la entidad origen
+  * @tparam L La logica de la entidad destino
   */
 trait OneToManyCompositeControllerTestTrait [S2<:Row,T2<:Row,K2<:Entity[T2], D, S<:Row,T<:Row,K<:Entity[T], C<:OneToManyCompositeController[S2,T2,K2,D,S,T,K], H<:CrudLogic[S2,T2,K2], L<:CrudLogic[S,T,K]] extends PlaySpec with GuiceOneAppPerSuite with ScalaFutures with MockitoSugar {
 
+  /**
+    * Fábrica de creación de entidades Podam
+    */
   val factory = new PodamFactoryImpl
+
+  /**
+    * Mock de logica de la entidad origen
+    */
+  var sourceLogicMock: H
+
+  /**
+    * Mock de logica de la entidad destino
+    */
+  var destinationLogicMock: L
+
+  /**
+    * El controlador a probar
+    */
+  var controller: C
+
+  /**
+    * El formato de tipo detalle de la entidad
+    */
+  implicit val formatDetail:Format[D]
 
   implicit lazy val materializer: Materializer = app.materializer
 
-  var sourceLogicMock: H
+  /**
+    * Convertidor de modelo de negocio a modelo detalle
+    */
+  implicit val Model2Detail:ModelConverter[S, D]
 
-  var destinationLogicMock: L
+  /**
+    * Convierte el modelo detalle a modelo de negocio
+    * @param d El modelo detalle
+    * @param converter El convertidor a utilizar
+    * @return Representación en modelo de negocio del modelo detalle dado
+    */
+  implicit def D2S (d : D)(implicit converter : ModelConverter[S,D]) : S = converter.convertInverse(d)
 
-  var controller: C
+  /**
+    * Convierte el modelo de negocio a modelo de detalle
+    * @param s El modelo negocio
+    * @param converter El convertidor a utilizar
+    * @return Representación en modelo de detalle del modelo negocio dado
+    */
+  implicit def S2D (s: S)(implicit converter : ModelConverter[S,D]):D = converter.convert(s)
 
-  implicit val formatDetail:Format[D]
-
+  /**
+    * Función que genera una dupla de la relación
+    * @param sourceId El id de la entidad origen
+    * @param destinationId El id de la entidad destino
+    */
   def generatePojos(sourceId:Int, destinationId:Int): (S2, S)
 
-  implicit def Model2Detail:ModelConverter[S, D]
-
-  implicit def M2S (f : D)(implicit converter : ModelConverter[S,D]) : S = converter.convertInverse(f)
-
-  implicit def S2M (s: S)(implicit converter : ModelConverter[S,D]):D = converter.convert(s)
-
   def getResourcesFromSourceTest = {
-    "Al solicitar los libros de un autor" must {
-      "Se deberia retornar un listado de sus libros" in {
+    "Al solicitar los recursos destino de una relacion" must {
+      "Se deberia retornar un listado de sus recursos destino" in {
         val pojos = generatePojos(1,1)
         val sourceResource = pojos._1
         val destinationResource = Seq(pojos._2)
@@ -67,8 +118,8 @@ trait OneToManyCompositeControllerTestTrait [S2<:Row,T2<:Row,K2<:Entity[T2], D, 
   }
 
   def getResourceFromSourceTest = {
-    "Al solicitar un comentario de de un libro" must {
-      "Se deberia retornar el comentario" in {
+    "Al solicitar un recurso destino de la relacion" must {
+      "Se deberia retornar el recurso solicitado" in {
         val pojos = generatePojos(1,1)
         val sourceResource = pojos._1
         val destinationResource = pojos._2

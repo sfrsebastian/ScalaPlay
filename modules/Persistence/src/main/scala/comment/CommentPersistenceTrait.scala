@@ -16,7 +16,7 @@ trait CommentPersistenceTrait extends CrudPersistence[Comment, CommentPersistenc
 
   var bookTable = TableQuery[BookTable]
 
-  override implicit def Model2Persistence = CommentPersistenceConverter
+  override implicit val Model2Persistence = CommentPersistenceConverter
 
   override val updateProjection: CommentTable => (Rep[String], Rep[String]) = b => (b.name, b.content)
 

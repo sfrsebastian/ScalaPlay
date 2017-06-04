@@ -26,7 +26,7 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
 
   val updateProjection: BookTable => (Rep[String], Rep[String], Rep[String], Rep[String], Rep[Option[Int]]) = b => (b.name, b.description, b.ISBN, b.image, b.editorialId)
 
-  override implicit def Model2Persistence = BookPersistenceConverter
+  override implicit val Model2Persistence = BookPersistenceConverter
 
   def updateTransform(element:BookPersistenceModel): (String, String, String, String, Option[Int]) = {
     (element.name, element.description, element.ISBN, element.image, element.editorialId)
@@ -84,14 +84,14 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
     }
   }
 
-  override def addEntityToSourceAction(author:Author, book:Book):DBIO[Option[Book]] = {
+  override def associateEntityToSourceAction(author:Author, book:Book):DBIO[Option[Book]] = {
     for{
       _ <- authorBookTable += AuthorBookPersistenceModel(1,"", book.id, author.id)
       book <- getAction(table.filter(_.id === book.id))
     }yield book
   }
 
-  override def removeEntityFromSourceAction (author:Author, book:Book):DBIO[Option[Book]] = {
+  override def disassociateEntityFromSourceAction(author:Author, book:Book):DBIO[Option[Book]] = {
     for{
       result <- authorBookTable.filter(r=> r.authorId === author.id && r.bookId === book.id).delete
       book <- getAction(table.filter(_.id === book.id))
@@ -100,15 +100,6 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
         case 1 => book
         case 0 => None
       }
-    }
-  }
-
-  override def replaceEntitiesFromSourceAction(author:Author, books:Seq[Book]): DBIO[Seq[Book]] = {
-    for{
-      _ <- authorBookTable.filter(_.authorId === author.id).delete
-      result <- DBIO.sequence(books.map(b => addEntityToSourceAction(author, b)))
-    }yield{
-      result.flatten
     }
   }
 

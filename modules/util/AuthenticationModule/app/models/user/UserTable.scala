@@ -10,16 +10,16 @@ import slick.lifted.Tag
 
 class UserTable(tag:Tag) extends Entity[UserPersistenceModel](tag, "USERS") {
   def uuid = column[UUID]("UUID")
-  override def name = column[String]("FIRST_NAME")
-  def lastName = column[String]("LAST_NAME")
-  def confirmed = column[Boolean]("CONFIRMED")
-  def email = column[String]("EMAIL")
-  def loginProviderId = column[String]("PROVIDER_ID") //Login info
-  def loginProviderKey = column[String]("PROVIDER_KEY") //Login info
-  def hasher = column[String]("HASHER") //PasswordInfo
-  def password = column[String]("PASSWORD") //PasswordInfo
-  def salt = column[Option[String]]("SALT") //PasswordInfo
-  def roles = column[String]("ROLES")
+  override val name = column[String]("FIRST_NAME")
+  val lastName = column[String]("LAST_NAME")
+  val confirmed = column[Boolean]("CONFIRMED")
+  val email = column[String]("EMAIL")
+  val loginProviderId = column[String]("PROVIDER_ID") //Login info
+  val loginProviderKey = column[String]("PROVIDER_KEY") //Login info
+  val hasher = column[String]("HASHER") //PasswordInfo
+  val password = column[String]("PASSWORD") //PasswordInfo
+  val salt = column[Option[String]]("SALT") //PasswordInfo
+  val roles = column[String]("ROLES")
 
   def * = (id, uuid, name, lastName, confirmed, email, loginProviderId, loginProviderKey, hasher, password, salt, roles) <> (UserPersistenceModel.tupled, UserPersistenceModel.unapply _)
 }

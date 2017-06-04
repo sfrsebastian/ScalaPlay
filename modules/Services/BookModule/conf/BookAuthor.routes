@@ -1,9 +1,7 @@
-GET     /:bookId/authors                controllers.book.BookAuthorController.getResourcesFromSource(bookId:Int)
+GET     /:bookId/authors                controllers.book.BookAuthorController.getResourcesFromSource(bookId:Int, start:Option[Int], limit:Option[Int])
 
 GET     /:bookId/authors/:authorId      controllers.book.BookAuthorController.getResourceFromSource(bookId:Int, authorId:Int)
 
-PUT     /:bookId/authors                controllers.book.BookAuthorController.replaceResourcesFromSource(bookId:Int)
-
 PUT     /:bookId/authors/:authorId      controllers.book.BookAuthorController.associateResourceToSource(bookId:Int, authorId:Int)
 
-DELETE  /:bookId/authors/:authorId      controllers.book.BookAuthorController.deleteResourceFromSource(bookId:Int, authorId:Int)
+DELETE  /:bookId/authors/:authorId      controllers.book.BookAuthorController.disassociateResourceFromSource(bookId:Int, authorId:Int)

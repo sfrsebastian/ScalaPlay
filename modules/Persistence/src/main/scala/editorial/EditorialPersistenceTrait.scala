@@ -15,7 +15,7 @@ trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPers
 
   val booksTable = TableQuery[BookTable]
 
-  override implicit def Model2Persistence = EditorialPersistenceConverter
+  override implicit val Model2Persistence = EditorialPersistenceConverter
 
   implicit def Book2Persistence (t : BookPersistenceModel) : Book = BookPersistenceConverter.convertInverse(t)
 

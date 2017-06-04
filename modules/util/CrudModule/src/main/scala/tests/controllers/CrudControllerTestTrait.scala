@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package tests.controllers
 
 import akka.stream.Materializer
@@ -15,35 +21,70 @@ import play.api.libs.json.{Format, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.co.jemos.podam.api.PodamFactoryImpl
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Random
 
 /**
-  * Created by sfrsebastian on 4/13/17.
+  * Trait genérico para probar el controlador de una entidad
+  * @tparam D El modelo detale de la entidad
+  * @tparam S El modelo de negocio de la entidad
+  * @tparam T El modelo de persistencia de la entidad
+  * @tparam K El modelo de tabla de la entidad
+  * @tparam C La clase del controlador
+  * @tparam L La logica del controlador
   */
-trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController[M,S,T,K], L<:CrudLogic[S,T,K]] extends PlaySpec with GuiceOneAppPerSuite with ScalaFutures with MockitoSugar with CrudTest{
+trait CrudControllerTestTrait[D, S<:Row, T<:Row, K<:Entity[T], C<:CrudController[D,S,T,K], L<:CrudLogic[S,T,K]] extends PlaySpec with GuiceOneAppPerSuite with ScalaFutures with MockitoSugar with CrudTest{
 
+  /**
+    * Fábrica de creación de entidades Podam
+    */
   val factory = new PodamFactoryImpl
 
+  /**
+    * Mock de logica del controlador
+    */
   var logicMock:L
 
+  /**
+    * El controlador a probar
+    */
   var controller: C
 
-  implicit val formatDetail:Format[M]
+  /**
+    * El formato de tipo detalle de la entidad
+    */
+  implicit val formatDetail:Format[D]
 
   implicit lazy val materializer: Materializer = app.materializer
 
-  implicit def Model2Detail:ModelConverter[S, M]
+  /**
+    * Convertidor de modelo de negocio a modelo detalle
+    */
+  implicit val Model2Detail:ModelConverter[S, D]
 
-  implicit def M2S (f : M)(implicit converter : ModelConverter[S,M]) : S = converter.convertInverse(f)
+  /**
+    * Convierte el modelo detalle a modelo de negocio
+    * @param d El modelo detalle
+    * @param converter El convertidor a utilizar
+    * @return Representación en modelo de negocio del modelo detalle dado
+    */
+  implicit def D2S (d : D)(implicit converter : ModelConverter[S,D]) : S = converter.convertInverse(d)
 
-  implicit def S2M (s: S)(implicit converter : ModelConverter[S,M]):M = converter.convert(s)
+  /**
+    * Convierte el modelo de negocio a modelo de detalle
+    * @param s El modelo negocio
+    * @param converter El convertidor a utilizar
+    * @return Representación en modelo de detalle del modelo negocio dado
+    */
+  implicit def S2D (s: S)(implicit converter : ModelConverter[S,D]):D = converter.convert(s)
 
+  /**
+    * Función que genera una entidad
+    */
   def generatePojo:S
 
-  override def createTest: Unit = {
+  override def createTest = {
     "Al crear un nuevo recurso" must {
       "Se deberia retornar el mensaje esperado cuando el formato del recurso no corresponde al esperado" in {
         val request = FakeRequest().withJsonBody(Json.parse("{}"))
@@ -55,7 +96,7 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
 
       "Se deberia retornar el mensaje esperado cuando el recurso no pudo ser creado" in {
         val newResource = generatePojo
-        val request = FakeRequest().withJsonBody(Json.toJson(newResource:M))
+        val request = FakeRequest().withJsonBody(Json.toJson(newResource:D))
         when(logicMock.create(any())) thenReturn Future(None)
         val result = call(controller.create(), request)
         val response = contentAsString(result)
@@ -65,8 +106,8 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
 
       "Se deberia retornar el recurso creado cuando si pudo ser creado" in {
         val newResource = generatePojo
-        val jsonResourceForm = Json.toJson(newResource:M)
-        val jsonResourceMin = Json.toJson(newResource:M)
+        val jsonResourceForm = Json.toJson(newResource:D)
+        val jsonResourceMin = Json.toJson(newResource:D)
         val request = FakeRequest().withJsonBody(jsonResourceForm)
         when(logicMock.create(any())) thenReturn Future(Some(newResource))
         val result = call(controller.create(), request)
@@ -77,13 +118,13 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
     }
   }
 
-  override def getTest: Unit = {
+  override def getTest = {
     "Al solicitar un recurso" must {
       "Se debe recibir el json del recurso solicitado" in {
         val id = Random.nextInt(20)
         val newResource = generatePojo
         val request = FakeRequest()
-        val jsonResource = Json.toJson(newResource:M)
+        val jsonResource = Json.toJson(newResource:D)
         when(logicMock.get(anyInt())) thenReturn Future(Some(newResource))
         val result = call(controller.get(id), request)
         val jsonResponse = contentAsJson(result)
@@ -103,11 +144,11 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
     }
   }
 
-  override def getAllTest: Unit = {
+  override def getAllTest = {
     "Al solicitar todos los recursos" must {
       "Se debe recibir el json de la coleccion solicitada" in {
         val newResource = (0 to 20).map(_ => generatePojo)
-        val jsonResource = Json.toJson(newResource.map(e=>e:M))
+        val jsonResource = Json.toJson(newResource.map(e=>e:D))
         val request = FakeRequest()
         when(logicMock.getAll(anyInt(), anyInt())) thenReturn Future(newResource)
         val result = call(controller.getAll(None, None), request)
@@ -118,7 +159,7 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
     }
   }
 
-  override def updateTest: Unit = {
+  override def updateTest = {
     "Al actualizar un recurso" must {
       "Se deberia retornar el mensaje esperado cuando el formato del recurso no corresponde al esperado" in {
         val request = FakeRequest().withJsonBody(Json.parse("{}"))
@@ -132,7 +173,7 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
       "Se deberia retornar el mensaje esperado cuando el elemento no pudo ser actualizado" in {
         val toUpdate = generatePojo
         val id = Random.nextInt(20)
-        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:M))
+        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:D))
         when(logicMock.update(anyInt(), any())) thenReturn Future(None)
         val result = call(controller.update(id), request)
         val response = contentAsString(result)
@@ -142,9 +183,9 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
 
       "Se deberia retornar el elemento creado cuando si pudo ser actualizado" in {
         val toUpdate = generatePojo
-        val jsonResource = Json.toJson(toUpdate:M)
+        val jsonResource = Json.toJson(toUpdate:D)
         val id = Random.nextInt(20)
-        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:M))
+        val request = FakeRequest().withJsonBody(Json.toJson(toUpdate:D))
         when(logicMock.update(anyInt(), any())) thenReturn Future(Some(toUpdate))
         val result = call(controller.update(id), request)
         val jsonResponse = contentAsJson(result)
@@ -154,7 +195,7 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
     }
   }
 
-  override def deleteTest: Unit = {
+  override def deleteTest = {
     "Al eliminar un recurso" must {
       "Se deberia retornar el mensaje esperado cuando el recurso no pudo ser eliminado" in {
         val id = Random.nextInt(20)
@@ -168,7 +209,7 @@ trait CrudControllerTestTrait[M, S<:Row, T<:Row, K<:Entity[T], C<:CrudController
 
       "Se deberia retornar el recurso eliminado cuando la operacion es exitosa" in {
         val toDelete = generatePojo
-        val jsonResource = Json.toJson(toDelete:M)
+        val jsonResource = Json.toJson(toDelete:D)
         val id = Random.nextInt(20)
         val request = FakeRequest()
         when(logicMock.delete(anyInt())) thenReturn Future(Some(toDelete))

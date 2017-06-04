@@ -18,5 +18,5 @@ trait EditorialControllerTrait extends CrudController[EditorialDetail, Editorial
 
   implicit val formatDetail = Json.format[EditorialDetail]
 
-  implicit def Detail2Model = EditorialDetailConverter
+  implicit val Model2Detail = EditorialDetailConverter
 }

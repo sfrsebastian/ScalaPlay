@@ -25,7 +25,7 @@ trait CommentControllerTestTrait extends CrudControllerTestTrait[CommentDetail, 
 
   override def generatePojo: Comment = factory.manufacturePojo(classOf[Comment]).copy(book = Book(1,"","","","",Seq(),Seq(),None))
 
-  implicit def Model2Detail = CommentDetailConverter
+  implicit val Model2Detail = CommentDetailConverter
 
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[CommentLogicTrait].toInstance(logicMock))

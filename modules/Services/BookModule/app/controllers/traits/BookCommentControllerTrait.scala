@@ -15,7 +15,7 @@ trait BookCommentControllerTrait extends OneToManyCompositeController[Book, Book
 
   implicit val formatDetail = Json.format[CommentDetail]
 
-  implicit def Detail2Model = CommentDetailConverter
+  implicit val Model2Detail = CommentDetailConverter
 
   def relationMapper(book:Book):Seq[Comment] = book.comments
 

@@ -1,14 +1,31 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package layers.persistence
 
 import slick.dbio.DBIO
 
 /**
-  * Created by sfrsebastian on 5/29/17.
+  * Trait genérico que maneja la persistencia de una relación muchos a muchos
+  * @tparam S2 El origen de la relación
+  * @tparam S El destino de la relación
   */
 trait ManyToManyPersistence[S2, S] {
-  def addEntityToSourceAction(source:S2, destination:S):DBIO[Option[S]]
 
-  def removeEntityFromSourceAction (source:S2, destination:S):DBIO[Option[S]]
+  /**
+    * Asocia una entidad origen con una entidad destino
+    * @param source La entidad origen
+    * @param destination La entidad destino
+    */
+  def associateEntityToSourceAction(source:S2, destination:S):DBIO[Option[S]]
 
-  def replaceEntitiesFromSourceAction(source:S2, destination:Seq[S]): DBIO[Seq[S]]
+  /**
+    * Desasocia una entidad origen de una entidad destino
+    * @param source La entidad origen
+    * @param destination La entidad destino
+    */
+  def disassociateEntityFromSourceAction(source:S2, destination:S):DBIO[Option[S]]
 }

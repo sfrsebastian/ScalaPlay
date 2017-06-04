@@ -21,5 +21,5 @@ trait BookControllerTrait extends CrudController[BookDetail, Book, BookPersisten
 
   implicit val formatDetail = Json.format[BookDetail]
 
-  implicit def Detail2Model = BookDetailConverter
+  implicit val Model2Detail = BookDetailConverter
 }

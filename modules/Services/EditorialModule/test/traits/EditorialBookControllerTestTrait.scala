@@ -33,7 +33,7 @@ trait EditorialBookControllerTestTrait extends OneToManyControllerTestTrait[Edit
 
   implicit val formatDetail = Json.format[BookDetail]
 
-  implicit def Model2Detail = BookDetailConverter
+  implicit val Model2Detail = BookDetailConverter
 
   def generatePojos(sourceId: Int, destinationId: Int): (Editorial, Book) = {
     val editorial = factory.manufacturePojo(classOf[Editorial]).copy(id = sourceId, books = Seq())

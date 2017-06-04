@@ -31,7 +31,7 @@ trait BookControllerTestTrait extends CrudControllerTestTrait[BookDetail, Book, 
 
   override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(authors = Seq(), comments = Seq())
 
-  implicit def Model2Detail = BookDetailConverter
+  implicit val Model2Detail = BookDetailConverter
 
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[BookLogicTrait].toInstance(logicMock))

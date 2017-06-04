@@ -3,9 +3,10 @@ import author.persistence.AuthorPersistence
 import book.model.Book
 import book.persistence.BookPersistence
 import comment.persistence.CommentPersistence
-import crud.tests.CrudPersistenceTestTrait
 import persistence.DatabasePopulator
 import slick.jdbc.PostgresProfile.api._
+import tests.persistence.CrudPersistenceTestTrait
+
 import scala.util.Random
 
 /**
@@ -21,7 +22,7 @@ trait AuthorPersistenceTestTrait extends CrudPersistenceTestTrait[Author, Author
 
   override def generatePojo(): Author = DatabasePopulator.generateAuthor(1)
 
-  override implicit def Persistence2Model = AuthorPersistenceConverter
+  override implicit val Model2Persistence = AuthorPersistenceConverter
 
   override def populateDatabase = {
     val populate = DatabasePopulator.populate

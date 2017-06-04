@@ -28,7 +28,7 @@ trait EditorialControllerTestTrait extends CrudControllerTestTrait[EditorialDeta
 
   override def generatePojo: Editorial = factory.manufacturePojo(classOf[Editorial]).copy(books = Seq())
 
-  implicit def Model2Detail = EditorialDetailConverter
+  implicit val Model2Detail = EditorialDetailConverter
 
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[EditorialLogicTrait].toInstance(logicMock))

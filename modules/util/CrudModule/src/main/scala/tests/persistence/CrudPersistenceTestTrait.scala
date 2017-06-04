@@ -1,7 +1,14 @@
-package crud.tests
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
+package tests.persistence
 
-import crud.models.{Entity, ModelConverter, Row}
 import crud.DatabaseOperations
+import crud.models.{Entity, ModelConverter, Row}
+import crud.tests.CrudTest
 import layers.persistence.CrudPersistence
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -9,19 +16,36 @@ import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play._
 import slick.jdbc.PostgresProfile.api._
 import uk.co.jemos.podam.api.PodamFactoryImpl
-
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.util.Random
 
+/**
+  * Trait genérico para probar la persistencia de una entidad
+  * @tparam S El modelo de negocio de la entidad
+  * @tparam T El modelo de persistencia de la entidad
+  * @tparam K El modelo de tabla de la entidad
+  */
 trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec with BeforeAndAfterEach with BeforeAndAfterAll with ScalaFutures with CrudTest{
 
+  /**
+    * Tiempo de espera para la resolución de un Future
+    */
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
+  /**
+    * Fábrica de creación de entidades Podam
+    */
   val factory = new PodamFactoryImpl
 
+  /**
+    * La persistencia a probar
+    */
   val persistence : CrudPersistence[S, T, K]
 
+  /**
+    * La colección de entidades de prueba
+    */
   var seedCollection:Seq[S]
 
   def populateDatabase = {
@@ -35,12 +59,44 @@ trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec wi
 
   val tables:Seq[TableQuery[_<:Entity[_<:Row]]]
 
-  implicit def Persistence2Model:ModelConverter[S,T]
+  /**
+    * Convertidor de modelo de negocio a modelo de persistencia
+    */
+  implicit def Model2Persistence:ModelConverter[S,T]
 
+  /**
+    * Convierte el modelo de negocio a modelo de persistencia
+    * @param s El modelo de negocio
+    * @param converter El convertidor a utilizar
+    * @return Representación en modelo de persistencia del modelo de negocio dado
+    */
   implicit def S2T (s : S)(implicit converter : ModelConverter[S,T]) : T = converter.convert(s)
 
+  /**
+    * Convierte el modelo de persistencia a modelo de negocio
+    * @param t El modelo de persistencia
+    * @param converter El convertidor a utilizar
+    * @return Representación en modelo de negocio del modelo de persistencia dado
+    */
   implicit def T2S (t : T)(implicit converter : ModelConverter[S,T]) : S = converter.convertInverse(t)
 
+  /**
+    * Función que genera una entidad
+    */
+  def generatePojo:S
+
+  /**
+    * Función que define la igualdad de dos entidades
+    * @param e1 La entidad 1
+    * @param e2 La entidad 2
+    */
+  def assertByProperties(e1:T, e2:T, compareRefs:Boolean = true):Unit = {
+    assert(e1.name == e2.name, "El nombre deberia ser el mismo")
+  }
+
+  /**
+    * Se elimina y recrea la base de datos antes de cada prueba
+    */
   override def beforeEach(){
     val dropSequence = persistence.db.run(DBIO.sequence(tables.reverse.flatMap(table => DatabaseOperations.Drop(persistence.db, table))))
 
@@ -55,15 +111,12 @@ trait CrudPersistenceTestTrait[S<:Row, T<:Row, K<:Entity[T]] extends PlaySpec wi
     Await.result(populateSequence, 10.second)
   }
 
+  /**
+    * Se eliminan las tablas al finalizar los casos de prueba
+    */
   override def afterAll():Unit = {
     val dropSequence = persistence.db.run(DBIO.sequence(tables.reverse.flatMap(table => DatabaseOperations.Drop(persistence.db, table))))
     Await.result(dropSequence, 10.second)
-  }
-
-  def generatePojo:S
-
-  def assertByProperties(e1:T, e2:T, compareRefs:Boolean = true):Unit = {
-    assert(e1.name == e2.name, "El nombre deberia ser el mismo")
   }
 
   def createTest:Unit={

@@ -26,7 +26,7 @@ trait AuthorControllerTestTrait extends CrudControllerTestTrait[AuthorDetail, Au
 
   override def generatePojo: Author = factory.manufacturePojo(classOf[Author]).copy(books = Seq())
 
-  implicit def Model2Detail = AuthorDetailConverter
+  implicit val Model2Detail = AuthorDetailConverter
 
   override lazy val app = new GuiceApplicationBuilder()
     .overrides(bind[AuthorLogicTrait].toInstance(logicMock))

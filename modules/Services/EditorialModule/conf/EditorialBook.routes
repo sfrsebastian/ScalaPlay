@@ -1,7 +1,7 @@
-GET     /:editorialId/books      controllers.editorial.EditorialBookController.getResourcesFromSource(editorialId:Int, start:Option[Int], limit:Option[Int] )
+GET     /:editorialId/books      controllers.editorial.EditorialBookController.getResourcesFromSource(editorialId:Int, start:Option[Int], limit:Option[Int])
 
 GET     /:editorialId/books/:bookId controllers.editorial.EditorialBookController.getResourceFromSource(editorialId:Int, bookId:Int)
 
 PUT /:editorialId/books/:bookId controllers.editorial.EditorialBookController.associateResourceToSource(editorialId:Int, bookId:Int)
 
-DELETE /:editorialId/books/:bookId controllers.editorial.EditorialBookController.deleteResourceFromSource(editorialId:Int, bookId:Int)
+DELETE /:editorialId/books/:bookId controllers.editorial.EditorialBookController.disassociateResourceFromSource(editorialId:Int, bookId:Int)

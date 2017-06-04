@@ -20,7 +20,7 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
 
   var table = TableQuery[AuthorTable]
 
-  override implicit def Model2Persistence = AuthorPersistenceConverter
+  override implicit val Model2Persistence = AuthorPersistenceConverter
 
   override val updateProjection: AuthorTable => (Rep[String], Rep[String]) = b => (b.name, b.lastName)
 
@@ -86,14 +86,14 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
     }
   }
 
-  override def addEntityToSourceAction(book:Book, author:Author):DBIO[Option[Author]] = {
+  override def associateEntityToSourceAction(book:Book, author:Author):DBIO[Option[Author]] = {
     for{
       _ <- authorBookTable += AuthorBookPersistenceModel(1,"", book.id, author.id)
       author <- getAction(table.filter(_.id === author.id))
     }yield author
   }
 
-  override def removeEntityFromSourceAction (book:Book, author:Author):DBIO[Option[Author]] = {
+  override def disassociateEntityFromSourceAction(book:Book, author:Author):DBIO[Option[Author]] = {
     for{
       result <- authorBookTable.filter(r=> r.authorId === author.id && r.bookId === book.id).delete
       author <- getAction(table.filter(_.id === author.id))
@@ -102,15 +102,6 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
         case 1 => author
         case 0 => None
       }
-    }
-  }
-
-  override def replaceEntitiesFromSourceAction(book:Book, authors:Seq[Author]): DBIO[Seq[Author]] = {
-    for{
-      _ <- authorBookTable.filter(_.bookId === book.id).delete
-      result <- DBIO.sequence(authors.map(a => addEntityToSourceAction(book, a)))
-    }yield{
-      result.flatten
     }
   }
 }

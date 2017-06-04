@@ -1,7 +1,7 @@
-import crud.tests.CrudPersistenceTestTrait
 import editorial.model._
 import editorial.persistence.EditorialPersistence
 import persistence.DatabasePopulator
+import tests.persistence.CrudPersistenceTestTrait
 
 /**
   * Created by sfrsebastian on 5/6/17.
@@ -15,7 +15,7 @@ trait EditorialPersistenceTestTrait extends CrudPersistenceTestTrait[Editorial, 
 
   override def generatePojo(): Editorial = DatabasePopulator.generateEditorial(1)
 
-  override implicit def Persistence2Model = EditorialPersistenceConverter
+  override implicit val Model2Persistence = EditorialPersistenceConverter
 
   override def populateDatabase = {
     val populate = DatabasePopulator.populate

@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package layers.controllers
 
 import crud.exceptions.ServiceLayerException
@@ -5,72 +11,153 @@ import crud.models.{Entity, ModelConverter, Row}
 import layers.controllers.mixins.{ErrorHandler, UserHandler}
 import layers.logic.{CrudLogic, OneToManyLogic}
 import play.api.libs.json.{Format, Json}
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, AnyContent, Controller}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
-  * Created by sfrsebastian on 5/29/17.
+  * Controlador genérico para el manejo de una relación uno a muchos
+  * @tparam S2 El modelo de negocio de la relación origen
+  * @tparam T2 El modelo de persistencia de la relación origen
+  * @tparam K2 El modelo de tabla de la relación origen
+  * @tparam D El modelo detalle de la relación destino
+  * @tparam S El modelo de negocio de la relación destino
+  * @tparam T El modelo de persistencia de la relación destino
+  * @tparam K El modelo de tabla de la relación destino
   */
 trait OneToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row, K<:Entity[T]] extends Controller with UserHandler with ErrorHandler {
 
+  /**
+    * La lógica del modelo de origen
+    */
   val sourceLogic:CrudLogic[S2,T2,K2]
 
+  /**
+    * La lógica del modelo de destino
+    * Debe contar con el trait OneToMany
+    */
   val destinationLogic:CrudLogic[S,T,K] with OneToManyLogic[S2, S, T, K]
 
+  /**
+    * El formato de tipo detalle de la entidad
+    */
   implicit val formatDetail:Format[D]
 
-  implicit def Detail2Model:ModelConverter[S, D]
+  /**
+    * Convertidor de modelo de negocio a modelo detalle
+    */
+  implicit val Model2Detail:ModelConverter[S, D]
 
-  implicit def M2S (m : D)(implicit converter : ModelConverter[S,D]) : S = converter.convertInverse(m)
+  /**
+    * Convierte el modelo detalle a modelo de negocio
+    * @param d El modelo detalle
+    * @param converter El convertidor a utilizar
+    * @return Representación en modelo de negocio del modelo detalle dado
+    */
+  implicit def D2S (d : D)(implicit converter : ModelConverter[S,D]) : S = converter.convertInverse(d)
 
-  implicit def S2M (s: S)(implicit converter : ModelConverter[S,D]):D = converter.convert(s)
+  /**
+    * Convierte el modelo de negocio a modelo de detalle
+    * @param s El modelo negocio
+    * @param converter El convertidor a utilizar
+    * @return Representación en modelo de detalle del modelo negocio dado
+    */
+  implicit def S2D (s: S)(implicit converter : ModelConverter[S,D]):D = converter.convert(s)
 
+  /**
+    * Función que retorna la colección del modelo destino según un modelo origen dado.
+    * @param source El modelo origen
+    * @return La colección de modelo destino asociado al modelo origen dado
+    */
   def relationMapper(source:S2):Seq[S]
 
-  def getResourcesFromSource(sourceId:Int, start:Option[Int], limit:Option[Int]) = Action.async {
+  /**
+    * Mensaje cuando no se encuentra el origen de la relación
+    */
+  val originNotFound:String = "El origen dado no existe"
+
+  /**
+    * Mensaje cuando no se encuentra el destino de la relación
+    */
+  val destinationNotFound:String = "El destino solicitado no existe"
+
+  /**
+    * Mensaje cuando una entidad destino no se encuentra asociada a una entidad origen
+    */
+  val destinationNotAssociated:String = "El destino no se encuentra asociado al origen dado"
+
+  /**
+    * Mensaje cuando una no se asocia una entidad destino con una entidad origen
+    */
+  val errorAssociatingDestination:String = "Se presento un error asociando el destino al origen"
+
+  /**
+    * Mensaje cuando no se elimina una entidad destino de una entidad origen
+    */
+  val errorDisassociatingDestination:String = "Se presento un error desasociando el destino del origen"
+
+  /**
+    * Servicio que retorna las entidades destino asociadas a una entidad origen con id dado
+    * @param sourceId Identificador de la entidad origen
+    */
+  def getResourcesFromSource(sourceId:Int, start:Option[Int], limit:Option[Int]): Action[AnyContent] = Action.async {
     val result = for{
       a <- sourceLogic.get(sourceId)
-      _ <- predicate(a.isDefined)(ServiceLayerException("La editorial dado no existe"))
-      b <- destinationLogic.getResourcesFromSource(a.get, start, limit)
+      _ <- predicate(a.isDefined)(ServiceLayerException(originNotFound))
+      b <- destinationLogic.getResourcesFromSource(a.get, start.getOrElse(0), limit.getOrElse(Int.MaxValue))
     }yield Ok(Json.toJson(b.map(e => e:D)))
     result.recover(errorHandler)
   }
 
-  def getResourceFromSource(sourceId:Int, destinationId:Int) = Action.async{
+  /**
+    * Servicio que retorna la entidad destino con id dado asociada a una entidad origen con id dado
+    * @param sourceId Identificador de la entidad de origen
+    * @param destinationId Identificador de la entidad destino
+    */
+  def getResourceFromSource(sourceId:Int, destinationId:Int): Action[AnyContent] = Action.async{
     val result = for{
       a <- sourceLogic.get(sourceId)
-      _ <- predicate(a.isDefined)(ServiceLayerException("La editorial dado no existe"))
+      _ <- predicate(a.isDefined)(ServiceLayerException(originNotFound))
       b <- destinationLogic.get(destinationId)
-      _ <- predicate(b.isDefined)(ServiceLayerException("El libro dado no existe"))
+      _ <- predicate(b.isDefined)(ServiceLayerException(destinationNotFound))
       r <- Future(a.flatMap(c => relationMapper(c).find(_.id == destinationId)))
-      _ <- predicate(r.isDefined)(ServiceLayerException("El libro dado no esta asociado a la editorial dada"))
+      _ <- predicate(r.isDefined)(ServiceLayerException(destinationNotAssociated))
     }yield Ok(Json.toJson(b.get:D))
     result.recover(errorHandler)
   }
 
-  def associateResourceToSource(sourceId:Int, destinationId:Int) = Action.async{
+  /**
+    * Servicio que asocia una entidad origen con una entidad destino
+    * @param sourceId Identificador de la entidad de origen
+    * @param destinationId Identificador de la entidad destino
+    */
+  def associateResourceToSource(sourceId:Int, destinationId:Int): Action[AnyContent] = Action.async{
     val result = for{
       a <- sourceLogic.get(sourceId)
-      _ <- predicate(a.isDefined)(ServiceLayerException("La editorial dada no existe"))
+      _ <- predicate(a.isDefined)(ServiceLayerException(originNotFound))
       b <- destinationLogic.get(destinationId)
-      _ <- predicate(b.isDefined)(ServiceLayerException("El libro dado no existe"))
+      _ <- predicate(b.isDefined)(ServiceLayerException(destinationNotFound))
       c <- destinationLogic.updateResourceToSourceRelation(a, b.get)
-      _ <- predicate(c.isDefined)(ServiceLayerException("Error actualizando asociacion editorial-libro"))
+      _ <- predicate(c.isDefined)(ServiceLayerException(errorAssociatingDestination))
     }yield Ok(Json.toJson(c.get:D))
     result.recover(errorHandler)
   }
 
-  def deleteResourceFromSource(sourceId:Int, destinationId:Int) = Action.async{
+  /**
+    * Servicio que elimina una entidad destino de de una entidad origen
+    * @param sourceId Identificador de la entidad de origen
+    * @param destinationId Identificador de la entidad destino
+    */
+  def disassociateResourceFromSource(sourceId:Int, destinationId:Int): Action[AnyContent] = Action.async{
     val result = for{
       a <- sourceLogic.get(sourceId)
-      _ <- predicate(a.isDefined)(ServiceLayerException("La editorial dada no existe"))
+      _ <- predicate(a.isDefined)(ServiceLayerException(originNotFound))
       b <- destinationLogic.get(destinationId)
-      _ <- predicate(b.isDefined)(ServiceLayerException("El libro dado no existe"))
+      _ <- predicate(b.isDefined)(ServiceLayerException(destinationNotFound))
       r <- Future(a.flatMap(c => relationMapper(c).find(_.id == destinationId)))
-      _ <- predicate(r.isDefined)(ServiceLayerException("El libro dado no esta asociado a la editorial dada"))
+      _ <- predicate(r.isDefined)(ServiceLayerException(destinationNotAssociated))
       c <- destinationLogic.updateResourceToSourceRelation(None, b.get)
-      _ <- predicate(c.isDefined)(ServiceLayerException("Error actualizando asociacion editorial-libro"))
+      _ <- predicate(c.isDefined)(ServiceLayerException(errorDisassociatingDestination))
     }yield Ok(Json.toJson(c.get:D))
     result.recover(errorHandler)
   }

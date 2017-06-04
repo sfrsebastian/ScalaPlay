@@ -27,7 +27,7 @@ trait BookCommentControllerTestTrait extends OneToManyCompositeControllerTestTra
 
   implicit val formatDetail = Json.format[CommentDetail]
 
-  implicit def Model2Detail = CommentDetailConverter
+  implicit val Model2Detail = CommentDetailConverter
 
   def generatePojos(sourceId: Int, destinationId: Int): (Book, Comment) = {
     val book = factory.manufacturePojo(classOf[Book]).copy(id = sourceId, authors = Seq(), comments=Seq())

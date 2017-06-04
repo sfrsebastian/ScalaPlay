@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package tests.logic
 
 import crud.models.{Entity, Row}
@@ -12,24 +18,45 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import slick.jdbc.PostgresProfile.api._
 import uk.co.jemos.podam.api.PodamFactoryImpl
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Random
 
 /**
-  * Created by sfrsebastian on 4/13/17.
+  * Trait genérico para probar la lógica de una entidad
+  * @tparam S El modelo de negocio de la entidad
+  * @tparam T El modelo de persistencia de la entidad
+  * @tparam K El modelo de tabla de la entidad
+  * @tparam L La clase de la logica
+  * @tparam P La persistencia de la logica
   */
 trait CrudLogicTestTrait[S<:Row, T<:Row, K<:Entity[T], L<:CrudLogic[S, T,K], P<:CrudPersistence[S, T,K]] extends PlaySpec with BeforeAndAfterEach with ScalaFutures with MockitoSugar with CrudTest {
 
+  /**
+    * Fábrica de creación de entidades Podam
+    */
   val factory = new PodamFactoryImpl
 
+  /**
+    * Mock de persistencia de la entidad
+    */
   var persistenceMock:P
 
+  /**
+    * La lógica a probar
+    */
   var logic:L
 
+  /**
+    * Función que genera una entidad
+    */
   def generatePojo:S
 
+  /**
+    * Función que define la igualdad de dos entidades
+    * @param e1 La entidad 1
+    * @param e2 La entidad 2
+    */
   def assertByProperties(e1:S, e2:S):Unit = assert(e1.name == e2.name, "El nombre deberia ser el mismo")
 
   def createTest: Unit ={

@@ -16,5 +16,5 @@ trait AuthorControllerTrait extends CrudController[AuthorDetail, Author, AuthorP
 
   implicit val formatDetail = Json.format[AuthorDetail]
 
-  implicit def Detail2Model = AuthorDetailConverter
+  implicit val Model2Detail = AuthorDetailConverter
 }

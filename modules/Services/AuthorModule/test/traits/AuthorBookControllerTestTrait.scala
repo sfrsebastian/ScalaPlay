@@ -33,7 +33,7 @@ trait AuthorBookControllerTestTrait extends ManyToManyControllerTestTrait[Author
 
   implicit val formatDetail = Json.format[BookDetail]
 
-  implicit def Model2Detail = BookDetailConverter
+  implicit val Model2Detail = BookDetailConverter
 
   def generatePojos(sourceId: Int, destinationId: Int): (Author, Book) = {
     val author = factory.manufacturePojo(classOf[Author]).copy(id = sourceId, books = Seq())

@@ -1,6 +1,12 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package crud.exceptions
 
 /**
-  * Created by sfrsebastian on 5/29/17.
+  * Excepción de lógica de servicios
   */
 case class ServiceLayerException(message: String = "", cause: Throwable = None.orNull) extends Exception(message, cause)

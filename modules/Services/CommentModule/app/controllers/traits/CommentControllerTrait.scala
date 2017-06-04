@@ -21,5 +21,5 @@ trait CommentControllerTrait extends CrudController[CommentDetail, Comment, Comm
 
   implicit val formatDetail = Json.format[CommentDetail]
 
-  implicit def Detail2Model = CommentDetailConverter
+  implicit val Model2Detail = CommentDetailConverter
 }

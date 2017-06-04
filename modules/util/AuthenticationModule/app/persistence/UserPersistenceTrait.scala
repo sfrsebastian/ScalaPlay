@@ -17,7 +17,7 @@ trait UserPersistenceTrait extends CrudPersistence[User, UserPersistenceModel, U
 
   override var table = TableQuery[UserTable]
 
-  override implicit def Model2Persistence = UserPersistenceConverter
+  override implicit val Model2Persistence = UserPersistenceConverter
 
   val updateProjection: UserTable => (Rep[Boolean], Rep[String], Rep[String]) = b => (b.confirmed, b.name, b.lastName)
 

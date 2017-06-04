@@ -24,7 +24,7 @@ trait BookAuthorControllerTrait extends ManyToManyController[Book, BookPersisten
 
   implicit val formatDetail = Json.format[AuthorDetail]
 
-  implicit def Detail2Model = AuthorDetailConverter
+  implicit val Model2Detail = AuthorDetailConverter
 
   def relationMapper(book:Book):Seq[Author] = book.authors
 

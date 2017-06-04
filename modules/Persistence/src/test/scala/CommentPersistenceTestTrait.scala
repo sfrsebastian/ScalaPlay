@@ -1,8 +1,9 @@
 import book.persistence.BookPersistence
 import comment.model._
 import comment.persistence.CommentPersistence
-import crud.tests.CrudPersistenceTestTrait
 import persistence.DatabasePopulator
+import tests.persistence.CrudPersistenceTestTrait
+
 import scala.util.Random
 
 trait CommentPersistenceTestTrait extends CrudPersistenceTestTrait[Comment, CommentPersistenceModel, CommentTable]{
@@ -18,7 +19,7 @@ trait CommentPersistenceTestTrait extends CrudPersistenceTestTrait[Comment, Comm
     DatabasePopulator.generateComment.copy(book = Random.shuffle(DatabasePopulator.books).take(1).head)
   }
 
-  override implicit def Persistence2Model = CommentPersistenceConverter
+  override implicit val Model2Persistence = CommentPersistenceConverter
 
   override def populateDatabase = {
     val populate = DatabasePopulator.populate
