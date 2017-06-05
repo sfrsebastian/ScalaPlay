@@ -26,4 +26,14 @@ trait EditorialBookControllerTrait extends OneToManyController[Editorial, Editor
   implicit val Model2Detail = BookDetailConverter
 
   def relationMapper(editorial:Editorial):Seq[Book] = editorial.books
+
+  override val originNotFound:String = "La editorial dada no existe"
+
+  override val destinationNotFound:String = "El libro dado no existe"
+
+  override val destinationNotAssociated:String = "El libro no se encuentra asociado a la editorial dada"
+
+  override val errorAssociatingDestination:String = "Se presento un error asociando el libro a la editorial"
+
+  override val errorDisassociatingDestination:String = "Se presento un error desasociando el libro de la editorial"
 }

@@ -32,4 +32,14 @@ trait BookAuthorControllerTrait extends ManyToManyController[Book, BookPersisten
   def relationMapper(book:Book):Seq[Author] = book.authors
 
   def inverseRelationMapper(author:Author):Seq[Book] = author.books
+
+  override val originNotFound:String = "El libro dado no existe"
+
+  override val destinationNotFound:String = "El autor dado no existe"
+
+  override val destinationNotAssociated:String = "El autor dado no se encuentra asociado al libro dado"
+
+  override val errorAssociatingDestination:String = "Se presento un error asociando el autor con el libro"
+
+  override val errorDisassociatingDestination:String = "Se presento un error desasociando el autor del libro"
 }

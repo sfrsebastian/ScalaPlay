@@ -23,4 +23,14 @@ trait BookReviewControllerTrait extends OneToManyCompositeController[Book, BookP
   def relationMapper(book:Book):Seq[Review] = book.Reviews
 
   def aggregationMapper(destination: Review, source: Book): Review = destination.copy(book = source)
+
+  override val originNotFound:String = "El libro dado no existe"
+
+  override val destinationNotFound:String = "El comentario solicitado no existe"
+
+  override val destinationNotAssociated:String = "El comentario no se encuentra asociado al libro dado"
+
+  override val errorCreatingDestination:String = "Se presento un error creando el comentario en el libro"
+
+  override val errorDeletingDestination:String = "Se presento un error eliminando el comentario del libro"
 }
