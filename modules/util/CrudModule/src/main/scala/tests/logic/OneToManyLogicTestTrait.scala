@@ -29,7 +29,7 @@ import scala.concurrent.Future
   * @tparam L La clase de la logica
   * @tparam P La persistencia de la logica
   */
-trait OneToManyLogicTestTrait [S2<:Row, S<:Row, T<:Row, K<:Entity[T], L<:OneToManyLogic[S2,S,T,K], P<:CrudPersistence[S, T,K] with OneToManyPersistence[S2,S]] extends PlaySpec with BeforeAndAfterEach with ScalaFutures with MockitoSugar {
+trait OneToManyLogicTestTrait [S2<:Row, S<:Row, T<:Row, K<:Entity[T], L<:OneToManyLogic[S2,S,T,K], P<:CrudPersistence[S, T,K] with OneToManyPersistence[S2,S]] extends PlaySpec with ScalaFutures with MockitoSugar {
   /**
     * Fábrica de creación de entidades Podam
     */

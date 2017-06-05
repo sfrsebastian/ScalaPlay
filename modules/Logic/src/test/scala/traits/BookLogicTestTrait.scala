@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package traits
 
 import book.logic.BookLogic
@@ -7,24 +13,14 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import slick.jdbc.PostgresProfile.api._
 import tests.logic.CrudLogicTestTrait
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-/**
-  * Created by sfrsebastian on 4/12/17.
-  */
 trait BookLogicTestTrait extends CrudLogicTestTrait[Book, BookPersistenceModel, BookTable, BookLogic, BookPersistence]{
 
   var persistenceMock = mock[BookPersistence]
 
   var logic = new BookLogic(persistenceMock)
-
-  override def beforeEach(){
-    persistenceMock = mock[BookPersistence]
-    when(persistenceMock.table) thenReturn mock[TableQuery[BookTable]]
-    logic = new BookLogic(persistenceMock)
-  }
 
   override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(comments = Seq())
 

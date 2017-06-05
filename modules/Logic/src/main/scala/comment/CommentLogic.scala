@@ -1,10 +1,13 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package comment.logic
 
 import comment.persistence.CommentPersistenceTrait
 import com.google.inject.Inject
 import comment.traits.CommentLogicTrait
 
-/**
-  * Created by sfrsebastian on 4/26/17.
-  */
 class CommentLogic @Inject() (override val persistence: CommentPersistenceTrait) extends CommentLogicTrait

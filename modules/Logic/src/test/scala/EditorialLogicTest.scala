@@ -1,6 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 import traits.EditorialLogicTestTrait
 
-/**
-  * Created by sfrsebastian on 4/12/17.
-  */
 class EditorialLogicTest extends EditorialLogicTestTrait

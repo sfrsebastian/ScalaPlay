@@ -11,7 +11,6 @@ import layers.logic.ManyToManyLogic
 import layers.persistence.{CrudPersistence, ManyToManyPersistence}
 import org.mockito.ArgumentMatchers.{any, anyInt}
 import org.mockito.Mockito.when
-import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -29,7 +28,7 @@ import scala.concurrent.Future
   * @tparam L La clase de la logica
   * @tparam P La persistencia de la logica
   */
-trait ManyToManyLogicTestTrait [S2<:Row, S<:Row, T<:Row, K<:Entity[T], L<:ManyToManyLogic[S2,S,T,K], P<:CrudPersistence[S, T,K] with ManyToManyPersistence[S2,S]] extends PlaySpec with BeforeAndAfterEach with ScalaFutures with MockitoSugar {
+trait ManyToManyLogicTestTrait [S2<:Row, S<:Row, T<:Row, K<:Entity[T], L<:ManyToManyLogic[S2,S,T,K], P<:CrudPersistence[S, T,K] with ManyToManyPersistence[S2,S]] extends PlaySpec with ScalaFutures with MockitoSugar {
 
   /**
     * Fábrica de creación de entidades Podam

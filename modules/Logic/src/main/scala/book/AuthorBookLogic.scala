@@ -1,14 +1,16 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package book.logic
-
-import javax.inject.Inject
 
 import author.model.Author
 import book.model.Book
 import book.persistence.BookPersistenceTrait
 import book.traits.AuthorBookLogicTrait
+import com.google.inject.Inject
 import layers.persistence.ManyToManyPersistence
 
-/**
-  * Created by sfrsebastian on 5/30/17.
-  */
 class AuthorBookLogic @Inject() (val persistence:BookPersistenceTrait with ManyToManyPersistence[Author, Book])extends AuthorBookLogicTrait

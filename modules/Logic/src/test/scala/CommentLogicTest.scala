@@ -1,6 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 import traits.CommentLogicTestTrait
 
-/**
-  * Created by sfrsebastian on 5/2/17.
-  */
 class CommentLogicTest extends CommentLogicTestTrait

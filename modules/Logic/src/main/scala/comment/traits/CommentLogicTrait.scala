@@ -1,8 +1,12 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package comment.traits
 
 import comment.model._
 import layers.logic.CrudLogic
-/**
-  * Created by sfrsebastian on 4/26/17.
-  */
+
 trait CommentLogicTrait extends CrudLogic[Comment, CommentPersistenceModel, CommentTable]

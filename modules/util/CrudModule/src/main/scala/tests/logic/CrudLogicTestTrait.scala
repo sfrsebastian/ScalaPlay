@@ -12,7 +12,6 @@ import layers.logic.CrudLogic
 import layers.persistence.CrudPersistence
 import org.mockito.ArgumentMatchers.{any, anyInt}
 import org.mockito.Mockito.when
-import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -30,7 +29,7 @@ import scala.util.Random
   * @tparam L La clase de la logica
   * @tparam P La persistencia de la logica
   */
-trait CrudLogicTestTrait[S<:Row, T<:Row, K<:Entity[T], L<:CrudLogic[S, T,K], P<:CrudPersistence[S, T,K]] extends PlaySpec with BeforeAndAfterEach with ScalaFutures with MockitoSugar with CrudTest {
+trait CrudLogicTestTrait[S<:Row, T<:Row, K<:Entity[T], L<:CrudLogic[S, T,K], P<:CrudPersistence[S, T,K]] extends PlaySpec with ScalaFutures with MockitoSugar with CrudTest {
 
   /**
     * Fábrica de creación de entidades Podam
