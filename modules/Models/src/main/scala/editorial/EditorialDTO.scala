@@ -1,8 +1,11 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package editorial.model
 
-/**
-  * Created by sfrsebastian on 5/15/17.
-  */
 abstract class EditorialDTO {
   val id:Int
   val name:String

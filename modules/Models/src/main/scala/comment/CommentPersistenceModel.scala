@@ -1,8 +1,11 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package comment.model
 
 import crud.models.Row
 
-/**
-  * Created by sfrsebastian on 4/26/17.
-  */
 case class CommentPersistenceModel(id:Int, name:String, content:String, bookId:Int) extends Row

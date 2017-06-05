@@ -1,11 +1,15 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package author.model
 
 import author.AuthorDetail
 import book.model._
 import crud.models.ModelConverter
-/**
-  * Created by sfrsebastian on 4/30/17.
-  */
+
 object AuthorPersistenceConverter extends ModelConverter[Author, AuthorPersistenceModel] {
   implicit def BookPersistenceModel2Book (t : BookPersistenceModel) : Book = BookPersistenceConverter.convertInverse(t)
 

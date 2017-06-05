@@ -1,11 +1,14 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package editorial.model
 
 import book.model._
 import crud.models.ModelConverter
 
-/**
-  * Created by sfrsebastian on 5/1/17.
-  */
 object EditorialPersistenceConverter extends ModelConverter[Editorial, EditorialPersistenceModel] {
 
   override def convert(source: Editorial): EditorialPersistenceModel = {

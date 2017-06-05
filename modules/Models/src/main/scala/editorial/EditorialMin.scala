@@ -1,6 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package editorial.model
 
-/**
-  * Created by sfrsebastian on 5/6/17.
-  */
 case class EditorialMin(id:Int, name:String, address:String) extends EditorialDTO

@@ -1,11 +1,14 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package author
 
 import author.model.AuthorDTO
 import book.model.BookMin
 
-/**
-  * Created by sfrsebastian on 5/6/17.
-  */
 case class AuthorDetail(
   val id:Int,
   val name:String,

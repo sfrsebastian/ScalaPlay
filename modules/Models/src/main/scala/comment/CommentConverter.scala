@@ -1,11 +1,14 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package comment.model
 
 import crud.models.ModelConverter
 import book.model._
 
-/**
-  * Created by sfrsebastian on 5/1/17.
-  */
 object CommentPersistenceConverter extends ModelConverter[Comment, CommentPersistenceModel] {
 
   implicit def BookPersistenceModel2Book (t : BookPersistenceModel) : Book = BookPersistenceConverter.convertInverse(t)

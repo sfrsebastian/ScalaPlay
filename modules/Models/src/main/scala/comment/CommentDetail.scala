@@ -1,8 +1,11 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package comment.model
 
 import book.model.BookMin
 
-/**
-  * Created by sfrsebastian on 5/6/17.
-  */
 case class CommentDetail(id:Int, content:String, book:BookMin) extends CommentDTO

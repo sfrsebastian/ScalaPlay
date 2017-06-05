@@ -1,8 +1,11 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package book.model
 
-/**
-  * Created by sfrsebastian on 5/6/17.
-  */
 abstract class BookDTO{
   val id:Int
   val name:String
