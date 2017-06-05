@@ -12,6 +12,7 @@ import book.persistence.BookPersistence
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import slick.jdbc.PostgresProfile.api._
+import slick.lifted.TableQuery
 import tests.logic.CrudLogicTestTrait
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -21,6 +22,8 @@ trait BookLogicTestTrait extends CrudLogicTestTrait[Book, BookPersistenceModel, 
   var persistenceMock = mock[BookPersistence]
 
   var logic = new BookLogic(persistenceMock)
+
+  when(persistenceMock.table) thenReturn mock[TableQuery[BookTable]]
 
   override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(comments = Seq())
 
