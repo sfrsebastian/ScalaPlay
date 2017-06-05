@@ -23,7 +23,7 @@ trait AuthorBookLogicTestTrait extends ManyToManyLogicTestTrait[Author, Book, Bo
 
   def generatePojos(sourceId: Int, destinationId: Int): (Author, Book) = {
     val author = factory.manufacturePojo(classOf[Author]).copy(id = sourceId, books = Seq())
-    val book = factory.manufacturePojo(classOf[Book]).copy(id = destinationId, authors = Seq(author), comments = Seq())
+    val book = factory.manufacturePojo(classOf[Book]).copy(id = destinationId, authors = Seq(author), Reviews = Seq())
     (author.copy(books = Seq(book)), book)
   }
 }

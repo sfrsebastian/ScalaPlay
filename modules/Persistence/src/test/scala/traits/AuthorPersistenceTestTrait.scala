@@ -10,7 +10,7 @@ import author.model._
 import author.persistence.AuthorPersistence
 import book.model.Book
 import book.persistence.BookPersistence
-import comment.persistence.CommentPersistence
+import review.persistence.ReviewPersistence
 import persistence.DatabasePopulator
 import slick.jdbc.PostgresProfile.api._
 import tests.persistence.CrudPersistenceTestTrait
@@ -20,7 +20,7 @@ trait AuthorPersistenceTestTrait extends CrudPersistenceTestTrait[Author, Author
 
   override val tables = DatabasePopulator.tables
 
-  override val persistence =  new AuthorPersistence(new BookPersistence(new CommentPersistence))
+  override val persistence =  new AuthorPersistence(new BookPersistence(new ReviewPersistence))
 
   override var seedCollection: Seq[Author] = Seq()
 

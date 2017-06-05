@@ -10,7 +10,7 @@ import author.model.AuthorMin
 import book.logic.BookLogic
 import book.model._
 import book.traits.BookLogicTrait
-import comment.model.CommentMin
+import review.model.ReviewMin
 import controllers.book.BookController
 import editorial.model.EditorialMin
 import play.api.inject.bind
@@ -24,7 +24,7 @@ trait BookControllerTestTrait extends CrudControllerTestTrait[BookDetail, Book, 
 
   var controller = app.injector.instanceOf[BookController]
 
-  implicit val commentMinFormat = Json.format[CommentMin]
+  implicit val ReviewMinFormat = Json.format[ReviewMin]
 
   implicit val authorMin = Json.format[AuthorMin]
 
@@ -32,7 +32,7 @@ trait BookControllerTestTrait extends CrudControllerTestTrait[BookDetail, Book, 
 
   implicit val formatDetail = Json.format[BookDetail]
 
-  override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(authors = Seq(), comments = Seq())
+  override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(authors = Seq(), Reviews = Seq())
 
   implicit val Model2Detail = BookDetailConverter
 

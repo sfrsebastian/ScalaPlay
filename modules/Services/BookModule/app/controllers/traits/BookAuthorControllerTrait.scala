@@ -10,14 +10,14 @@ import auth.controllers.AuthUserHandler
 import author.AuthorDetail
 import author.model._
 import book.model.{Book, BookMin, BookPersistenceModel, BookTable}
-import comment.model.CommentMin
+import review.model.ReviewMin
 import editorial.model.EditorialMin
 import layers.controllers.ManyToManyController
 import play.api.libs.json.Json
 
 trait BookAuthorControllerTrait extends ManyToManyController[Book, BookPersistenceModel, BookTable, AuthorDetail, Author, AuthorPersistenceModel, AuthorTable] with AuthUserHandler{
 
-  implicit val commentMinFormat = Json.format[CommentMin]
+  implicit val ReviewMinFormat = Json.format[ReviewMin]
 
   implicit val editorialMin = Json.format[EditorialMin]
 

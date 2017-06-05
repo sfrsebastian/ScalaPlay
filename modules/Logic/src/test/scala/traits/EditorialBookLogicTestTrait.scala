@@ -23,7 +23,7 @@ trait EditorialBookLogicTestTrait extends OneToManyLogicTestTrait[Editorial, Boo
 
   def generatePojos(sourceId: Int, destinationId: Int): (Editorial, Book) = {
     val editorial = factory.manufacturePojo(classOf[Editorial]).copy(id = sourceId, books = Seq())
-    val book = factory.manufacturePojo(classOf[Book]).copy(id = destinationId, authors = Seq(), comments=Seq(), editorial = Some(editorial))
+    val book = factory.manufacturePojo(classOf[Book]).copy(id = destinationId, authors = Seq(), Reviews=Seq(), editorial = Some(editorial))
     (editorial.copy(books = Seq(book)), book)
   }
 }

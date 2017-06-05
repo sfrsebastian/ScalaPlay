@@ -5,9 +5,9 @@ import author.traits.BookAuthorLogicTrait
 import book.logic.BookLogic
 import book.persistence.{BookPersistence, BookPersistenceTrait}
 import book.traits.BookLogicTrait
-import comment.logic.CommentLogic
-import comment.persistence.{CommentPersistence, CommentPersistenceTrait}
-import comment.traits.CommentLogicTrait
+import review.logic.ReviewLogic
+import review.persistence.{ReviewPersistence, ReviewPersistenceTrait}
+import review.traits.ReviewLogicTrait
 import play.api.{Configuration, Environment}
 import play.api.inject.Module
 
@@ -16,7 +16,7 @@ class BookModule extends Module {
     bind[BookLogicTrait].to[BookLogic],
     bind[BookAuthorLogicTrait].to[BookAuthorLogic],
     bind[BookPersistenceTrait].to[BookPersistence],
-    bind[CommentPersistenceTrait].to[CommentPersistence],
-    bind[CommentLogicTrait].to[CommentLogic]
+    bind[ReviewPersistenceTrait].to[ReviewPersistence],
+    bind[ReviewLogicTrait].to[ReviewLogic]
   )
 }

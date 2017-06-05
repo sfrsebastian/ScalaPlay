@@ -10,7 +10,7 @@ import author.model._
 import book.logic.EditorialBookLogic
 import book.model._
 import book.traits.EditorialBookLogicTrait
-import comment.model.CommentMin
+import review.model.ReviewMin
 import controllers.editorial.EditorialBookController
 import editorial.logic.EditorialLogic
 import editorial.model.{Editorial, EditorialMin, EditorialPersistenceModel, EditorialTable}
@@ -28,7 +28,7 @@ trait EditorialBookControllerTestTrait extends OneToManyControllerTestTrait[Edit
 
   var controller = app.injector.instanceOf[EditorialBookController]
 
-  implicit val commentMinFormat = Json.format[CommentMin]
+  implicit val ReviewMinFormat = Json.format[ReviewMin]
 
   implicit val authorMin = Json.format[AuthorMin]
 
@@ -40,7 +40,7 @@ trait EditorialBookControllerTestTrait extends OneToManyControllerTestTrait[Edit
 
   def generatePojos(sourceId: Int, destinationId: Int): (Editorial, Book) = {
     val editorial = factory.manufacturePojo(classOf[Editorial]).copy(id = sourceId, books = Seq())
-    val book = factory.manufacturePojo(classOf[Book]).copy(id = destinationId, authors = Seq(), comments=Seq(), editorial = Some(editorial))
+    val book = factory.manufacturePojo(classOf[Book]).copy(id = destinationId, authors = Seq(), Reviews=Seq(), editorial = Some(editorial))
     (editorial.copy(books = Seq(book)), book)
   }
 

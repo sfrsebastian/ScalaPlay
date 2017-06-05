@@ -12,7 +12,7 @@ import author.{AuthorDetail, BookAuthorLogic}
 import book.logic.BookLogic
 import book.model._
 import book.traits.BookLogicTrait
-import comment.model.CommentMin
+import review.model.ReviewMin
 import controllers.book.BookAuthorController
 import editorial.model.EditorialMin
 import play.api.inject.bind
@@ -28,7 +28,7 @@ trait BookAuthorControllerTestTrait extends ManyToManyControllerTestTrait[Book, 
 
   var controller = app.injector.instanceOf[BookAuthorController]
 
-  implicit val commentMinFormat = Json.format[CommentMin]
+  implicit val ReviewMinFormat = Json.format[ReviewMin]
 
   implicit val editorialMin = Json.format[EditorialMin]
 
@@ -41,7 +41,7 @@ trait BookAuthorControllerTestTrait extends ManyToManyControllerTestTrait[Book, 
   implicit val Model2Detail = AuthorDetailConverter
 
   def generatePojos(sourceId: Int, destinationId: Int): (Book, Author) = {
-    val book = factory.manufacturePojo(classOf[Book]).copy(id = sourceId, authors = Seq(), comments = Seq())
+    val book = factory.manufacturePojo(classOf[Book]).copy(id = sourceId, authors = Seq(), Reviews = Seq())
     val author = factory.manufacturePojo(classOf[Author]).copy(id = destinationId, books = Seq(book))
     (book.copy(authors = Seq(author)), author)
   }

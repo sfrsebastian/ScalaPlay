@@ -1,0 +1,9 @@
+GET     /                                       controllers.Review.ReviewController.getAll(start:Option[Int], limit:Option[Int])
+
+GET     /:id                                    controllers.Review.ReviewController.get(id:Int)
+
+PUT     /:id                                    controllers.Review.ReviewController.update(id : Int)
+
+POST    /                                       controllers.Review.ReviewController.create
+
+DELETE  /:id                                    controllers.Review.ReviewController.delete(id:Int)

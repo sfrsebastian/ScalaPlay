@@ -1,7 +1,0 @@
-GET     /:bookId/comments                       controllers.book.BookCommentController.getResourcesFromSource(bookId:Int, start:Option[Int], limit:Option[Int])
-
-GET     /:bookId/comments/:commentId            controllers.book.BookCommentController.getResourceFromSource(bookId:Int, commentId : Int)
-
-POST    /:bookId/comments                       controllers.book.BookCommentController.createResourceInSource(bookId:Int)
-
-DELETE  /:bookId/comments/:commentId            controllers.book.BookCommentController.deleteResourceFromSource(bookId:Int, commentId:Int)

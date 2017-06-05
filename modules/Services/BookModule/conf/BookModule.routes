@@ -10,4 +10,4 @@ DELETE  /:id            controllers.book.BookController.delete(id:Int)
 
 -> /                    BookAuthor.Routes
 
--> /                    BookComment.Routes
+-> /                    BookReview.Routes

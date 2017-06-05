@@ -1,0 +1,7 @@
+GET     /:bookId/reviews                       controllers.book.BookReviewController.getResourcesFromSource(bookId:Int, start:Option[Int], limit:Option[Int])
+
+GET     /:bookId/reviews/:reviewId            controllers.book.BookReviewController.getResourceFromSource(bookId:Int, reviewId : Int)
+
+POST    /:bookId/reviews                       controllers.book.BookReviewController.createResourceInSource(bookId:Int)
+
+DELETE  /:bookId/reviews/:reviewId            controllers.book.BookReviewController.deleteResourceFromSource(bookId:Int, reviewId:Int)

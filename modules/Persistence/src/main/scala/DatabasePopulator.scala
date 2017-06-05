@@ -10,7 +10,7 @@ import author.model.{Author, AuthorPersistenceConverter, AuthorPersistenceModel,
 import authorbook.AuthorBook
 import authorbook.model.{AuthorBookPersistenceModel, AuthorBookTable}
 import book.model.{Book, BookPersistenceConverter, BookPersistenceModel, BookTable}
-import comment.model.{Comment, CommentPersistenceConverter, CommentPersistenceModel, CommentTable}
+import review.model.{Review, ReviewPersistenceConverter, ReviewPersistenceModel, ReviewTable}
 import editorial.model.{Editorial, EditorialPersistenceConverter, EditorialPersistenceModel, EditorialTable}
 import slick.lifted.TableQuery
 import uk.co.jemos.podam.api.PodamFactoryImpl
@@ -28,7 +28,7 @@ object DatabasePopulator {
   implicit def editorial2Persistence (s : Editorial):EditorialPersistenceModel = EditorialPersistenceConverter.convert(s)
   implicit def book2Persistence (s : Book):BookPersistenceModel = BookPersistenceConverter.convert(s)
   implicit def author2Persistence (s : Author):AuthorPersistenceModel = AuthorPersistenceConverter.convert(s)
-  implicit def comment2Persistence (s : Comment):CommentPersistenceModel = CommentPersistenceConverter.convert(s)
+  implicit def Review2Persistence (s : Review):ReviewPersistenceModel = ReviewPersistenceConverter.convert(s)
 
   /**
     * Las tablas de la aplicación
@@ -38,7 +38,7 @@ object DatabasePopulator {
     TableQuery[EditorialTable],
     TableQuery[BookTable],
     TableQuery[AuthorTable],
-    TableQuery[CommentTable],
+    TableQuery[ReviewTable],
     TableQuery[AuthorBookTable]
   )
 
@@ -47,14 +47,14 @@ object DatabasePopulator {
   var books:Seq[Book] = Seq()
   var authors:Seq[Author] = Seq()
   var authorBook:Seq[AuthorBook] = Seq()
-  var comments:Seq[Comment] = Seq()
+  var Reviews:Seq[Review] = Seq()
 
   //Generador de entidades de cada tabla
   def generateEditorial(id:Int) = factory.manufacturePojo(classOf[Editorial]).copy(id=id)
-  def generateBook(id:Int) = factory.manufacturePojo(classOf[Book]).copy(id = id, editorial = Some(editorials(Random.nextInt(editorials.length))), comments = Seq())
+  def generateBook(id:Int) = factory.manufacturePojo(classOf[Book]).copy(id = id, editorial = Some(editorials(Random.nextInt(editorials.length))), Reviews = Seq())
   def generateAuthor(id:Int) = factory.manufacturePojo(classOf[Author]).copy(id = id, books = Seq())
   def generateAuthorBook(book:Book, author:Author) = factory.manufacturePojo(classOf[AuthorBook]).copy(book = book, author = author)
-  def generateComment = factory.manufacturePojo(classOf[Comment])copy(book = books(Random.nextInt(books.length)))
+  def generateReview = factory.manufacturePojo(classOf[Review])copy(book = books(Random.nextInt(books.length)))
 
   /**
     * Método que genera las entidades de las tablas
@@ -84,12 +84,12 @@ object DatabasePopulator {
     }
     val authorBookAction = TableQuery[AuthorBookTable] ++= authorBook.map(e=>AuthorBookPersistenceModel(1,"",e.book.id, e.author.id))
 
-    comments = for {
+    Reviews = for {
       _ <- 0 to 99
-    }yield generateComment
+    }yield generateReview
 
-    val commentAction = TableQuery[CommentTable] ++= comments.map(e=>e:CommentPersistenceModel)
+    val ReviewAction = TableQuery[ReviewTable] ++= Reviews.map(e=>e:ReviewPersistenceModel)
 
-    DBIO.seq(editorialAction, bookAction, authorAction, authorBookAction, commentAction)
+    DBIO.seq(editorialAction, bookAction, authorAction, authorBookAction, ReviewAction)
   }
 }

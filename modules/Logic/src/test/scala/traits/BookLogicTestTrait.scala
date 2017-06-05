@@ -25,7 +25,7 @@ trait BookLogicTestTrait extends CrudLogicTestTrait[Book, BookPersistenceModel, 
 
   when(persistenceMock.table) thenReturn mock[TableQuery[BookTable]]
 
-  override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(comments = Seq())
+  override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(Reviews = Seq())
 
   override def assertByProperties(e1: Book, e2: Book): Unit = {
     super.assertByProperties(e1, e2)

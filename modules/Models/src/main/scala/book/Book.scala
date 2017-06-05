@@ -8,7 +8,7 @@ package book.model
 
 import author.model.Author
 import crud.models.Row
-import comment.model.Comment
+import review.model.Review
 import editorial.model.Editorial
 
-case class Book(id:Int, name:String, description:String, ISBN:String, image:String, comments:Seq[Comment], authors:Seq[Author], editorial: Option[Editorial]) extends Row
+case class Book(id:Int, name:String, description:String, ISBN:String, image:String, Reviews:Seq[Review], authors:Seq[Author], editorial: Option[Editorial]) extends Row

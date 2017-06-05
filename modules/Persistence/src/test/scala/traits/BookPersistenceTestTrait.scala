@@ -8,8 +8,8 @@ package traits
 
 import book.model._
 import book.persistence.BookPersistence
-import comment.model.Comment
-import comment.persistence.CommentPersistence
+import review.model.Review
+import review.persistence.ReviewPersistence
 import persistence.DatabasePopulator
 import slick.jdbc.PostgresProfile.api._
 import tests.persistence.CrudPersistenceTestTrait
@@ -19,7 +19,7 @@ trait BookPersistenceTestTrait extends CrudPersistenceTestTrait[Book, BookPersis
 
   override val tables = DatabasePopulator.tables
 
-  override val persistence = new BookPersistence(new CommentPersistence)
+  override val persistence = new BookPersistence(new ReviewPersistence)
 
   override var seedCollection: Seq[Book] = Seq()
 
@@ -48,13 +48,13 @@ trait BookPersistenceTestTrait extends CrudPersistenceTestTrait[Book, BookPersis
 
         val newObject = generatePojo
 
-        val comments:Seq[Comment] = for {
+        val Reviews:Seq[Review] = for {
           _ <- 0 to Random.nextInt(15) + 1
-        }yield DatabasePopulator.generateComment.copy(book = newObject)
+        }yield DatabasePopulator.generateReview.copy(book = newObject)
 
-        whenReady(persistence.runAction(persistence.createAction(newObject.copy(comments = comments)))) { element =>
-          whenReady(persistence.db.run(persistence.commentPersistence.table.filter(_.bookId === element.id).result)){ dbComments =>
-            assert(dbComments.length == comments.length, "La longitud de los comentarios encontrados deberia ser la misma que los comentarios creados")
+        whenReady(persistence.runAction(persistence.createAction(newObject.copy(Reviews = Reviews)))) { element =>
+          whenReady(persistence.db.run(persistence.ReviewPersistence.table.filter(_.bookId === element.id).result)){ dbReviews =>
+            assert(dbReviews.length == Reviews.length, "La longitud de los comentarios encontrados deberia ser la misma que los comentarios creados")
           }
         }
       }

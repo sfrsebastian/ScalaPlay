@@ -9,7 +9,7 @@ package book.persistence
 import author.model.{Author, AuthorTable}
 import authorbook.model.{AuthorBookPersistenceModel, AuthorBookTable}
 import book.model._
-import comment.persistence.CommentPersistenceTrait
+import review.persistence.ReviewPersistenceTrait
 import editorial.model.{Editorial, EditorialTable}
 import layers.persistence.{CrudPersistence, ManyToManyPersistence, OneToManyPersistence}
 import slick.jdbc.PostgresProfile.api._
@@ -17,7 +17,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, BookTable] with ManyToManyPersistence[Author, Book] with OneToManyPersistence[Editorial, Book]{
 
-  val commentPersistence:CommentPersistenceTrait
+  val ReviewPersistence:ReviewPersistenceTrait
 
   val authorBookTable = TableQuery[AuthorBookTable]
 
@@ -37,7 +37,7 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
 
   override def getAction(query: Query[BookTable, BookPersistenceModel, Seq]): DBIO[Option[Book]] = {
     for{
-      book <- query.joinLeft(commentPersistence.table).on(_.id === _.bookId)
+      book <- query.joinLeft(ReviewPersistence.table).on(_.id === _.bookId)
         .join(authorBookTable).on(_._1.id === _.bookId)
         .join(authorTable).on(_._2.authorId === _.id)
         .joinLeft(editorialTable).on(_._1._1._1.editorialId === _.id)
@@ -52,7 +52,7 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
 
   override def getAllAction(query: Query[BookTable, BookPersistenceModel, Seq], start: Int, limit: Int): DBIO[Seq[Book]] = {
     for{
-      book <- query.joinLeft(commentPersistence.table).on(_.id === _.bookId)
+      book <- query.joinLeft(ReviewPersistence.table).on(_.id === _.bookId)
         .join(authorBookTable).on(_._1.id === _.bookId)
         .join(authorTable).on(_._2.authorId === _.id)
         .joinLeft(editorialTable).on(_._1._1._1.editorialId === _.id)
@@ -70,7 +70,7 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
     for{
       created <- (table returning table) += element
       _ <- DBIO.seq(authorBookTable ++= element.authors.map(u => AuthorBookPersistenceModel(1,"",created.id, u.id)))
-      _ <- DBIO.sequence(element.comments.map(c => commentPersistence.createAction(c.copy(book = created))))
+      _ <- DBIO.sequence(element.Reviews.map(c => ReviewPersistence.createAction(c.copy(book = created))))
       book <- getAction(table.filter(_.id === created.id))
     }yield book.get
   }

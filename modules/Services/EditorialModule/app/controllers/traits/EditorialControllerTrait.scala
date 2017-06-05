@@ -8,14 +8,14 @@ package controllers.traits
 
 import auth.controllers.AuthUserHandler
 import book.model.BookMin
-import comment.model.CommentMin
+import review.model.ReviewMin
 import editorial.model._
 import layers.controllers.CrudController
 import play.api.libs.json.Json
 
 trait EditorialControllerTrait extends CrudController[EditorialDetail, Editorial, EditorialPersistenceModel, EditorialTable] with AuthUserHandler {
 
-  implicit val formatCommentMin = Json.format[CommentMin]
+  implicit val formatReviewMin = Json.format[ReviewMin]
 
   implicit val formatBookMin = Json.format[BookMin]
 

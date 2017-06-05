@@ -7,7 +7,7 @@
 package book.model
 
 import author.model.AuthorMin
-import comment.model.CommentMin
+import review.model.ReviewMin
 import editorial.model.EditorialMin
 
 case class BookDetail(
@@ -17,6 +17,6 @@ case class BookDetail(
   val ISBN:String,
   val image:String,
   val authors:Seq[AuthorMin],
-  val comments:Seq[CommentMin],
+  val reviews:Seq[ReviewMin],
   val editorial:Option[EditorialMin]
 ) extends BookDTO
