@@ -11,7 +11,7 @@ import book.model.BookTable
 import slick.lifted.Tag
 import slick.jdbc.PostgresProfile.api._
 
-class ReviewTable(tag:Tag) extends Entity[ReviewPersistenceModel](tag, "ReviewS") {
+class ReviewTable(tag:Tag) extends Entity[ReviewPersistenceModel](tag, "REVIEWS") {
   def content = column[String]("CONTENT")
   def bookId = column[Int]("BOOK_ID")
 
