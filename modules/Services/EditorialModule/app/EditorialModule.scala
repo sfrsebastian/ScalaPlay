@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package editorial.settings
 
 import book.logic.EditorialBookLogic
@@ -8,9 +14,6 @@ import editorial.traits.EditorialLogicTrait
 import play.api.{Configuration, Environment}
 import play.api.inject.Module
 
-/**
-  * Created by sfrsebastian on 4/26/17.
-  */
 class EditorialModule extends Module {
   def bindings(env: Environment, conf: Configuration) = Seq(
     bind[EditorialLogicTrait].to[EditorialLogic],

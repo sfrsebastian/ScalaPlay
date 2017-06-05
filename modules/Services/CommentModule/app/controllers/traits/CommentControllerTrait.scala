@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package controllers.traits
 
 import auth.controllers.AuthUserHandler
@@ -8,9 +14,6 @@ import comment.traits.CommentLogicTrait
 import layers.controllers.CrudController
 import play.api.libs.json.Json
 
-/**
-  * Created by sfrsebastian on 5/2/17.
-  */
 trait CommentControllerTrait extends CrudController[CommentDetail, Comment, CommentPersistenceModel, CommentTable] with AuthUserHandler{
 
   val logic:CommentLogicTrait

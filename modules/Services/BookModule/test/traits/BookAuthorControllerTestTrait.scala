@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package traits
 
 import author.model._
@@ -14,9 +20,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import tests.controllers.ManyToManyControllerTestTrait
 
-/**
-  * Created by sfrsebastian on 5/29/17.
-  */
 trait BookAuthorControllerTestTrait extends ManyToManyControllerTestTrait[Book, BookPersistenceModel, BookTable, AuthorDetail, Author, AuthorPersistenceModel, AuthorTable, BookAuthorController, BookLogic, BookAuthorLogic] {
 
   var sourceLogicMock = mock[BookLogic]

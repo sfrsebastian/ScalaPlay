@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 import traits.CommentControllerTestTrait
 
 /*IMPORTS CON AUTENTICACION/AUTORIZACION
@@ -16,10 +22,6 @@ import play.api.test.Helpers.{call, contentAsJson, status}
 import play.api.test.Helpers._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future*/
-
-/**
-  * Created by sfrsebastian on 4/12/17.
-  */
 
 class CommentControllerTest extends CommentControllerTestTrait{
   /*override lazy val app = new GuiceApplicationBuilder()

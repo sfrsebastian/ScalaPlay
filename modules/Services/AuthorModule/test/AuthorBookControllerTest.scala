@@ -1,6 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 import traits.AuthorBookControllerTestTrait
 
-/**
-  * Created by sfrsebastian on 5/29/17.
-  */
 class AuthorBookControllerTest extends AuthorBookControllerTestTrait

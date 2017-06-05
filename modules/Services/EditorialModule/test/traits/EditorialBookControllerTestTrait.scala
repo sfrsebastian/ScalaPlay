@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package traits
 
 import author.model._
@@ -14,9 +20,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import tests.controllers.OneToManyControllerTestTrait
 
-/**
-  * Created by sfrsebastian on 5/30/17.
-  */
 trait EditorialBookControllerTestTrait extends OneToManyControllerTestTrait[Editorial, EditorialPersistenceModel, EditorialTable, BookDetail, Book, BookPersistenceModel, BookTable, EditorialBookController, EditorialLogic, EditorialBookLogic] {
 
   var sourceLogicMock = mock[EditorialLogic]

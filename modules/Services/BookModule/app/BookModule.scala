@@ -2,7 +2,7 @@ package book.settings
 
 import author.BookAuthorLogic
 import author.traits.BookAuthorLogicTrait
-import book.logic.{AuthorBookLogic, BookLogic}
+import book.logic.BookLogic
 import book.persistence.{BookPersistence, BookPersistenceTrait}
 import book.traits.BookLogicTrait
 import comment.logic.CommentLogic

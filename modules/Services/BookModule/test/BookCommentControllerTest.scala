@@ -1,6 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 import traits.BookCommentControllerTestTrait
 
-/**
-  * Created by sfrsebastian on 5/30/17.
-  */
 class BookCommentControllerTest extends BookCommentControllerTestTrait

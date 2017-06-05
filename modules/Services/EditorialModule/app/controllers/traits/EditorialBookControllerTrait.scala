@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package controllers.traits
 
 import auth.controllers.AuthUserHandler
@@ -8,9 +14,6 @@ import editorial.model.{Editorial, EditorialMin, EditorialPersistenceModel, Edit
 import layers.controllers.OneToManyController
 import play.api.libs.json.Json
 
-/**
-  * Created by sfrsebastian on 5/29/17.
-  */
 trait EditorialBookControllerTrait extends OneToManyController[Editorial, EditorialPersistenceModel, EditorialTable, BookDetail, Book, BookPersistenceModel, BookTable] with AuthUserHandler{
   implicit val commentMinFormat = Json.format[CommentMin]
 

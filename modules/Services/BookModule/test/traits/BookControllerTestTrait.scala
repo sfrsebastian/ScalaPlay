@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package traits
 
 import author.model.AuthorMin
@@ -12,9 +18,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import tests.controllers.CrudControllerTestTrait
 
-/**
-  * Created by sfrsebastian on 5/6/17.
-  */
 trait BookControllerTestTrait extends CrudControllerTestTrait[BookDetail, Book, BookPersistenceModel, BookTable , BookController, BookLogic] {
 
   var logicMock = mock[BookLogic]

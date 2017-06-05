@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package controllers.traits
 
 import auth.controllers.AuthUserHandler
@@ -7,9 +13,6 @@ import editorial.model._
 import layers.controllers.CrudController
 import play.api.libs.json.Json
 
-/**
-  * Created by sfrsebastian on 5/6/17.
-  */
 trait EditorialControllerTrait extends CrudController[EditorialDetail, Editorial, EditorialPersistenceModel, EditorialTable] with AuthUserHandler {
 
   implicit val formatCommentMin = Json.format[CommentMin]

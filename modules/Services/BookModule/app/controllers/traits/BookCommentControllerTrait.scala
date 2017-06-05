@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package controllers.traits
 
 import auth.controllers.AuthUserHandler
@@ -6,9 +12,6 @@ import comment.model._
 import layers.controllers.OneToManyCompositeController
 import play.api.libs.json.Json
 
-/**
-  * Created by sfrsebastian on 5/29/17.
-  */
 trait BookCommentControllerTrait extends OneToManyCompositeController[Book, BookPersistenceModel, BookTable, CommentDetail, Comment, CommentPersistenceModel, CommentTable] with AuthUserHandler{
 
   implicit val formatBookMin = Json.format[BookMin]

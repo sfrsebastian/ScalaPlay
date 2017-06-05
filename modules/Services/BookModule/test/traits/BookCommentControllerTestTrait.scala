@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package traits
 
 import book.logic.BookLogic
@@ -12,9 +18,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import tests.controllers.OneToManyCompositeControllerTestTrait
 
-/**
-  * Created by sfrsebastian on 5/30/17.
-  */
 trait BookCommentControllerTestTrait extends OneToManyCompositeControllerTestTrait[Book, BookPersistenceModel, BookTable, CommentDetail, Comment, CommentPersistenceModel, CommentTable, BookCommentController, BookLogic, CommentLogic] {
 
   var sourceLogicMock = mock[BookLogic]

@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package controllers.traits
 
 import auth.controllers.AuthUserHandler
@@ -7,9 +13,6 @@ import book.model.BookMin
 import layers.controllers.CrudController
 import play.api.libs.json.Json
 
-/**
-  * Created by sfrsebastian on 5/2/17.
-  */
 trait AuthorControllerTrait extends CrudController[AuthorDetail, Author, AuthorPersistenceModel, AuthorTable] with AuthUserHandler {
 
   implicit val bookMinFormat=Json.format[BookMin]
