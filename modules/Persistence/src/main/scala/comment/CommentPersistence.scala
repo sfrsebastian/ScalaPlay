@@ -1,6 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package comment.persistence
 
-/**
-  * Created by sfrsebastian on 4/26/17.
-  */
 class CommentPersistence extends CommentPersistenceTrait

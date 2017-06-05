@@ -1,3 +1,11 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
+package traits
+
 import author.model._
 import author.persistence.AuthorPersistence
 import book.model.Book
@@ -6,12 +14,8 @@ import comment.persistence.CommentPersistence
 import persistence.DatabasePopulator
 import slick.jdbc.PostgresProfile.api._
 import tests.persistence.CrudPersistenceTestTrait
-
 import scala.util.Random
 
-/**
-  * Created by sfrsebastian on 5/2/17.
-  */
 trait AuthorPersistenceTestTrait extends CrudPersistenceTestTrait[Author, AuthorPersistenceModel, AuthorTable]{
 
   override val tables = DatabasePopulator.tables

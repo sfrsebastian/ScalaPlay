@@ -1,15 +1,17 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package editorial.persistence
 
 import book.model._
 import editorial.model._
 import layers.persistence.CrudPersistence
 import slick.jdbc.PostgresProfile.api._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
-/**
-  * Created by sfrsebastian on 4/26/17.
-  */
 trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPersistenceModel, EditorialTable] {
   var table = TableQuery[EditorialTable]
 

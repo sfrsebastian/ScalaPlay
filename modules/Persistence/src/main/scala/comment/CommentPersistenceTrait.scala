@@ -1,15 +1,17 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package comment.persistence
 
 import book.model.BookTable
 import comment.model._
 import layers.persistence.CrudPersistence
 import slick.jdbc.PostgresProfile.api._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
-/**
-  * Created by sfrsebastian on 4/26/17.
-  */
 trait CommentPersistenceTrait extends CrudPersistence[Comment, CommentPersistenceModel,CommentTable] {
 
   var table = TableQuery[CommentTable]

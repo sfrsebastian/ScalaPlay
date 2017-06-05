@@ -1,6 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package editorial.persistence
 
-/**
-  * Created by sfrsebastian on 4/26/17.
-  */
 class EditorialPersistence extends EditorialPersistenceTrait

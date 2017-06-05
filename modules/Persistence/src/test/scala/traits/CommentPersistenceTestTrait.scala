@@ -1,9 +1,16 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
+package traits
+
 import book.persistence.BookPersistence
 import comment.model._
 import comment.persistence.CommentPersistence
 import persistence.DatabasePopulator
 import tests.persistence.CrudPersistenceTestTrait
-
 import scala.util.Random
 
 trait CommentPersistenceTestTrait extends CrudPersistenceTestTrait[Comment, CommentPersistenceModel, CommentTable]{

@@ -1,3 +1,9 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
 package book.persistence
 
 import author.model.{Author, AuthorTable}
@@ -9,9 +15,6 @@ import layers.persistence.{CrudPersistence, ManyToManyPersistence, OneToManyPers
 import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-/**
-  * Created by sfrsebastian on 4/10/17.
-  */
 trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, BookTable] with ManyToManyPersistence[Author, Book] with OneToManyPersistence[Editorial, Book]{
 
   val commentPersistence:CommentPersistenceTrait

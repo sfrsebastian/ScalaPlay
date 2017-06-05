@@ -1,11 +1,16 @@
+/*
+ * Desarrollado por: Sebastián Flórez
+ * Universidad de los Andes
+ * Ingeniería de Sistemas y Computación
+ * Pregrado
+ */
+package traits
+
 import editorial.model._
 import editorial.persistence.EditorialPersistence
 import persistence.DatabasePopulator
 import tests.persistence.CrudPersistenceTestTrait
 
-/**
-  * Created by sfrsebastian on 5/6/17.
-  */
 trait EditorialPersistenceTestTrait extends CrudPersistenceTestTrait[Editorial, EditorialPersistenceModel, EditorialTable]{
   override val tables = DatabasePopulator.tables
 
