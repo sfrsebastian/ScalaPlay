@@ -99,9 +99,13 @@ Esta sentencia indica a Scalatest la referencia de los archivos de configuració
 ## Paso 5: Ejecutar
 Seleccionar la configuración a correr y dar click en el boton de ejecución (botón play).
 
-Para el caso de ejecución de la aplicación se despliega la siguiente ventan en el navegador.
+Para el caso de ejecución de la aplicación se despliega la siguiente ventana en el navegador.
+
+![alt text](https://raw.githubusercontent.com/sfrsebastian/ScalaPlay/master/img/7.png)
 
 Para el caso de pruebas se muestra la siguiente ventana en Intellij
+
+![alt text](https://raw.githubusercontent.com/sfrsebastian/ScalaPlay/master/img/8.png)
 
 ## Paso 6: Ejecutar en SonarQube
 1. Agregar los archivos .jar presentes en el directorio *sonar-plugins* en el directorio de sonar *[ruta-sonar]/extensions/plugins*.
