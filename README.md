@@ -107,6 +107,8 @@ Para el caso de pruebas se muestra la siguiente ventana en Intellij
 
 ![alt text](https://raw.githubusercontent.com/sfrsebastian/ScalaPlay/master/img/8.png)
 
+Todas las rutas desarrolladas pueden ser probadas importanto el archivo *bookstore-postman.json* en la herramienta Postman.
+
 ## Paso 6: Ejecutar en SonarQube
 1. Agregar los archivos .jar presentes en el directorio *sonar-plugins* en el directorio de sonar *[ruta-sonar]/extensions/plugins*.
 

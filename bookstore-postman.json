@@ -1,0 +1,672 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Proyecto de Grado",
+		"_postman_id": "1ae914dd-2833-1ae3-9696-2094e3c02821",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autenticacion",
+			"description": "",
+			"item": [
+				{
+					"name": "Sign Up",
+					"request": {
+						"url": "http://localhost:9000/auth/signup",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Sebastian\",\n    \"lastName\": \"Florez\",\n    \"email\": \"sebastian@gmail.com\",\n    \"password\": \"123456\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "SignIn",
+					"request": {
+						"url": "http://localhost:9000/auth/signin",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"sebastian@gmail.com\",\n\t\"password\":\"123456\",\n\t\"rememberMe\":false\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "SignOut",
+					"request": {
+						"url": "http://localhost:9000/auth/signout?redirect=http://localhost:9000/auth/index",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxLWVzcEJtSUZXVzlMd1NORTRFNWQrMUtXWWNxTXgzZ3Y1VU54NnhZWUhKNjZvT0tjVU5xeXpoTElVT0dSY2xLNTA1amU1OWlYUWpSOEZqVUJDNFoydzZPT2djNGxSQ1gwRjIxZzdLZzRlZ0V3PSIsImlzcyI6IlBsYXlTaWxob3VldHRlUmVzdCIsImV4cCI6MTQ5NTEyOTM5NiwiaWF0IjoxNDkyNTM3Mzk2LCJqdGkiOiJlMjZmOGYzMjAyOWQ2YjlmYjc2Y2I2MDc0YzUzZWU1NzQ3MjE3OWUzMGQ1ZTc3MDc3MTM0NWU2OTU0MGQ2NTkwYWRhY2IxOTMzYWUxYTBlOTYwZGM4ZDUwYmM0MTZhNjBiMzA0YzY0ZDdlYTcwNGI0MzhhNmYyNTY5M2U1YmZmYmViODI2MWRkNzE2NDcyMjU5YmQyNjUyOGZlMGQ2M2Q2MDhlNzA3ZjQzNGVhYWRjYzM5NzA0YzIyNzgxN2U3MGJiZjEzMjljMjFhMjgyMTczN2FmYzczY2VmNjllMDk4MGJkYmIxMDZhZjQzNzRhNTcwOWM2YTNiMTg1NzNlM2RlIn0.gKC8fW59Qe726cNadai6LBF1z1uJS_Sf9R0YIcWlbAk",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AuthorBooks",
+			"description": "",
+			"item": [
+				{
+					"name": "Dar Libros de un Autor",
+					"request": {
+						"url": "http://localhost:9000/authors/1/books",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"ISBN\": \"hM78mYnY5v\",\n\t\t\"authors\":[],\n\t\t\"comments\":[],\n\t\t\"description\":\"GulO8T2RS5\",\n\t\t\"id\":13,\n\t\t\"image\":\"BGWyW89HwB\",\n\t\t\"name\":\"O6FPB6PrgX\"\n\t}\n]"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Dar Libro de un Autor",
+					"request": {
+						"url": "http://localhost:9000/authors/1/books/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"ISBN\": \"hM78mYnY5v\",\n\t\t\"authors\":[],\n\t\t\"comments\":[],\n\t\t\"description\":\"GulO8T2RS5\",\n\t\t\"id\":13,\n\t\t\"image\":\"BGWyW89HwB\",\n\t\t\"name\":\"O6FPB6PrgX\"\n\t}\n]"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Asociar un Libro a un Autor",
+					"request": {
+						"url": "http://localhost:9000/authors/1/books/1",
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Desasociar un Libro de un Autor",
+					"request": {
+						"url": "http://localhost:9000/authors/1/books/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authors",
+			"description": "",
+			"item": [
+				{
+					"name": "Dar Autores",
+					"request": {
+						"url": "http://localhost:9000/authors",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxLW9kbDZkSEZLb3VSREkzVmwybkdqbHI0bW1VYTBsbGhQdlExOWxoazdOcDdTMk4xSUFsM09yWGZqQWU2YU1xMzZoZThqSDRqMHlJaTV0empoOTVPZmVBODBTQ0szVEYwUG5QYmk0bFFxa040PSIsImlzcyI6IlBsYXlTaWxob3VldHRlUmVzdCIsImV4cCI6MTQ5NTUwNzEyOSwiaWF0IjoxNDkyOTE1MTI5LCJqdGkiOiJiNTQ5YjAzYTY0M2UxZmVjYjRkNzE2ZmQ5NmI0OGM4ZDNmZWU2NjRlMmI1MjA1OGE3ODg5NzdiZDEzMTc2NDY0NzhiNGQ3MjllZmExMTk2MmRiZTk3ZTdmNGE5YjdhY2RiNjgzNTMyNTc3MWM0ZWViYzcwMjM3MjIxODdlYjE0ZWVhOTdlMjk1MGExNDlhNWUzMDMyMTdiZjk0YWM2MTBkYTBhYzVmM2VkMmNkMmI0MWEzODgxZWNmMmZlYWU4ZmFkNjliNjNiNzZjZTUyY2FiMDk0ZmQyMmE1OTMxYTQ4OTA4NmZmNmJmOTUwNTE1YTE4OThkYWMxOTc0NDRmNzM0In0.pmOXEdkkJh4lrpcDBGyy0-o4PPQTIQWd6Q43wM5MAP0",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Dar Autor",
+					"request": {
+						"url": "http://localhost:9000/authors/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Autor",
+					"request": {
+						"url": "http://localhost:9000/authors/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": 21,\n    \"name\": \"John2\",\n    \"lastName\":\"Doe 2\",\n    \"books\":[]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Autor",
+					"request": {
+						"url": "http://localhost:9000/authors",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":1,\n\t\"name\": \"John\",\n\t\"lastName\": \"Doe\",\n\t\"books\":[\n\t\t{\n    \t\t\"id\": 1,\n    \t\t\"name\": \"Cien años de soledad\",\n    \t\t\"description\": \"Descripcion del libro2\",\n\t\t\t \"ISBN\": \"ISBN5007\",\n    \t\t\"image\": \"url3\"\n\t\t}\n\t]\n}"
+						},
+						"description": "El atributo de books puede ser dado como un arreglo vacio []"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Autor",
+					"request": {
+						"url": "http://localhost:9000/authors/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BookAuthors",
+			"description": "",
+			"item": [
+				{
+					"name": "Dar Autores de un Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1/authors",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"ISBN\": \"hM78mYnY5v\",\n\t\t\"authors\":[],\n\t\t\"comments\":[],\n\t\t\"description\":\"GulO8T2RS5\",\n\t\t\"id\":13,\n\t\t\"image\":\"BGWyW89HwB\",\n\t\t\"name\":\"O6FPB6PrgX\"\n\t}\n]"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Dar Autor de un Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1/authors/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"ISBN\": \"hM78mYnY5v\",\n\t\t\"authors\":[],\n\t\t\"comments\":[],\n\t\t\"description\":\"GulO8T2RS5\",\n\t\t\"id\":13,\n\t\t\"image\":\"BGWyW89HwB\",\n\t\t\"name\":\"O6FPB6PrgX\"\n\t}\n]"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Asociar un Autor a un Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1/authors/1",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t{\n\t\t\"ISBN\": \"hM78mYnY5v\",\n\t\t\"authors\":[],\n\t\t\"comments\":[],\n\t\t\"description\":\"GulO8T2RS5\",\n\t\t\"id\":13,\n\t\t\"image\":\"BGWyW89HwB\",\n\t\t\"name\":\"O6FPB6PrgX\"\n\t}\n]"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Desasociar un Autor de un Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1/authors/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Books",
+			"description": "",
+			"item": [
+				{
+					"name": "Dar Libros",
+					"request": {
+						"url": "http://localhost:9000/books",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxLW9kbDZkSEZLb3VSREkzVmwybkdqbHI0bW1VYTBsbGhQdlExOWxoazdOcDdTMk4xSUFsM09yWGZqQWU2YU1xMzZoZThqSDRqMHlJaTV0empoOTVPZmVBODBTQ0szVEYwUG5QYmk0bFFxa040PSIsImlzcyI6IlBsYXlTaWxob3VldHRlUmVzdCIsImV4cCI6MTQ5NTUwNzEyOSwiaWF0IjoxNDkyOTE1MTI5LCJqdGkiOiJiNTQ5YjAzYTY0M2UxZmVjYjRkNzE2ZmQ5NmI0OGM4ZDNmZWU2NjRlMmI1MjA1OGE3ODg5NzdiZDEzMTc2NDY0NzhiNGQ3MjllZmExMTk2MmRiZTk3ZTdmNGE5YjdhY2RiNjgzNTMyNTc3MWM0ZWViYzcwMjM3MjIxODdlYjE0ZWVhOTdlMjk1MGExNDlhNWUzMDMyMTdiZjk0YWM2MTBkYTBhYzVmM2VkMmNkMmI0MWEzODgxZWNmMmZlYWU4ZmFkNjliNjNiNzZjZTUyY2FiMDk0ZmQyMmE1OTMxYTQ4OTA4NmZmNmJmOTUwNTE1YTE4OThkYWMxOTc0NDRmNzM0In0.pmOXEdkkJh4lrpcDBGyy0-o4PPQTIQWd6Q43wM5MAP0",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Dar Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 21,\n    \"name\": \"Cien años de soledad\",\n    \"description\": \"Descripcion del libro2\",\n    \"ISBN\": \"ISBN5007\",\n    \"image\": \"url3\",\n    \"authors\":[],\n    \"reviews\":[]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Libro",
+					"request": {
+						"url": "http://localhost:9000/books",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Cien anios de soledad\",\n    \"description\": \"Descripcion del libro\",\n    \"ISBN\": \"ISBN5010\",\n    \"image\": \"url2\",\n    \"authors\":[\n    ],\n    \"reviews\":[\n    \t{\n    \t\t\"id\":1,\n    \t\t\"content\":\"Muy Buen Libro\"\n    \t}\n    ]\n}"
+						},
+						"description": "El atributo de authors y reviews puede ser dado como un arreglo vacio []"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BooksReviews",
+			"description": "",
+			"item": [
+				{
+					"name": "Dar Comentarios de un Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1/reviews",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxLW9kbDZkSEZLb3VSREkzVmwybkdqbHI0bW1VYTBsbGhQdlExOWxoazdOcDdTMk4xSUFsM09yWGZqQWU2YU1xMzZoZThqSDRqMHlJaTV0empoOTVPZmVBODBTQ0szVEYwUG5QYmk0bFFxa040PSIsImlzcyI6IlBsYXlTaWxob3VldHRlUmVzdCIsImV4cCI6MTQ5NTUwNzEyOSwiaWF0IjoxNDkyOTE1MTI5LCJqdGkiOiJiNTQ5YjAzYTY0M2UxZmVjYjRkNzE2ZmQ5NmI0OGM4ZDNmZWU2NjRlMmI1MjA1OGE3ODg5NzdiZDEzMTc2NDY0NzhiNGQ3MjllZmExMTk2MmRiZTk3ZTdmNGE5YjdhY2RiNjgzNTMyNTc3MWM0ZWViYzcwMjM3MjIxODdlYjE0ZWVhOTdlMjk1MGExNDlhNWUzMDMyMTdiZjk0YWM2MTBkYTBhYzVmM2VkMmNkMmI0MWEzODgxZWNmMmZlYWU4ZmFkNjliNjNiNzZjZTUyY2FiMDk0ZmQyMmE1OTMxYTQ4OTA4NmZmNmJmOTUwNTE1YTE4OThkYWMxOTc0NDRmNzM0In0.pmOXEdkkJh4lrpcDBGyy0-o4PPQTIQWd6Q43wM5MAP0",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Dar Comentario de un Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1/reviews/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Comentario de un Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1/reviews/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": 1,\n    \"content\": \"nuevo comentario\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Comentario en un Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1/reviews",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 2,\n    \"content\": \"Nuevo\",\n    \"book\":{\n    \t\"id\": 5,\n\t\t\"name\": \"Cien años de soledad\",\n\t\t\"description\": \"Descripcion del libro2\",\n\t\t\"ISBN\": \"ISBN5007\",\n\t\t\"image\": \"url3\"\n    }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Comentario de un Libro",
+					"request": {
+						"url": "http://localhost:9000/books/1/reviews/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Editorials",
+			"description": "",
+			"item": [
+				{
+					"name": "Dar Editoriales",
+					"request": {
+						"url": "http://localhost:9000/editorials",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxLW9kbDZkSEZLb3VSREkzVmwybkdqbHI0bW1VYTBsbGhQdlExOWxoazdOcDdTMk4xSUFsM09yWGZqQWU2YU1xMzZoZThqSDRqMHlJaTV0empoOTVPZmVBODBTQ0szVEYwUG5QYmk0bFFxa040PSIsImlzcyI6IlBsYXlTaWxob3VldHRlUmVzdCIsImV4cCI6MTQ5NTUwNzEyOSwiaWF0IjoxNDkyOTE1MTI5LCJqdGkiOiJiNTQ5YjAzYTY0M2UxZmVjYjRkNzE2ZmQ5NmI0OGM4ZDNmZWU2NjRlMmI1MjA1OGE3ODg5NzdiZDEzMTc2NDY0NzhiNGQ3MjllZmExMTk2MmRiZTk3ZTdmNGE5YjdhY2RiNjgzNTMyNTc3MWM0ZWViYzcwMjM3MjIxODdlYjE0ZWVhOTdlMjk1MGExNDlhNWUzMDMyMTdiZjk0YWM2MTBkYTBhYzVmM2VkMmNkMmI0MWEzODgxZWNmMmZlYWU4ZmFkNjliNjNiNzZjZTUyY2FiMDk0ZmQyMmE1OTMxYTQ4OTA4NmZmNmJmOTUwNTE1YTE4OThkYWMxOTc0NDRmNzM0In0.pmOXEdkkJh4lrpcDBGyy0-o4PPQTIQWd6Q43wM5MAP0",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Dar Editorial",
+					"request": {
+						"url": "http://localhost:9000/editorials/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Editorial",
+					"request": {
+						"url": "http://localhost:9000/editorials/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Editorial2\",\n    \"address\": \"Calle de la editorial2\",\n    \"books\":[]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Editorial",
+					"request": {
+						"url": "http://localhost:9000/editorials",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Editorial\",\n    \"address\": \"Calle de la editorial\",\n    \"books\":[\n    \t{\n    \t\t\"id\": 1,\n\t\t\t\"name\": \"Cien anios de soledad\",\n\t\t\t\"description\": \"Descripcion del libro\",\n\t\t\t\"ISBN\": \"ISBN5010\",\n\t\t\t\"image\": \"url2\"\n    \t}\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Editorial",
+					"request": {
+						"url": "http://localhost:9000/editorials/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EditorialsBooks",
+			"description": "",
+			"item": [
+				{
+					"name": "Dar Libros de una Editorial",
+					"request": {
+						"url": "http://localhost:9000/editorials/1/books",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxLW9kbDZkSEZLb3VSREkzVmwybkdqbHI0bW1VYTBsbGhQdlExOWxoazdOcDdTMk4xSUFsM09yWGZqQWU2YU1xMzZoZThqSDRqMHlJaTV0empoOTVPZmVBODBTQ0szVEYwUG5QYmk0bFFxa040PSIsImlzcyI6IlBsYXlTaWxob3VldHRlUmVzdCIsImV4cCI6MTQ5NTUwNzEyOSwiaWF0IjoxNDkyOTE1MTI5LCJqdGkiOiJiNTQ5YjAzYTY0M2UxZmVjYjRkNzE2ZmQ5NmI0OGM4ZDNmZWU2NjRlMmI1MjA1OGE3ODg5NzdiZDEzMTc2NDY0NzhiNGQ3MjllZmExMTk2MmRiZTk3ZTdmNGE5YjdhY2RiNjgzNTMyNTc3MWM0ZWViYzcwMjM3MjIxODdlYjE0ZWVhOTdlMjk1MGExNDlhNWUzMDMyMTdiZjk0YWM2MTBkYTBhYzVmM2VkMmNkMmI0MWEzODgxZWNmMmZlYWU4ZmFkNjliNjNiNzZjZTUyY2FiMDk0ZmQyMmE1OTMxYTQ4OTA4NmZmNmJmOTUwNTE1YTE4OThkYWMxOTc0NDRmNzM0In0.pmOXEdkkJh4lrpcDBGyy0-o4PPQTIQWd6Q43wM5MAP0",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Dar Libro de una Editorial",
+					"request": {
+						"url": "http://localhost:9000/editorials/1/books/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Asociar Libro a una Editorial",
+					"request": {
+						"url": "http://localhost:9000/editorials/1/books/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\": 7,\n    \"name\": \"otro nombre 3\",\n    \"description\": \"Descripcion nueva\",\n    \"ISBN\": \"ISBN7\",\n    \"image\": \"url9\"}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Desasociar Libro de una Editorial",
+					"request": {
+						"url": "http://localhost:9000/editorials/2/books/1",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
