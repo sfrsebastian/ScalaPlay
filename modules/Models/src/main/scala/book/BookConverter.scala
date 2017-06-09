@@ -24,9 +24,9 @@ object BookPersistenceConverter extends ModelConverter[Book, BookPersistenceMode
     Book(source.id, source.name, source.description, source.ISBN, source.image, List(), List(), None)
   }
 
-  def convertInverse(source:BookPersistenceModel, Reviews: Seq[ReviewPersistenceModel], authors:Seq[AuthorPersistenceModel], editorial:Option[EditorialPersistenceModel]): Book ={
+  def convertInverse(source:BookPersistenceModel, reviews: Seq[ReviewPersistenceModel], authors:Seq[AuthorPersistenceModel], editorial:Option[EditorialPersistenceModel]): Book ={
     convertInverse(source).copy(
-        Reviews=Reviews.map(e => ReviewPersistenceConverter.convertInverse(e, source)),
+        reviews=reviews.map(e => ReviewPersistenceConverter.convertInverse(e, source)),
         authors= authors.map(a=>a:Author),
         editorial = editorial.map(e => e:Editorial)
       )
@@ -62,10 +62,10 @@ object BookMinConverter extends ModelConverter[Book, BookMin] {
     )
   }
 
-  def convertInverse(source:BookMin, Reviews: Seq[Review], authors:Seq[Author], editorial:Option[Editorial]): Book ={
+  def convertInverse(source:BookMin, reviews: Seq[Review], authors:Seq[Author], editorial:Option[Editorial]): Book ={
     convertInverse(source)
       .copy(
-        Reviews = Reviews,
+        reviews = reviews,
         authors = authors,
         editorial = editorial
       )
@@ -81,7 +81,7 @@ object BookDetailConverter extends ModelConverter[Book, BookDetail] {
   implicit def Min2Editorial (t : EditorialMin) : Editorial = EditorialMinConverter.convertInverse(t)
 
   override def convert(source: Book): BookDetail = {
-    BookDetail(source.id, source.name, source.description, source.ISBN, source.image, source.authors.map(a => a:AuthorMin), source.Reviews.map(c => c:ReviewMin), source.editorial.map(e=>e:EditorialMin))
+    BookDetail(source.id, source.name, source.description, source.ISBN, source.image, source.authors.map(a => a:AuthorMin), source.reviews.map(c => c:ReviewMin), source.editorial.map(e=>e:EditorialMin))
   }
 
   override def convertInverse(source: BookDetail) : Book  = {

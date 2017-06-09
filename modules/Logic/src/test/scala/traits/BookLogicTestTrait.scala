@@ -9,11 +9,13 @@ package traits
 import book.logic.BookLogic
 import book.model._
 import book.persistence.BookPersistence
+import crud.exceptions.LogicLayerException
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.TableQuery
 import tests.logic.CrudLogicTestTrait
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -25,7 +27,7 @@ trait BookLogicTestTrait extends CrudLogicTestTrait[Book, BookPersistenceModel, 
 
   when(persistenceMock.table) thenReturn mock[TableQuery[BookTable]]
 
-  override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(Reviews = Seq())
+  override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(reviews = Seq())
 
   override def assertByProperties(e1: Book, e2: Book): Unit = {
     super.assertByProperties(e1, e2)
@@ -40,9 +42,8 @@ trait BookLogicTestTrait extends CrudLogicTestTrait[Book, BookPersistenceModel, 
         val newObject = generatePojo
         when(persistenceMock.getAction(any())) thenReturn mock[DBIO[Option[Book]]]
         when(persistenceMock.runAction(any(classOf[DBIO[Option[Book]]]))) thenReturn Future(Some(newObject))
-        whenReady(logic.create(newObject)) {
-          case Some(_) => fail("No se deberia retornar el libro")
-          case None => succeed
+        whenReady(logic.create(newObject).failed) {ex =>
+            ex mustBe a [LogicLayerException]
         }
       }
 

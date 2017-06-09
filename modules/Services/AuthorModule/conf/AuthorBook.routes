@@ -2,6 +2,6 @@ GET     /:authorId/books                controllers.author.AuthorBookController.
 
 GET     /:authorId/books/:bookId        controllers.author.AuthorBookController.getResourceFromSource(authorId:Int, bookId:Int)
 
-PUT     /:authorId/books/:bookId        controllers.author.AuthorBookController.associateResourceToSource(authorId:Int, bookId:Int)
+POST     /:authorId/books/:bookId        controllers.author.AuthorBookController.associateResourceToSource(authorId:Int, bookId:Int)
 
 DELETE  /:authorId/books/:bookId        controllers.author.AuthorBookController.disassociateResourceFromSource(authorId:Int, bookId:Int)

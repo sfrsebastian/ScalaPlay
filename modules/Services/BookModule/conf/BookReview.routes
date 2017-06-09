@@ -4,4 +4,6 @@ GET     /:bookId/reviews/:reviewId            controllers.book.BookReviewControl
 
 POST    /:bookId/reviews                       controllers.book.BookReviewController.createResourceInSource(bookId:Int)
 
+PUT     /:bookId/reviews/:reviewId             controllers.book.BookReviewController.updateResourceInSource(bookId:Int, reviewId:Int)
+
 DELETE  /:bookId/reviews/:reviewId            controllers.book.BookReviewController.deleteResourceFromSource(bookId:Int, reviewId:Int)

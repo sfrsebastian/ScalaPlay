@@ -18,7 +18,7 @@ trait EditorialPersistenceTestTrait extends CrudPersistenceTestTrait[Editorial, 
 
   override var seedCollection: Seq[Editorial] = Seq()
 
-  override def generatePojo(): Editorial = DatabasePopulator.generateEditorial(1)
+  override def generatePojo(): Editorial = DatabasePopulator.generateEditorial(1).copy(books = Seq())
 
   override implicit val Model2Persistence = EditorialPersistenceConverter
 

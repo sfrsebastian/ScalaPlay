@@ -9,7 +9,9 @@ package editorial.persistence
 import book.model._
 import editorial.model._
 import layers.persistence.CrudPersistence
+import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPersistenceModel, EditorialTable] {
@@ -42,17 +44,19 @@ trait EditorialPersistenceTrait extends CrudPersistence[Editorial, EditorialPers
     }
   }
 
+  override def createAction(element: Editorial): DBIO[Editorial] = {
+    for{
+      created <- super.createAction(element)
+      _ <- DBIO.sequence(element.books.map(b => booksTable.filter(_.id === b.id).map(_.editorialId).update(Some(created.id))))
+      result <- getAction(table.filter(_.id === created.id))
+    }yield result.get
+  }
+
   override def deleteAction(id: Int): DBIO[Option[Editorial]] = {
     for{
-      toDelete <- getAction(table.filter(_.id === id))
       _ <- booksTable.filter(_.editorialId === id).map(_.editorialId).update(null)
-      result <- table.filter(_.id === id).delete
-    }yield{
-      result match{
-        case 1 => toDelete
-        case _ => None
-      }
-    }
+      deleted <- super.deleteAction(id)
+    }yield deleted
   }
 
   override def updateAction(id: Int, toUpdate: Editorial): DBIO[Option[Editorial]] = {

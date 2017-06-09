@@ -30,7 +30,7 @@ trait ErrorHandler{
     * Manejo de las excepciones en recover de un Future
     */
   def errorHandler: PartialFunction[Throwable, Result] = {
-    case e: TransactionException => InternalServerError(e.message)
+    case e: TransactionException => println(e.printStackTrace());InternalServerError(e.message)
     case e: ServiceLayerException => BadRequest(e.getMessage)
     case e: LogicLayerException => BadRequest(e.getMessage)
     case _ => InternalServerError("Se presento un error en el servidor")

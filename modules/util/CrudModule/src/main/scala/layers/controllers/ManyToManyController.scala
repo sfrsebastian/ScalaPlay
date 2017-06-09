@@ -93,6 +93,11 @@ trait ManyToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row
   val destinationNotAssociated:String = "El destino no se encuentra asociado al origen dado"
 
   /**
+    * Mensaje cuando una entidad destino ya se encuentra asociada a una entidad origen
+    */
+  val destinationAlreadyAssociated:String = "El destino ya se encuentra asociado al origen dado"
+
+  /**
     * Mensaje cuando una no se asocia una entidad destino con una entidad origen
     */
   val errorAssociatingDestination:String = "Se presento un error asociando el destino al origen"
@@ -142,6 +147,7 @@ trait ManyToManyController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row, T<:Row
       _ <- predicate(a.isDefined)(ServiceLayerException(originNotFound))
       b <- destinationLogic.get(destinationId)
       _ <- predicate(b.isDefined)(ServiceLayerException(destinationNotFound))
+      _ <- predicate(!relationMapper(a.get).map(_.id).contains(destinationId))(ServiceLayerException(destinationAlreadyAssociated))
       c <- destinationLogic.associateResourceToSource(a.get, b.get)
       _ <- predicate(c.isDefined)(ServiceLayerException(errorAssociatingDestination))
     }yield Ok(Json.toJson(c.get:D))

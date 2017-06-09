@@ -47,11 +47,11 @@ object DatabasePopulator {
   var books:Seq[Book] = Seq()
   var authors:Seq[Author] = Seq()
   var authorBook:Seq[AuthorBook] = Seq()
-  var Reviews:Seq[Review] = Seq()
+  var reviews:Seq[Review] = Seq()
 
   //Generador de entidades de cada tabla
   def generateEditorial(id:Int) = factory.manufacturePojo(classOf[Editorial]).copy(id=id)
-  def generateBook(id:Int) = factory.manufacturePojo(classOf[Book]).copy(id = id, editorial = Some(editorials(Random.nextInt(editorials.length))), Reviews = Seq())
+  def generateBook(id:Int) = factory.manufacturePojo(classOf[Book]).copy(id = id, editorial = Some(editorials(Random.nextInt(editorials.length))), reviews = Seq())
   def generateAuthor(id:Int) = factory.manufacturePojo(classOf[Author]).copy(id = id, books = Seq())
   def generateAuthorBook(book:Book, author:Author) = factory.manufacturePojo(classOf[AuthorBook]).copy(book = book, author = author)
   def generateReview = factory.manufacturePojo(classOf[Review])copy(book = books(Random.nextInt(books.length)))
@@ -84,11 +84,11 @@ object DatabasePopulator {
     }
     val authorBookAction = TableQuery[AuthorBookTable] ++= authorBook.map(e=>AuthorBookPersistenceModel(1,"",e.book.id, e.author.id))
 
-    Reviews = for {
+    reviews = for {
       _ <- 0 to 99
     }yield generateReview
 
-    val ReviewAction = TableQuery[ReviewTable] ++= Reviews.map(e=>e:ReviewPersistenceModel)
+    val ReviewAction = TableQuery[ReviewTable] ++= reviews.map(e=>e:ReviewPersistenceModel)
 
     DBIO.seq(editorialAction, bookAction, authorAction, authorBookAction, ReviewAction)
   }

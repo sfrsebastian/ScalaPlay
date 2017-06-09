@@ -30,7 +30,7 @@ trait ReviewPersistenceTestTrait extends CrudPersistenceTestTrait[Review, Review
 
   override def populateDatabase = {
     val populate = DatabasePopulator.populate
-    seedCollection = DatabasePopulator.Reviews
+    seedCollection = DatabasePopulator.reviews
     populate
   }
 

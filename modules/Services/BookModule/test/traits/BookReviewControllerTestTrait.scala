@@ -33,9 +33,9 @@ trait BookReviewControllerTestTrait extends OneToManyCompositeControllerTestTrai
   implicit val Model2Detail = ReviewDetailConverter
 
   def generatePojos(sourceId: Int, destinationId: Int): (Book, Review) = {
-    val book = factory.manufacturePojo(classOf[Book]).copy(id = sourceId, authors = Seq(), Reviews=Seq())
+    val book = factory.manufacturePojo(classOf[Book]).copy(id = sourceId, authors = Seq(), reviews=Seq())
     val Review = factory.manufacturePojo(classOf[Review]).copy(id = destinationId, book = book)
-    (book.copy(Reviews = Seq(Review)), Review)
+    (book.copy(reviews = Seq(Review)), Review)
   }
 
   override lazy val app = new GuiceApplicationBuilder()

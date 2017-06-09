@@ -36,6 +36,8 @@ trait AuthorBookControllerTrait extends ManyToManyController[Author, AuthorPersi
 
   override val destinationNotAssociated:String = "El libro dado no se encuentra asociado al autor dado"
 
+  override val destinationAlreadyAssociated:String = "El libro dado ya se encuentra asociado al autor dado"
+
   override val errorAssociatingDestination:String = "Se presento un error asociando el libro con el autor"
 
   override val errorDisassociatingDestination:String = "Se presento un error desasociando el libro del autor"

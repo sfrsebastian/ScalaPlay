@@ -163,15 +163,16 @@ trait ManyToManyControllerTestTrait[S2<:Row,T2<:Row,K2<:Entity[T2], D, S<:Row,T<
   def associateResourceToSourceTest = {
     "Al asociar un recurso destino al recurso origen" must {
       "Se deberia retornar el recurso destino asociado" in {
-        val pojos = generatePojos(1, 1)
-        val sourceResource = pojos._1
-        val destinationResource = pojos._2
+        val pojos1 = generatePojos(1, 1)
+        val pojos2 = generatePojos(1,2)
+        val sourceResource = pojos1._1
+        val destinationResource = pojos2._2
         val jsonResource = Json.toJson(destinationResource: D)
         val request = FakeRequest()
         when(sourceLogicMock.get(anyInt())) thenReturn Future(Some(sourceResource))
         when(destinationLogicMock.get(anyInt())) thenReturn Future(Some(destinationResource))
         when(destinationLogicMock.associateResourceToSource(sourceResource, destinationResource)) thenReturn Future(Some(destinationResource))
-        val result = call(controller.associateResourceToSource(1, 1), request)
+        val result = call(controller.associateResourceToSource(1, 2), request)
         val jsonResponse = contentAsJson(result)
         assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso destino asociado")
         assert(status(result) == OK, "El codigo de respuesta debe ser 200")

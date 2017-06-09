@@ -173,6 +173,73 @@ trait OneToManyCompositeControllerTestTrait [S2<:Row,T2<:Row,K2<:Entity[T2], D, 
     }
   }
 
+  def updateResourceInSourceTest = {
+    "Al actualizar un recurso destino del recurso origen" must {
+      "Se deberia retornar el recurso actualizado" in {
+        val pojos = generatePojos(1, 1)
+        val sourceResource = pojos._1
+        val destinationResource = pojos._2
+        val jsonResource = Json.toJson(destinationResource:D)
+        val request = FakeRequest().withJsonBody(jsonResource)
+        when(sourceLogicMock.get(anyInt())) thenReturn Future(Some(sourceResource))
+        when(destinationLogicMock.get(anyInt())) thenReturn Future(Some(destinationResource))
+        when(destinationLogicMock.update(anyInt(), any())) thenReturn Future(Some(destinationResource))
+        val result = call(controller.updateResourceInSource(1, 1), request)
+        val jsonResponse = contentAsJson(result)
+        assert(jsonResponse == jsonResource, "El json recibido debe corresponder al recurso eliminado")
+        assert(status(result) == OK, "El codigo de respuesta debe ser 200")
+      }
+
+      "Se deberia retornar un mensaje de error si el origen de la relacion no existe" in {
+        val pojos = generatePojos(1, 1)
+        val sourceResource = pojos._1
+        val destinationResource = pojos._2
+        val jsonResource = Json.toJson(destinationResource:D)
+        val request = FakeRequest().withJsonBody(jsonResource)
+        when(sourceLogicMock.get(anyInt())) thenReturn Future(None)
+        val result = call(controller.updateResourceInSource(1, 1), request)
+        assert(status(result) == BAD_REQUEST, "El codigo de respuesta debe ser 400")
+      }
+
+      "Se deberia retornar un mensaje de error si el destino de la relacion no existe" in {
+        val pojos = generatePojos(1, 1)
+        val sourceResource = pojos._1
+        val destinationResource = pojos._2
+        val jsonResource = Json.toJson(destinationResource:D)
+        val request = FakeRequest().withJsonBody(jsonResource)
+        when(sourceLogicMock.get(anyInt())) thenReturn Future(Some(sourceResource))
+        when(destinationLogicMock.get(anyInt())) thenReturn Future(None)
+        val result = call(controller.updateResourceInSource(1, 1), request)
+        assert(status(result) == BAD_REQUEST, "El codigo de respuesta debe ser 400")
+      }
+
+      "Se deberia retornar un mensaje de error si el destino no hace parte de la colección del origen" in {
+        val pojos = generatePojos(1, 1)
+        val sourceResource = pojos._1
+        val destinationResource = pojos._2
+        val jsonResource = Json.toJson(destinationResource:D)
+        val request = FakeRequest().withJsonBody(jsonResource)
+        when(sourceLogicMock.get(anyInt())) thenReturn Future(Some(generatePojos(1, 2)._1))
+        when(destinationLogicMock.get(anyInt())) thenReturn Future(Some(generatePojos(2, 2)._2))
+        val result = call(controller.updateResourceInSource(1, 1), request)
+        assert(status(result) == BAD_REQUEST, "El codigo de respuesta debe ser 400")
+      }
+
+      "Se deberia retornar el un mensaje de error si el recurso no pudo ser actualizado correctamente" in {
+        val pojos = generatePojos(1, 1)
+        val sourceResource = pojos._1
+        val destinationResource = pojos._2
+        val jsonResource = Json.toJson(destinationResource:D)
+        val request = FakeRequest().withJsonBody(jsonResource)
+        when(sourceLogicMock.get(anyInt())) thenReturn Future(Some(sourceResource))
+        when(destinationLogicMock.get(anyInt())) thenReturn Future(Some(destinationResource))
+        when(destinationLogicMock.update(anyInt(), any())) thenReturn Future(None)
+        val result = call(controller.updateResourceInSource(1, 1), request)
+        assert(status(result) == BAD_REQUEST, "El codigo de respuesta debe ser 400")
+      }
+    }
+  }
+
   def deleteResourceFromSourceTest = {
     "Al eliminar un recurso destino del recurso origen" must {
       "Se deberia retornar el recurso eliminado" in {
@@ -232,5 +299,6 @@ trait OneToManyCompositeControllerTestTrait [S2<:Row,T2<:Row,K2<:Entity[T2], D, 
   getResourceFromSourceTest
   getResourcesFromSourceTest
   createResourceToSourceTest
+  updateResourceInSourceTest
   deleteResourceFromSourceTest
 }

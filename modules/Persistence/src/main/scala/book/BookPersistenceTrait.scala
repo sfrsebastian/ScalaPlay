@@ -38,39 +38,37 @@ trait BookPersistenceTrait extends CrudPersistence[Book, BookPersistenceModel, B
   override def getAction(query: Query[BookTable, BookPersistenceModel, Seq]): DBIO[Option[Book]] = {
     for{
       book <- query.joinLeft(ReviewPersistence.table).on(_.id === _.bookId)
-        .join(authorBookTable).on(_._1.id === _.bookId)
-        .join(authorTable).on(_._2.authorId === _.id)
-        .joinLeft(editorialTable).on(_._1._1._1.editorialId === _.id)
+        .joinLeft(authorBookTable.join(authorTable).on(_.authorId === _.id)).on(_._1.id === _._1.bookId)
+        .joinLeft(editorialTable).on(_._1._1.editorialId === _.id)
         .result
     }yield {
       book
-        .groupBy(_._1._1._1._1)
-        .map(r=>(r._1,r._2.map(_._1._1._1._2), r._2.map(_._1._2), r._2.map(_._2)))
-        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.flatMap(e=>e).distinct, r._3.distinct, r._4.head)).headOption
+        .groupBy(_._1._1._1)
+        .map(r=>(r._1, r._2.map(_._1._1._2), r._2.map(_._1._2.map(_._2)), r._2.map(_._2)))
+        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.flatten.distinct, r._3.flatten.distinct, r._4.head)).headOption
     }
   }
 
   override def getAllAction(query: Query[BookTable, BookPersistenceModel, Seq], start: Int, limit: Int): DBIO[Seq[Book]] = {
     for{
       book <- query.joinLeft(ReviewPersistence.table).on(_.id === _.bookId)
-        .join(authorBookTable).on(_._1.id === _.bookId)
-        .join(authorTable).on(_._2.authorId === _.id)
-        .joinLeft(editorialTable).on(_._1._1._1.editorialId === _.id)
+        .joinLeft(authorBookTable.join(authorTable).on(_.authorId === _.id)).on(_._1.id === _._1.bookId)
+        .joinLeft(editorialTable).on(_._1._1.editorialId === _.id)
         .drop(start).take(limit)
         .result
     }yield {
       book
-        .groupBy(_._1._1._1._1)
-        .map(r=>(r._1,r._2.map(_._1._1._1._2), r._2.map(_._1._2), r._2.map(_._2)))
-        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.flatMap(e=>e).distinct, r._3.distinct, r._4.head)).toSeq
+        .groupBy(_._1._1._1)
+        .map(r=>(r._1, r._2.map(_._1._1._2), r._2.map(_._1._2.map(_._2)), r._2.map(_._2)))
+        .map(r => BookPersistenceConverter.convertInverse(r._1, r._2.flatten.distinct, r._3.flatten.distinct, r._4.head)).toSeq
     }
   }
 
   override def createAction(element: Book): DBIO[Book] = {
     for{
-      created <- (table returning table) += element
-      _ <- DBIO.seq(authorBookTable ++= element.authors.map(u => AuthorBookPersistenceModel(1,"",created.id, u.id)))
-      _ <- DBIO.sequence(element.Reviews.map(c => ReviewPersistence.createAction(c.copy(book = created))))
+      created <- super.createAction(element)
+      _ <- DBIO.sequence(element.authors.map(a => associateEntityToSourceAction(a, created)))
+      _ <- DBIO.sequence(element.reviews.map(c => ReviewPersistence.createAction(c.copy(book = created))))
       book <- getAction(table.filter(_.id === created.id))
     }yield book.get
   }

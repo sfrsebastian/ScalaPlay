@@ -99,6 +99,11 @@ trait OneToManyCompositeController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row
   val errorCreatingDestination:String = "Se presento un error creando el destino en el origen"
 
   /**
+    * Mensaje cuando no se actualiza una entidad destino en una entidad origen
+    */
+  val errorUpdatingDestination:String = "Se presento un error actualizando el destino"
+
+  /**
     * Mensaje cuando no se elimina una entidad destino de una entidad origen
     */
   val errorDeletingDestination:String = "Se presento un error eliminando el destino del origen"
@@ -143,6 +148,28 @@ trait OneToManyCompositeController[S2<:Row, T2<:Row , K2<:Entity[T2] , D, S<:Row
           b <- destinationLogic.create(aggregationMapper(x, a.get))
           _ <- predicate(b.isDefined)(ServiceLayerException(errorCreatingDestination))
         }yield Ok(Json.toJson(b.get:D))
+        result.recover(errorHandler)
+      case None => Future(BadRequest("Error en formato de contenido"))
+    }
+  }
+
+  /**
+    * Servicio que actualiza una entidad destino en una entidad origen con id dado
+    * @param sourceId Identificador de la entidad de origen
+    * @param destinationId Indentificador de la entidad de destino
+    */
+  def updateResourceInSource(sourceId:Int, destinationId:Int): Action[JsValue] = Action.async(parse.json){ request =>
+    request.body.validateOpt[D].getOrElse(None) match {
+      case Some(x) =>
+        val result = for{
+          a <- sourceLogic.get(sourceId)
+          _ <- predicate(a.isDefined)(ServiceLayerException(originNotFound))
+          b <- destinationLogic.get(destinationId)
+          _ <- predicate(b.isDefined)(ServiceLayerException(destinationNotFound))
+          _ <- predicate(relationMapper(a.get).map(_.id).contains(destinationId))(ServiceLayerException(destinationNotAssociated))
+          update <- destinationLogic.update(destinationId, x)
+          _ <- predicate(update.isDefined)(ServiceLayerException(errorUpdatingDestination))
+        }yield Ok(Json.toJson(update.get:D))
         result.recover(errorHandler)
       case None => Future(BadRequest("Error en formato de contenido"))
     }

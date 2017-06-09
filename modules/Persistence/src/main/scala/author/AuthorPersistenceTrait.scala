@@ -65,17 +65,11 @@ trait AuthorPersistenceTrait extends CrudPersistence[Author, AuthorPersistenceMo
   override def createAction(element: Author): DBIO[Author] = {
     for{
       created <- super.createAction(element)
-      _ <- DBIO.sequence(element.books.map(b => bookPersistence.createAction(b.copy(authors = created::Nil))))
+      _ <- DBIO.sequence(element.books.map(b => associateEntityToSourceAction(b, created)))
       author <- getAction(table.filter(_.id === created.id))
     }yield author.get
   }
 
-  def addBookAction(id:Int, book:Book):DBIO[Book] = {
-    for {
-      created <- bookPersistence.createAction(book)
-      _ <- authorBookTable += AuthorBookPersistenceModel(1, "", created.id, id)
-    }yield created
-  }
 
   override def updateAction(id: Int, toUpdate: Author): DBIO[Option[Author]] = {
     for {
