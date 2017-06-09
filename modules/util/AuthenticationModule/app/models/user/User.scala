@@ -34,7 +34,7 @@ case class User(
   email:String,
   loginInfo:LoginInfo,
   passwordInfo:PasswordInfo,
-  roles:Array[String] = Array("user", "admin")
+  roles:Array[String] = Array("user")
 ) extends Row with Identity{
   def fullName = name + " " + lastName
   def toMin = UserMin(id, name, lastName, fullName, email)
