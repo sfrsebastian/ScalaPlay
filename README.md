@@ -57,18 +57,25 @@ Database = {
 ## Paso 3: Importar en Intellij IDE
 1. Abrir Intellij Idea.
 2. Seleccionar "Import Project".
+![alt text](https://raw.githubusercontent.com/sfrsebastian/ScalaPlay/master/img/1.png)
+
 3. Seleccionar el directorio de la solución.
 4. Seleccionar la opción "Importar de modelo externo" y seleccionar "SBT".
+![alt text](https://raw.githubusercontent.com/sfrsebastian/ScalaPlay/master/img/2.png)
 5. Validar que se cuenta con un "SDK de ejecución".
+![alt text](https://raw.githubusercontent.com/sfrsebastian/ScalaPlay/master/img/3.png)
 6. Finalizar.
 
 ## Paso 4: Agregar configuraciones de ejecución
 Para crear una configuración en Intellij, seleccionar la opción "Edit Configurations" ubicada en la parte superior derecha.
 
+![alt text](https://raw.githubusercontent.com/sfrsebastian/ScalaPlay/master/img/4.png)
+
 ### Crear configuración de ejecución
 1. Seleccionar la opción "+" para agregar una nueva configuración
 2. Seleccionar "Play 2 App"
 3. Agregar un nombre significativo. Por ejemplo: Start App
+![alt text](https://raw.githubusercontent.com/sfrsebastian/ScalaPlay/master/img/5.png)
 4. Finalizar.
 
 ### Crear configuración de pruebas
@@ -85,6 +92,8 @@ Esta sentencia indica a Scalatest la referencia de los archivos de configuració
 - "Test Kind" -> "All in package"
 - "Search for tests" ->"Across Module Dependencies"
 - "Use classpath and SDK module" -> "bookstore"
+
+![alt text](https://raw.githubusercontent.com/sfrsebastian/ScalaPlay/master/img/6.png)
 6. Finalizar.
 
 ## Paso 5: Ejecutar
