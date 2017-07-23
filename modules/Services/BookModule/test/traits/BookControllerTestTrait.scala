@@ -32,7 +32,7 @@ trait BookControllerTestTrait extends CrudControllerTestTrait[BookDetail, Book, 
 
   implicit val formatDetail = Json.format[BookDetail]
 
-  override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(authors = Seq(), Reviews = Seq())
+  override def generatePojo: Book = factory.manufacturePojo(classOf[Book]).copy(authors = Seq(), reviews = Seq())
 
   implicit val Model2Detail = BookDetailConverter
 

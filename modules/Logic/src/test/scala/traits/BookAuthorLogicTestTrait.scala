@@ -22,7 +22,7 @@ trait BookAuthorLogicTestTrait extends ManyToManyLogicTestTrait[Book, Author, Au
   when(persistenceMock.table) thenReturn mock[TableQuery[AuthorTable]]
 
   def generatePojos(sourceId: Int, destinationId: Int): (Book, Author) = {
-    val book = factory.manufacturePojo(classOf[Book]).copy(id = sourceId, authors = Seq(), Reviews = Seq())
+    val book = factory.manufacturePojo(classOf[Book]).copy(id = sourceId, authors = Seq(), reviews = Seq())
     val author = factory.manufacturePojo(classOf[Author]).copy(id = destinationId, books = Seq(book))
     (book.copy(authors = Seq(author)), author)
   }
