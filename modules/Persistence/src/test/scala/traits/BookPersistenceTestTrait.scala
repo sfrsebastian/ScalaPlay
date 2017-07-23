@@ -48,11 +48,11 @@ trait BookPersistenceTestTrait extends CrudPersistenceTestTrait[Book, BookPersis
 
         val newObject = generatePojo
 
-        val Reviews:Seq[Review] = for {
+        var Reviews: Seq[Review] = for {
           _ <- 0 to Random.nextInt(15) + 1
-        }yield DatabasePopulator.generateReview.copy(book = newObject)
+        } yield DatabasePopulator.generateReview.copy(book = newObject)
 
-        whenReady(persistence.runAction(persistence.createAction(newObject.copy(Reviews = Reviews)))) { element =>
+        whenReady(persistence.runAction(persistence.createAction(newObject.copy(reviews = Reviews)))) { element =>
           whenReady(persistence.db.run(persistence.ReviewPersistence.table.filter(_.bookId === element.id).result)){ dbReviews =>
             assert(dbReviews.length == Reviews.length, "La longitud de los comentarios encontrados deberia ser la misma que los comentarios creados")
           }
